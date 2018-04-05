@@ -304,6 +304,9 @@
            <directory>src/main/java</directory>
                 <includes>
                     <include>edu/columbia/dbmi/ohdsims/model/*.ser.gz</include>
+                    <include>edu/columbia/dbmi/ohdsims/model/*.model</include>
+                    <include>edu/columbia/dbmi/ohdsims/model/*.txt</include>
+                    <include>edu/columbia/dbmi/ohdsims/model/*.sutime.txt</include>
                 </includes>
         </resource>
     </resources>
