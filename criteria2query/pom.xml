@@ -299,5 +299,13 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+        <resource>
+           <directory>src/main/java</directory>
+                <includes>
+                    <include>edu/columbia/dbmi/ohdsims/model/*.ser.gz</include>
+                </includes>
+        </resource>
+    </resources>
   </build>
 </project>
