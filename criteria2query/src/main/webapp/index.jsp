@@ -339,7 +339,6 @@
 				<a class="btn btn-success" id="start" target="_blank" role="button">&nbsp;&nbsp;Parsing&nbsp;&nbsp;</a>
 				<a class="btn btn-info" id="reset" role="button">&nbsp;&nbsp;&nbsp;Reset&nbsp;&nbsp;&nbsp;</a>
 				<a class="btn btn-warning" id="auto" role="button">&nbsp;&nbsp;One-Button Start&nbsp;&nbsp;</a>	
-				<a class="btn btn-warning" id="test" role="button">&nbsp;&nbsp;Test&nbsp;&nbsp;</a>	
 			</p>  	
 		</div>	
 			<div class="col-sm-12 col-md-12 col-lg-12">
