@@ -33,7 +33,6 @@ public class NERTool {
 		long startTime = System.nanoTime();
 
         /* Step 1: learn the classifier from the training data */
-        
         String trainFile = traindatapath; 
         /* Learn the classifier from the training data */
         String serializeFileLoc =targetpath;
@@ -159,17 +158,22 @@ public class NERTool {
 	public String trans4display(String text,List<Term> terms){
 		String sent=text;
 		StringBuffer sb=new StringBuffer();
+		int endindex=0;
 		for(int i=0;i<terms.size();i++){
 			String s2="<mark data-entity=\""+terms.get(i).getCategorey().toLowerCase()+"\">"+terms.get(i).getText()+"</mark>";
 			//sent=sent.replace(.getText(), s2);
 			if(i==0){
 				sb.append(sent.substring(0,terms.get(i).getEnd_index()).replace(terms.get(i).getText(), s2));
+				endindex =terms.get(i).getEnd_index();
 			}else if(i>0){
 				sb.append(sent.substring(terms.get(i-1).getEnd_index()+1,terms.get(i).getEnd_index()).replace(terms.get(i).getText(), s2));
+				endindex =terms.get(i).getEnd_index();
 			}
 		}
 		if(terms.size()==0){
 			sb.append(text);
+		}else{
+			sb.append(sent.substring(endindex+1));
 		}
 		return sb.toString();
 	}
