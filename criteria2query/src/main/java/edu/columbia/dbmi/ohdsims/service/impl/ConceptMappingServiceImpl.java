@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -22,9 +23,11 @@ import edu.columbia.dbmi.ohdsims.pojo.Sentence;
 import edu.columbia.dbmi.ohdsims.pojo.Term;
 import edu.columbia.dbmi.ohdsims.service.IConceptMappingService;
 import edu.columbia.dbmi.ohdsims.tool.ConceptMapping;
+import edu.columbia.dbmi.ohdsims.tool.OHDSIApis;
 import edu.columbia.dbmi.ohdsims.util.HttpUtil;
 import edu.stanford.nlp.util.Triple;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Service("conceptMappingService")
 public class ConceptMappingServiceImpl implements IConceptMappingService{
@@ -140,11 +143,58 @@ public class ConceptMappingServiceImpl implements IConceptMappingService{
 	public List<ConceptSet> mapAndSortConceptSetByEntityName(String entityname) {
 		List<ConceptSet> lscst=new ArrayList<ConceptSet>();
 		LinkedHashMap<ConceptSet, Integer> hcs = cptmap.mapConceptSetByEntity(entityname);
+		Set<String> conceptSetlist=new HashSet<String>();
+		
+		//filter out
 		for (Map.Entry<ConceptSet, Integer> entry : hcs.entrySet()) {
-			lscst.add(entry.getKey());
+			if(conceptSetlist.contains(entry.getKey().getName())==false){
+				lscst.add(entry.getKey());
+				conceptSetlist.add(entry.getKey().getName());
+			}
 		}
 		return lscst;
 	}
+		
+	
+	public boolean conceptSetisEqual(Integer conceptSet1, Integer conceptSet2){
+		Set<Integer> set1=getAllConceptIds(conceptSet1);
+		Set<Integer> set2=getAllConceptIds(conceptSet2);
+		if (set1 == null && set2 == null) {    
+			   return true; // Both are null    
+			  }        
+			  if (set1 == null || set2 == null || set1.size() != set2.size()    
+			    || set1.size() == 0 || set2.size() == 0) {    
+			   return false;    
+			  }    
+			      
+			  Iterator ite1 = set1.iterator();    
+			  Iterator ite2 = set2.iterator();    
+			      
+			  boolean isFullEqual = true;    
+			      
+			 while (ite2.hasNext()) {    
+			   if (!set1.contains(ite2.next())) {    
+			    isFullEqual = false;    
+			   }    
+			  }  	      
+		return isFullEqual;    
+		
+	}
+	public Set<Integer> getAllConceptIds(Integer conceptSetId) {
+		JSONObject set1=OHDSIApis.querybyconceptSetid(conceptSetId);
+		Set<Integer> conceptIds=new HashSet<Integer>();
+		JSONObject jo=(JSONObject) set1.get("expression");
+		JSONArray ja=(JSONArray) jo.get("items");
+		if(ja.size()>0){
+			for(int i=0;i<ja.size();i++){
+				JSONObject conceptunit=(JSONObject) ja.get(i);
+				JSONObject concept=(JSONObject) conceptunit.get("concept");
+				conceptIds.add(concept.getInt("CONCEPT_ID"));
+			}
+		}
+		return conceptIds;
+	}
+	
 	
 	@Override
 	public Document ignoreTermByEntityText(Document doc, String termtext) {

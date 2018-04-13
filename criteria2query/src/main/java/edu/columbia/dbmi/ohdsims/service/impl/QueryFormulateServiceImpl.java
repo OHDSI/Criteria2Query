@@ -195,6 +195,11 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 				clist.addAll(c.getClist());
 			}
 		}
+		StringBuffer initialeventtext=new StringBuffer();
+		for(CdmCriteria cdmc:omopcohort.getInitial_event()){
+			initialeventtext.append(cdmc.getText());
+		}
+		initial_criteria.setText(initialeventtext.toString());
 		initial_criteria.setInitialevent(true);
 		initial_criteria.setIncluded(true);
 		initial_criteria.setClist(clist);
@@ -206,7 +211,8 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 		// initial events
 		cohort.accumulate("PrimaryCriteria", formulatePrimaryCriteria(initial_criteria));
 		if(initial_criteria.getText()!=null &&initial_criteria.getText().length() >0){
-		cohort.accumulate("AdditionalCriteria", formulateOneCdmCriteria(initial_criteria));
+			System.out.println("=>additional criteria");
+			cohort.accumulate("AdditionalCriteria", formulateOneCdmCriteria(initial_criteria));
 		}
 		cohort.accumulate("QualifiedLimit", formulateQualifiedLimit());
 		cohort.accumulate("ExpressionLimit", formulateExpressionLimit());
@@ -470,15 +476,14 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 		for (CdmCriterion cdmcriterion : criteria_list) {
 			cdmcriterion.setOccurenceStart(cdmc.getOccurenceStart());
 			JSONObject classandconcept = new JSONObject();
-			classandconcept = formualteCriteria(cdmcriterion);
+			classandconcept = formualtePrimaryCriteriaInInitialEvent(cdmcriterion);
 			if(classandconcept!=null){
 				criterialist.add(classandconcept);
 			}
 		}
 		return criterialist;
 	}
-	
-	public JSONObject formualteCriteria(CdmCriterion cdmcriterion) {
+	public JSONObject formualtePrimaryCriteriaInInitialEvent(CdmCriterion cdmcriterion) {
 		JSONObject conceptsetid = new JSONObject();
 		JSONObject classandconcept = new JSONObject();
 		JSONObject occurscontent=new JSONObject();
@@ -518,6 +523,67 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 			if(occurscontent.containsKey("Value")){
 				conceptsetid.accumulate("OccurrenceStartDate",occurscontent);
 			}
+			Map<String,String> attributes=cdmcriterion.getAttributes();
+			if(attributes!=null){
+				String mvalue=attributes.get("measure_value");
+				JSONObject jo=new JSONObject();
+				if(mvalue!=null){					
+					List<Double> m=NumericConvert.recognizeNumbersAdvanced(mvalue);
+					if(m!=null){
+						if(m.size()==2){
+							if(mvalue.toLowerCase().contains("or")){
+								jo.accumulate("Value",m.get(0));
+								jo.accumulate("Extent",m.get(1));
+								jo.accumulate("Op", "!bt");
+							}else{
+								jo.accumulate("Value",m.get(0));
+								jo.accumulate("Extent",m.get(1));
+								jo.accumulate("Op", "bt");
+							}
+						}else if(m.size()==1&&((mvalue.indexOf(">")!=-1)||(mvalue.indexOf("greater")!=-1)||(mvalue.indexOf("higher")!=-1))){
+							jo.accumulate("Value",m.get(0));
+							jo.accumulate("Op", "gt");
+						}else if(m.size()==1&&((mvalue.indexOf("<")!=-1)||(mvalue.indexOf("lower")!=-1)||(mvalue.indexOf("smaller")!=-1))){
+							jo.accumulate("Value",m.get(0));
+							jo.accumulate("Op", "lt");
+						}else if(mvalue.indexOf("≥")!=-1){
+							jo.accumulate("Value",m.get(0));
+							jo.accumulate("Op", "gte");
+						}else if(mvalue.indexOf("≤")!=-1){
+							jo.accumulate("Value",m.get(0));
+							jo.accumulate("Op", "lte");
+						}
+					}
+				}
+				conceptsetid.accumulate("ValueAsNumber", jo);
+			}
+			classandconcept.accumulate("Measurement", conceptsetid);
+			
+		}else{
+			return null;
+		}
+		return classandconcept;
+	}
+	
+	public JSONObject formualteCriteria(CdmCriterion cdmcriterion) {
+		JSONObject conceptsetid = new JSONObject();
+		JSONObject classandconcept = new JSONObject();
+		if (cdmcriterion.getDomain().equals("Condition")) {// Condition
+			conceptsetid.accumulate("CodesetId", cdmcriterion.getConceptsetId());	
+			classandconcept.accumulate("ConditionOccurrence", conceptsetid);
+			
+		} else if (cdmcriterion.getDomain().equals("Drug")) {// Drug
+			conceptsetid.accumulate("CodesetId", cdmcriterion.getConceptsetId());		
+			classandconcept.accumulate("DrugExposure", conceptsetid);
+		} else if (cdmcriterion.getDomain().equals("Observation")) {// Observation
+			conceptsetid.accumulate("CodesetId", cdmcriterion.getConceptsetId());		
+			classandconcept.accumulate("Observation", conceptsetid);
+
+		} else if (cdmcriterion.getDomain().equals("Procedure")) {// Procedure
+			conceptsetid.accumulate("CodesetId", cdmcriterion.getConceptsetId());		
+			classandconcept.accumulate("ProcedureOccurrence", conceptsetid);
+		} else if (cdmcriterion.getDomain().equals("Measurement")) {// Procedure
+			conceptsetid.accumulate("CodesetId", cdmcriterion.getConceptsetId());	
 			Map<String,String> attributes=cdmcriterion.getAttributes();
 			if(attributes!=null){
 				String mvalue=attributes.get("measure_value");

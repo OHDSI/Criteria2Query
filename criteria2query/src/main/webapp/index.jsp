@@ -339,6 +339,7 @@
 				<a class="btn btn-success" id="start" target="_blank" role="button">&nbsp;&nbsp;Parsing&nbsp;&nbsp;</a>
 				<a class="btn btn-info" id="reset" role="button">&nbsp;&nbsp;&nbsp;Reset&nbsp;&nbsp;&nbsp;</a>
 				<a class="btn btn-warning" id="auto" role="button">&nbsp;&nbsp;One-Button Start&nbsp;&nbsp;</a>	
+				<a class="btn btn-warning" id="test" role="button">&nbsp;&nbsp;Test&nbsp;&nbsp;</a>	
 			</p>  	
 		</div>	
 			<div class="col-sm-12 col-md-12 col-lg-12">
@@ -366,7 +367,7 @@
 	<div class="container">
 		<div class="row footer-top">
 			<div class="col-sm-6 col-lg-6">
-			    <p><strong>Criteria2query v0.8.2.1</strong></p>
+			    <p><strong>Criteria2query v0.8.2.2</strong></p>
 				<p>This website was developed by Chi Yuan,Patrick Ryan, Yixuan Guo, Chunhua Weng</p>
 			</div>
 		</div>
@@ -387,10 +388,7 @@
 				formatdata();
 			});
 			$("#reset").click(function() {
-				$("#incriteria").val('');
-				$("#excriteria").val(''); 
-				$("#fbcontent").val('');
-				$("#initialevent").val('');
+				$("#abbr").attr("checked",false);
 			});
 			
 			$("#fbsubmit").click(function() {

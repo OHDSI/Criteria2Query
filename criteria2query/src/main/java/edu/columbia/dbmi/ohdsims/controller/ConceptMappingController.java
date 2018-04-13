@@ -26,6 +26,7 @@ import edu.columbia.dbmi.ohdsims.pojo.Term;
 import edu.columbia.dbmi.ohdsims.service.IConceptMappingService;
 import edu.columbia.dbmi.ohdsims.service.IInformationExtractionService;
 import edu.columbia.dbmi.ohdsims.tool.ConceptMapping;
+import edu.columbia.dbmi.ohdsims.tool.NERTool;
 import edu.columbia.dbmi.ohdsims.util.ATLASUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -33,6 +34,7 @@ import net.sf.json.JSONObject;
 @Controller
 @RequestMapping("/map")
 public class ConceptMappingController {
+	
 	@Resource
 	private IConceptMappingService conceptMappingService;
 
