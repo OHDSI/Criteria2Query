@@ -172,7 +172,7 @@ public class NERTool {
 		}
 		if(terms.size()==0){
 			sb.append(text);
-		}else{
+		}else if(endindex!=text.length()){
 			sb.append(sent.substring(endindex+1));
 		}
 		return sb.toString();
