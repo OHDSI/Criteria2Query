@@ -123,6 +123,7 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 						if (logictool.isConnected(t, a, sent.getText())) {
 							relflag = true;
 						}
+						relflag = true;
 						if (relflag == true && a.getCategorey().equals("Value")) {
 							rel = "has_value";
 						}

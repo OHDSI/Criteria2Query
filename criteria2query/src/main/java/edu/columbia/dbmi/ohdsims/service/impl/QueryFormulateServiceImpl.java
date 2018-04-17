@@ -107,6 +107,9 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 					if (t.getTermId() == r.first) {
 						if(r.third.equals("has_temporal")){
 							TemporalConstraint[] temporalwindow = normalizeTemporal(findTermById(terms,r.second).getText());
+							if(temporalwindow==null){
+								continue;
+							}
 							cunit.setTemporalwindow(temporalwindow);
 						}else if(r.third.equals("has_value")){
 							String valuestr=findTermById(terms,r.second).getText();
@@ -152,7 +155,12 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 			tc[0]=new TemporalConstraint();
 		}
 		
+		if(days<10000){
+			//System.out.println(days);
 		return tc;
+		}else{
+			return null;
+		}
 	}
 	
 	public List<Integer> extractConceptsetByDoc(Document doc){

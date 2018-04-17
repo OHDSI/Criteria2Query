@@ -133,7 +133,7 @@ public class TemporalConvert {
 		if (ssi.size() > 0) {
 			return ssi.get(ssi.size() - 1);
 		} else {
-			return -100;
+			return -10000;
 		}
 	}
 	

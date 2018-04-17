@@ -66,7 +66,6 @@ public class TemporalNormalize {
 			System.out.println("n="+number);
 			// System.out.println("unit=" + total);
 			if(total==30 && number==12){
-				
 				days=365;
 				
 			}else{

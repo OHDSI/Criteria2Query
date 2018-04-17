@@ -56,7 +56,6 @@ public class RelExTool {
 	public RelExTool() {
 		this.classifier = readModel(GlobalSetting.relexmodel);//GlobalSetting.relexmodel
 	}
-	
 	public static void main(String[] args) {
 		//generateTrainingFile();
 		RelExTool rt=new RelExTool();
