@@ -373,7 +373,7 @@
 	<div class="container">
 		<div class="row footer-top">
 			<div class="col-sm-6 col-lg-6">
-			    <p><strong>Criteria2query v0.8.2.2</strong></p>
+			    <p><strong>Criteria2query v0.8.2.3</strong></p>
 				<p>This website was developed by Chi Yuan,Patrick Ryan, Yixuan Guo, Chunhua Weng</p>
 			</div>
 		</div>
