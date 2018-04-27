@@ -42,7 +42,8 @@ import net.sf.json.JSONObject;
 public class InformationExtractionController {
 	@Resource
 	private IInformationExtractionService ieService;
-
+	@Resource
+	private IConceptFilteringService cfService;
 	
 	@RequestMapping("/parse")
 	@ResponseBody
@@ -71,6 +72,7 @@ public class InformationExtractionController {
 		if(abb==true){
 			doc= this.ieService.abbrExtensionByDoc(doc);
 		}
+		doc=this.cfService.removeRedundency(doc);
 		httpSession.setAttribute("allcriteria", doc);
 		map.put("initial_event", display_initial_event);
 		map.put("include", display_inclusion_criteria);

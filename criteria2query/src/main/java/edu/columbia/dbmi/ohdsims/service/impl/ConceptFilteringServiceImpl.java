@@ -11,6 +11,7 @@ import edu.columbia.dbmi.ohdsims.pojo.Paragraph;
 import edu.columbia.dbmi.ohdsims.pojo.Sentence;
 import edu.columbia.dbmi.ohdsims.pojo.Term;
 import edu.columbia.dbmi.ohdsims.service.IConceptFilteringService;
+import edu.columbia.dbmi.ohdsims.util.FileUtil;
 import edu.stanford.nlp.util.Triple;
 
 @Service("conceptFilteringService")
@@ -19,15 +20,17 @@ public class ConceptFilteringServiceImpl implements IConceptFilteringService {
 	@Override
 	public Document removeRedundency(Document doc) {
 		// TODO Auto-generated method stub
-		Set<Term> termpool=new HashSet<Term>();
+		Set<String> termpool=new HashSet<String>();
 		if (doc.getInitial_event() != null) {
 			List<Paragraph> originalp = doc.getInitial_event();
 			originalp = filterOutTerms(originalp, termpool);
+			termpool = updateTermSet(originalp, termpool);
 			doc.setInitial_event(originalp);
 		}
 		if (doc.getInclusion_criteria() != null) {
 			List<Paragraph> originalp = doc.getInclusion_criteria();
 			originalp = filterOutTerms(originalp, termpool);
+			termpool = updateTermSet(originalp, termpool);
 			doc.setInclusion_criteria(originalp);
 		}
 		if (doc.getExclusion_criteria() != null) {
@@ -39,26 +42,49 @@ public class ConceptFilteringServiceImpl implements IConceptFilteringService {
 	}
 
 	// 
-	public List<Paragraph> filterOutTerms(List<Paragraph> originalp, Set<Term> terms) {
+	public List<Paragraph> filterOutTerms(List<Paragraph> originalp, Set<String> terms) {
+		Set<String> tset=terms;
 		for (Paragraph p : originalp) {
 			if (p.getSents() != null) {
 				for (Sentence s : p.getSents()) {
 					if (s.getTerms() != null) {
 						for (int i = 0; i < s.getTerms().size(); i++) {
-							for(Term t:terms){
-								if(isEqual(t, s.getTerms().get(i))){
+								if(tset.contains(s.getTerms().get(i).getText())){
 									s.getTerms().remove(i);
 									System.err.println("remove");
+									
+									break;
 								}else{
-									terms.add(s.getTerms().get(i));
+									tset.add(s.getTerms().get(i).getText());
+								}
+							
 								}
 							}
 						}
 					}
 				}
+		return originalp;
+	}
+	
+	public Set<String> updateTermSet(List<Paragraph> originalp, Set<String> terms) {
+		for (Paragraph p : originalp) {
+			if (p.getSents() != null) {
+				for (Sentence s : p.getSents()) {
+					if (s.getTerms() != null) {
+						for (int i = 0; i < s.getTerms().size(); i++) {
+							terms.add(s.getTerms().get(i).getText());
 			}
 		}
-		return originalp;
+				}
+			}
+		}
+		return terms;
+	}
+	
+	public void printout(Set<String> terms){
+		for(String t:terms){
+			System.out.println("print out:"+t);
+		}
 	}
 	
 	public boolean isEqual(Term t1,Term t2){

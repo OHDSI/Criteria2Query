@@ -10,11 +10,8 @@
                         http://www.springframework.org/schema/mvc  
                         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 	<context:component-scan base-package="edu.columbia.dbmi.ohdsims "/>
-	<!-- 引入配置文件 -->
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location" value="classpath:config.properties" />
 	</bean>
-
-
 </beans>
