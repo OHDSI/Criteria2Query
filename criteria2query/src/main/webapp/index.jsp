@@ -11,8 +11,8 @@
 <meta charset="utf-8">
 <title>Criteria2Query</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="keywords" content="Clinical trial">
-<meta name="author" content="Chi Yuan, Chunhua Weng">
+<meta name="keywords" content="Clinical trial,NLP">
+<meta name="author" content="Chi Yuan, Patrick Ryan, Yixuan Guo, Chunhua Weng">
 <meta name="robots" content="index,follow">
 
 <!-- Site CSS -->
@@ -103,7 +103,6 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'UA-118282453-1');
 </script>
 </head>
