@@ -28,6 +28,7 @@ import edu.columbia.dbmi.ohdsims.pojo.DisplayCriterion;
 import edu.columbia.dbmi.ohdsims.pojo.Document;
 import edu.columbia.dbmi.ohdsims.pojo.ObservationConstraint;
 import edu.columbia.dbmi.ohdsims.pojo.Sentence;
+import edu.columbia.dbmi.ohdsims.service.IConceptFilteringService;
 import edu.columbia.dbmi.ohdsims.service.IInformationExtractionService;
 import edu.columbia.dbmi.ohdsims.tool.CoreNLP;
 import edu.columbia.dbmi.ohdsims.tool.FeedBackTool;
