@@ -23,6 +23,7 @@ import edu.columbia.dbmi.ohdsims.pojo.Document;
 import edu.columbia.dbmi.ohdsims.pojo.GlobalSetting;
 import edu.columbia.dbmi.ohdsims.pojo.Sentence;
 import edu.columbia.dbmi.ohdsims.pojo.Term;
+import edu.columbia.dbmi.ohdsims.service.IConceptFilteringService;
 import edu.columbia.dbmi.ohdsims.service.IConceptMappingService;
 import edu.columbia.dbmi.ohdsims.service.IInformationExtractionService;
 import edu.columbia.dbmi.ohdsims.tool.ConceptMapping;
@@ -37,6 +38,7 @@ public class ConceptMappingController {
 	
 	@Resource
 	private IConceptMappingService conceptMappingService;
+	
 
 	@RequestMapping("/mapConceptSets")
 	@ResponseBody
