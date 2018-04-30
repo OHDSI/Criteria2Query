@@ -80,6 +80,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script src="../js/bootstrap-table.min.js"></script>
 <script type="text/javascript"
 	src="http://malsup.github.io/min/jquery.blockUI.min.js"></script>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-118282453-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-118282453-1');
+</script>
 </head>
 	<div class="navbar navbar-inverse navbar-fixed-top navback">
 		<div class="container">
