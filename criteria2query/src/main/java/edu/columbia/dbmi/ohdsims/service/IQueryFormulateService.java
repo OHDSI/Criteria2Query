@@ -14,5 +14,5 @@ public CdmCohort translateByDoc(Document doc);
 public List<CdmCriteria> translateByParagraph(Paragraph p,boolean include);
 public CdmCriteria translateBySentence(Sentence s,boolean include) ;
 public JSONObject formualteCohortQuery(Document doc);
-public Integer storeInATLAS(JSONObject expression);
+public Integer storeInATLAS(JSONObject expression,String cohortname);
 }

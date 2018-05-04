@@ -329,4 +329,28 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 		return false;
 	}
 
+	@Override
+	public List<String> getAllInitialEvents(Document doc) {
+		List<String> initevent=new ArrayList<String>();
+		List<Paragraph> initial_events=doc.getInitial_event();
+		if(initial_events!=null){
+			for(Paragraph p:initial_events){
+				List<Sentence> sents=p.getSents();
+				if(sents!=null){
+					for(Sentence s:sents){
+						List<Term> terms=s.getTerms();
+						if(terms!=null){
+							for(Term t:terms){
+								if(Arrays.asList(GlobalSetting.conceptSetDomains).contains(t.getCategorey())){
+									initevent.add(t.getText());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return initevent;
+	}
+
 }

@@ -14,4 +14,5 @@ public interface IInformationExtractionService {
 	public List<DisplayCriterion> displayDoc(List<Paragraph> ps);
 	public Document patchIEResults(Document doc);
 	public Document abbrExtensionByDoc(Document doc);
+	public List<String> getAllInitialEvents(Document doc);
 }

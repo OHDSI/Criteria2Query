@@ -18,6 +18,7 @@ import edu.columbia.dbmi.ohdsims.pojo.Document;
 import edu.columbia.dbmi.ohdsims.pojo.GlobalSetting;
 import edu.columbia.dbmi.ohdsims.pojo.Sentence;
 import edu.columbia.dbmi.ohdsims.service.IConceptMappingService;
+import edu.columbia.dbmi.ohdsims.service.IInformationExtractionService;
 import edu.columbia.dbmi.ohdsims.service.IQueryFormulateService;
 import edu.columbia.dbmi.ohdsims.tool.ConceptMapping;
 import edu.columbia.dbmi.ohdsims.util.HttpUtil;
@@ -30,6 +31,8 @@ import net.sf.json.JSONObject;
 public class QueryFormulationController {
 	@Resource
 	private IQueryFormulateService qfService;
+	@Resource
+	private IInformationExtractionService ieService;
 
 	@RequestMapping("/formulateCohort")
 	@ResponseBody
@@ -46,9 +49,16 @@ public class QueryFormulationController {
 	@RequestMapping("/storeInATLAS")
 	@ResponseBody
 	public Map<String, Object> storeCohortInATLAS(HttpSession httpSession, String conceptsets){
+		Document doc = (Document) httpSession.getAttribute("allcriteria");
 		Map<String,Object> map=new HashMap<String,Object>();
 		JSONObject expression=(JSONObject) httpSession.getAttribute("jsonResult");
-		Integer cohortId=this.qfService.storeInATLAS(expression);
+		List<String> initial_events=ieService.getAllInitialEvents(doc);
+		StringBuffer sb=new StringBuffer();
+		for(String e:initial_events){
+			sb.append(e+" ");
+		}
+		
+		Integer cohortId=this.qfService.storeInATLAS(expression,"[C2Q]"+sb.toString());
 		map.put("id", cohortId);
 		return map;
 	}
