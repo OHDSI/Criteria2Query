@@ -104,7 +104,8 @@ public class ConceptMapping {
 		long t1=System.currentTimeMillis();  
 		JSONObject jo=new JSONObject();
 		SimpleDateFormat df = new SimpleDateFormat("yyyy_MM_dd_HH_mm");
-		jo.accumulate("name", term+"_created_by_"+GlobalSetting.c2qversion+"_[confidence_"+res[1]+"]");
+		jo.accumulate("name", "[C2Q]"+term);
+		//jo.accumulate("name", "[C2Q]"+term+"_[cs_"+res[1]+"]");
 		jo.accumulate("id", 23333);
 		jo.accumulate("createdBy", GlobalSetting.c2qversion);
 		String result=HttpUtil.doPost(conceptseturl, jo.toString());
