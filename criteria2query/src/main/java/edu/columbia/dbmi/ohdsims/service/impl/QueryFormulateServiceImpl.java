@@ -554,10 +554,10 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 						}else if(m.size()==1&&((mvalue.indexOf("<")!=-1)||(mvalue.indexOf("lower")!=-1)||(mvalue.indexOf("smaller")!=-1))){
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "lt");
-						}else if(mvalue.indexOf("≥")!=-1){
+						}else if(mvalue.indexOf("≥")!=-1||((mvalue.indexOf("greater")!=-1)&&(mvalue.indexOf("equal")!=-1))){
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "gte");
-						}else if(mvalue.indexOf("≤")!=-1){
+						}else if(mvalue.indexOf("≤")!=-1||((mvalue.indexOf("less")!=-1)&&(mvalue.indexOf("equal")!=-1))){
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "lte");
 						}
