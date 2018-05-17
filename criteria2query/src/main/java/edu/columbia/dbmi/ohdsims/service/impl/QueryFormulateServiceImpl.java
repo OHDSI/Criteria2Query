@@ -534,6 +534,7 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 			Map<String,String> attributes=cdmcriterion.getAttributes();
 			if(attributes!=null){
 				String mvalue=attributes.get("measure_value");
+				System.out.println("mvalut="+mvalue);
 				JSONObject jo=new JSONObject();
 				if(mvalue!=null){					
 					List<Double> m=NumericConvert.recognizeNumbersAdvanced(mvalue);
@@ -548,20 +549,27 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 								jo.accumulate("Extent",m.get(1));
 								jo.accumulate("Op", "bt");
 							}
-						}else if(m.size()==1&&((mvalue.indexOf(">")!=-1)||(mvalue.indexOf("greater")!=-1)||(mvalue.indexOf("higher")!=-1))){
+						}else if(m.size()==1){
+							System.out.println("1 number");
+						if(((mvalue.indexOf(">")!=-1)||(mvalue.indexOf("greater")!=-1)||(mvalue.indexOf("higher")!=-1))){
+							System.out.println(">");
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "gt");
-						}else if(m.size()==1&&((mvalue.indexOf("<")!=-1)||(mvalue.indexOf("lower")!=-1)||(mvalue.indexOf("smaller")!=-1))){
+						}else if(((mvalue.indexOf("<")!=-1)||(mvalue.indexOf("lower")!=-1)||(mvalue.indexOf("smaller")!=-1))){
+							System.out.println("<");
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "lt");
-						}else if(mvalue.indexOf("≥")!=-1||((mvalue.indexOf("greater")!=-1)&&(mvalue.indexOf("equal")!=-1))){
+						}else if((mvalue.indexOf("≥")!=-1||((mvalue.indexOf("greater")!=-1)&&(mvalue.indexOf("equal")!=-1)))){
+							System.out.println(">=");
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "gte");
-						}else if(mvalue.indexOf("≤")!=-1||((mvalue.indexOf("less")!=-1)&&(mvalue.indexOf("equal")!=-1))){
+						}else if((mvalue.indexOf("≤")!=-1||((mvalue.indexOf("less")!=-1)&&(mvalue.indexOf("equal")!=-1)))){
+							System.out.println("<=");
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "lte");
 						}
 					}
+				}
 				}
 				conceptsetid.accumulate("ValueAsNumber", jo);
 			}
@@ -609,20 +617,27 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 								jo.accumulate("Extent",m.get(1));
 								jo.accumulate("Op", "bt");
 							}
-						}else if(m.size()==1&&((mvalue.indexOf(">")!=-1)||(mvalue.indexOf("greater")!=-1)||(mvalue.indexOf("higher")!=-1))){
+						}else if(m.size()==1){
+							System.out.println("1 number");
+						if(((mvalue.indexOf(">")!=-1)||(mvalue.indexOf("greater")!=-1)||(mvalue.indexOf("higher")!=-1))){
+							System.out.println(">");
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "gt");
-						}else if(m.size()==1&&((mvalue.indexOf("<")!=-1)||(mvalue.indexOf("lower")!=-1)||(mvalue.indexOf("smaller")!=-1))){
+						}else if(((mvalue.indexOf("<")!=-1)||(mvalue.indexOf("lower")!=-1)||(mvalue.indexOf("smaller")!=-1))){
+							System.out.println("<");
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "lt");
-						}else if(mvalue.indexOf("≥")!=-1){
+						}else if((mvalue.indexOf("≥")!=-1||((mvalue.indexOf("greater")!=-1)&&(mvalue.indexOf("equal")!=-1)))){
+							System.out.println(">=");
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "gte");
-						}else if(mvalue.indexOf("≤")!=-1){
+						}else if((mvalue.indexOf("≤")!=-1||((mvalue.indexOf("less")!=-1)&&(mvalue.indexOf("equal")!=-1)))){
+							System.out.println("<=");
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "lte");
 						}
 					}
+				}
 				}
 				conceptsetid.accumulate("ValueAsNumber", jo);
 			}
