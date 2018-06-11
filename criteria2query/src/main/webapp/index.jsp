@@ -331,7 +331,7 @@
 									</div>
 									<div class="form-group col-sm-4 col-md-4 col-lg-4">
 										<div class="checkbox">
-											<label> <input id="abbr" type="checkbox"> Abbreviation Extension (UMLS)
+											<label> <input id="abbr" type="checkbox" checked> Abbreviation Extension (UMLS)
 											</label>
 										</div>
 									</div>
