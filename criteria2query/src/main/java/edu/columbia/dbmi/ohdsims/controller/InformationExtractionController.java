@@ -1,6 +1,8 @@
 package edu.columbia.dbmi.ohdsims.controller;
 
 import java.io.BufferedOutputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -34,8 +36,13 @@ import edu.columbia.dbmi.ohdsims.tool.CoreNLP;
 import edu.columbia.dbmi.ohdsims.tool.FeedBackTool;
 import edu.columbia.dbmi.ohdsims.tool.NERTool;
 import edu.columbia.dbmi.ohdsims.tool.NegReTool;
+import edu.columbia.dbmi.ohdsims.util.IOUtil;
 import edu.columbia.dbmi.ohdsims.util.StringUtil;
 import edu.columbia.dbmi.ohdsims.util.TemporalNormalize;
+import edu.columbia.dbmi.ohdsims.util.WebUtil;
+import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.ling.SentenceUtils;
+import edu.stanford.nlp.process.DocumentPreprocessor;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -122,5 +129,57 @@ public class InformationExtractionController {
 			}
 		}
 
+	}
+	
+	@RequestMapping(value = "/getct", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public Map<String, Object> getCrteriafromCT(HttpSession httpSession, HttpServletRequest request, String nctid)
+			throws Exception {
+		String url = "https://clinicaltrials.gov/show/" + nctid + "?displayxml=true";
+		String response = WebUtil.getCTByNctid(nctid);
+		String[] criteria = WebUtil.parse(response);
+		StringBuffer insb = new StringBuffer();
+		StringBuffer exsb = new StringBuffer();
+		String gender = criteria[1];
+		String minimum_age = criteria[2];
+		String maxmum_age = criteria[3];
+		String sampling_method = criteria[4];
+		String study_pop = criteria[5];
+		String healthy_volunteers = criteria[6];
+		
+		
+		boolean flag = false;
+		String[] lines = criteria[0].split("\n");
+		StringBuffer sb = new StringBuffer();
+		for (int x = 1; x < lines.length; x++) {
+			if (lines[x - 1].trim().length() == 0) {
+				// System.out.println("iiiiin=" +
+				// removeMultiSpace(lines[x]));
+				String res = IOUtil.removeMultiSpace(lines[x]);
+				if (res.startsWith("-  ")) {
+					res = res.substring(3);
+				}
+				sb.append("\n" + res);
+			} else {
+				// System.out.println("add=" + removeMultiSpace(lines[x]));
+				sb.append(" " + IOUtil.removeMultiSpace(lines[x]));
+			}
+		}
+		//System.out.println("____________");
+		//System.out.println(sb.toString());
+		String ecstr = sb.toString();
+		String[] inc_exc=IOUtil.separateIncExc(ecstr);
+		Map<String, Object> map = null;
+		map = new HashMap<String, Object>();
+		map.put("gender", gender);
+		map.put("minimum_age", minimum_age);
+		map.put("maxmum_age", maxmum_age);
+
+		map.put("sampling_method", sampling_method);
+		map.put("study_pop", study_pop);
+		map.put("healthy_volunteers", healthy_volunteers);
+		map.put("inc", inc_exc[0]);
+		map.put("exc", inc_exc[1]);// ----
+		return map;
 	}
 }

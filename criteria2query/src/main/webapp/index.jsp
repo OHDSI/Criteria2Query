@@ -190,6 +190,30 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion" href="#collapseNCT" aria-expanded="false" class="collapsed"><span class="glyphicon glyphicon-download-alt"></span>
+						Criteria Resource
+						</a>
+					</h4>
+				</div>
+				<div id="collapseNCT" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+				<div class="panel-body">
+					<div class="form-group col-sm-12 col-md-12 col-lg-12">
+								<form class="form-inline">
+									<div class="form-group">
+									<label>Eligibility Criteria from ClinicalTrials.gov</label>
+								<input class="input-sm" type="text" id="nctid" name="nctid" placeholder="e.g., NCT01640873">
+								<a class="btn btn-primary" id="fetchct" role="button">Fetch</a>
+								</div>
+								</form>
+							</div>	
+				</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-12 col-md-12 col-lg-12">	
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
 						<a data-toggle="collapse" data-parent="#accordion" 
 				   				href="#collapseOne"><span class="glyphicon glyphicon-dashboard"></span>
 						Initial Events (Optional)
