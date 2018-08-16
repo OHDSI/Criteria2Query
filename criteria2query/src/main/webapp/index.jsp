@@ -525,7 +525,7 @@
 					});
 			$.ajax({
 				type : 'POST',
-				url : basePath + "nlpmethod/getct",
+				url : basePath + "ie/getct",
 				data : {
 					'nctid' : nctid
 				},
