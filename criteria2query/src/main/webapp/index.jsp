@@ -200,7 +200,7 @@
 					<div class="form-group col-sm-12 col-md-12 col-lg-12">
 								<form class="form-inline">
 									<div class="form-group">
-									<label>Eligibility Criteria from ClinicalTrials.gov</label>
+									<label>Please input a NCTID :</label>
 								<input class="input-sm" type="text" id="nctid" name="nctid" placeholder="e.g., NCT01640873">
 								<a class="btn btn-primary" id="fetchct" role="button">Fetch</a>
 								</div>
