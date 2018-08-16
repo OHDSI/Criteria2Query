@@ -190,12 +190,12 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h4 class="panel-title">
-						<a data-toggle="collapse" data-parent="#accordion" href="#collapseNCT" aria-expanded="false" class="collapsed"><span class="glyphicon glyphicon-download-alt"></span>
+						<a data-toggle="collapse" data-parent="#accordion" href="#collapseNCT" ><span class="glyphicon glyphicon-download-alt"></span>
 						Criteria Resource
 						</a>
 					</h4>
 				</div>
-				<div id="collapseNCT" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+				<div id="collapseNCT" class="panel-collapse collapse in">
 				<div class="panel-body">
 					<div class="form-group col-sm-12 col-md-12 col-lg-12">
 								<form class="form-inline">
