@@ -19,7 +19,6 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public class HttpUtil {
-	//final static HttpHost proxy = new HttpHost("sg5.cumc.columbia.edu", 8080, "HTTP");
 	public static String doPost(String url, String content) {
 		try {
 			HttpPost httppost = new HttpPost(url);
@@ -62,9 +61,7 @@ public class HttpUtil {
 
 	public static void doPut(String urlstr,String json) {
 		try {
-			//Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("sg5.cumc.columbia.edu", 8080));
 	        URL url = new URL(urlstr);
-	        //HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxy);
 	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 	        connection.setRequestMethod("PUT");
 	        connection.setDoOutput(true);
@@ -83,10 +80,9 @@ public class HttpUtil {
 	
 	public static void doDelete(String urlstr,String json) {
 		try {
-			//Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("sg5.cumc.columbia.edu", 8080));
+			
 	        URL url = new URL(urlstr);
 	        System.out.println("delete!!!");
-	        //HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxy);
 	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 	        connection.setRequestMethod("DELETE");
 	        connection.setDoOutput(true);
