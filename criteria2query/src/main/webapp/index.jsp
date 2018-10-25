@@ -224,7 +224,7 @@
 				<div class="panel-body">
 							<div class="form-group">
 								<span class="help-block"><strong>Initial event
-										cohort:</strong>Events are recorded time-stamped observations for the
+										cohort:</strong> Events are recorded time-stamped observations for the
 									persons, such as drug exposures, conditions, procedures,
 									measurements and visits. All events have a start date and end
 									date, though some events may have a start date and end date
@@ -367,9 +367,9 @@
 		</div>
 		<div class="col-sm-12 col-md-12 col-lg-12">	
 			<p class="masthead-button-links">
-				<a class="btn btn-success" id="start" target="_blank" role="button">&nbsp;&nbsp;Parsing&nbsp;&nbsp;</a>
+				<a class="btn btn-success" id="start" target="_blank" role="button">&nbsp;&nbsp;Parse&nbsp;&nbsp;</a>
 				<a class="btn btn-info" id="reset" role="button">&nbsp;&nbsp;&nbsp;Reset&nbsp;&nbsp;&nbsp;</a>
-				<a class="btn btn-warning" id="auto" role="button">&nbsp;&nbsp;One-Button Start&nbsp;&nbsp;</a>	
+				<a class="btn btn-warning" id="auto" role="button">&nbsp;&nbsp;Generate Query&nbsp;&nbsp;</a>	
 			</p>  	
 		</div>	
 			<div class="col-sm-12 col-md-12 col-lg-12">
@@ -624,9 +624,9 @@
 		}
 		
 		function parse() {
-			var inc = $("#incriteria").val();
-			var exc = $("#excriteria").val();
-			var initialevent = $("#initialevent").val();
+			var inc = $("#incriteria").val().trim().replace(/^\s+|\s+$/g,'').trim();
+			var exc = $("#excriteria").val().trim().replace(/^\s+|\s+$/g,'').trim();
+			var initialevent = $("#initialevent").val().trim().replace(/^\s+|\s+$/g,'').trim();
 			var rule=$("#rule").is(':checked');
 			var ml=$("#ml").is(':checked');
 			var abb=$("#abbr").is(':checked');
