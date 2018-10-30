@@ -18,11 +18,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <!-- Site CSS -->
 <!--  <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> -->
 <link href="../css/bootstrap.min.css" rel="stylesheet">
-<link
-	href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"
-	rel="stylesheet">
-<link href="https://static.bootcss.com/www/assets/css/site.min.css?v5"
-	rel="stylesheet">
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="../css/site.min.css?v5" rel="stylesheet">
 <style>
 .job-hot {
 	position: absolute;
@@ -86,7 +83,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </script>
 </head>
 <body>
-
 	<div class="navbar navbar-inverse navbar-fixed-top navback">
 		<div class="container">
 			<div class="navbar-header">
@@ -127,7 +123,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div class="container">
 		<div class="row footer-top">
 			<div class="col-sm-6 col-lg-6">
-			    <p><strong>Criteria2query v0.8.2.1</strong></p>
+			    <p><strong>Criteria2query v0.8.2.3</strong></p>
 				<p>This website was developed by Chi Yuan,Patrick Ryan, Yixuan Guo, Chunhua Weng</p>
 			</div>
 		</div>
@@ -340,7 +336,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									+ i
 									+ "\"class=\"pull-right btn btn-success\" onclick=\"toAtlas('"
 									+i
-									+ "')\">Manually Create</button><button class=\"pull-right btn btn-primary \" onclick=\"refreshconceptset()\">Sync</button><button class=\"pull-right btn btn-danger \" onclick=\"ignoreTerm('"
+									+ "')\">Manually Create</button><button class=\"pull-right btn btn-primary \" onclick=\"refreshconceptset()\">Refresh</button><button class=\"pull-right btn btn-danger \" onclick=\"ignoreTerm('"
 									+conceptsetname[i]+"')\">Ignore</button></h4></div><table id=\"conceptsettable"+i+"\"></table> ";
 						}
 						$("#candidates").html(nav1);
