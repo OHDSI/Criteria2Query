@@ -416,10 +416,11 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 						if(m!=null){
 							System.out.println("m_size="+m.size());
 							System.out.println("number="+m.get(0));
-							if(m.size()==1 && (((agerangestr.indexOf(">")!=-1 )&&agerangestr.indexOf("<")==-1)||(((agerangestr.indexOf("older") !=-1))&&(agerangestr.indexOf("younger") ==-1)))){
+							System.err.println("str="+agerangestr);
+							if(m.size()==1 && (((agerangestr.indexOf(">")!=-1 )&&agerangestr.indexOf("<")==-1&&agerangestr.indexOf("=")==-1)||(((agerangestr.indexOf("older") !=-1))&&(agerangestr.indexOf("younger") ==-1)))){
 								jo.accumulate("Value",m.get(0));
 								jo.accumulate("Op", "gt");
-							}else if(m.size()==1 &&((agerangestr.indexOf("<")!=-1 )&&agerangestr.indexOf(">")==-1)||((agerangestr.indexOf("younger") !=-1)&&( agerangestr.indexOf("older") ==-1))){
+							}else if(m.size()==1 &&((agerangestr.indexOf("<")!=-1 )&&agerangestr.indexOf(">")==-1&&agerangestr.indexOf("=")==-1)||((agerangestr.indexOf("younger") !=-1)&&( agerangestr.indexOf("older") ==-1))){
 								jo.accumulate("Value",m.get(0));
 								jo.accumulate("Op", "lt");
 							}else if(m.size()==2){
@@ -430,7 +431,9 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 								System.out.println("lte=====>");
 								jo.accumulate("Value",m.get(0));
 								jo.accumulate("Op", "lte");
-							}else if(m.size()==1 && (agerangestr.indexOf("≥")!=-1 )){
+							}else if((m.size()==1 && (agerangestr.indexOf("≥")!=-1 )||((agerangestr.indexOf(">")!=-1)&&(agerangestr.indexOf("=")!=-1)))){
+								System.err.println("gte=========================================>");
+							
 								System.out.println("gte=====>");
 								jo.accumulate("Value",m.get(0));
 								jo.accumulate("Op", "gte");
@@ -551,15 +554,15 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 							}
 						}else if(m.size()==1){
 							System.out.println("1 number");
-						if(((mvalue.indexOf(">")!=-1)||(mvalue.indexOf("greater")!=-1)||(mvalue.indexOf("higher")!=-1))){
+						if(((mvalue.indexOf("=")==-1&& mvalue.indexOf(">")!=-1)||(mvalue.indexOf("greater")!=-1)||(mvalue.indexOf("higher")!=-1))){
 							System.out.println(">");
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "gt");
-						}else if(((mvalue.indexOf("<")!=-1)||(mvalue.indexOf("lower")!=-1)||(mvalue.indexOf("smaller")!=-1))){
+						}else if((mvalue.indexOf("=")==-1 &&mvalue.indexOf("<")!=-1)||(mvalue.indexOf("lower")!=-1)||(mvalue.indexOf("smaller")!=-1)){
 							System.out.println("<");
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "lt");
-						}else if((mvalue.indexOf("≥")!=-1||((mvalue.indexOf("greater")!=-1)&&(mvalue.indexOf("equal")!=-1)))){
+						}else if((mvalue.indexOf("≥")!=-1)||((mvalue.indexOf("greater")!=-1)&&(mvalue.indexOf("equal")!=-1))||((mvalue.indexOf(">")!=-1)&&(mvalue.indexOf("=")!=-1))){
 							System.out.println(">=");
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "gte");
@@ -619,19 +622,19 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 							}
 						}else if(m.size()==1){
 							System.out.println("1 number");
-						if(((mvalue.indexOf(">")!=-1)||(mvalue.indexOf("greater")!=-1)||(mvalue.indexOf("higher")!=-1))){
+						if(((mvalue.indexOf(">")!=-1&&mvalue.indexOf("=")==-1)||(mvalue.indexOf("greater")!=-1)||(mvalue.indexOf("higher")!=-1))){
 							System.out.println(">");
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "gt");
-						}else if(((mvalue.indexOf("<")!=-1)||(mvalue.indexOf("lower")!=-1)||(mvalue.indexOf("smaller")!=-1))){
+						}else if(((mvalue.indexOf("<")!=-1&&mvalue.indexOf("=")==-1)||(mvalue.indexOf("lower")!=-1)||(mvalue.indexOf("smaller")!=-1))){
 							System.out.println("<");
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "lt");
-						}else if((mvalue.indexOf("≥")!=-1||((mvalue.indexOf("greater")!=-1)&&(mvalue.indexOf("equal")!=-1)))){
+						}else if((mvalue.indexOf("≥")!=-1)||((mvalue.indexOf("greater")!=-1)&&(mvalue.indexOf("equal")!=-1))||((mvalue.indexOf(">")!=-1)&&(mvalue.indexOf("=")!=-1))){
 							System.out.println(">=");
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "gte");
-						}else if((mvalue.indexOf("≤")!=-1||((mvalue.indexOf("less")!=-1)&&(mvalue.indexOf("equal")!=-1)))){
+						}else if((mvalue.indexOf("≤")!=-1)||((mvalue.indexOf("lower")!=-1)&&(mvalue.indexOf("equal")!=-1))||((mvalue.indexOf(">")!=-1)&&(mvalue.indexOf("=")!=-1))){//(mvalue.indexOf("≤")!=-1)||((mvalue.indexOf("greater")!=-1)&&(mvalue.indexOf("equal")!=-1))||((mvalue.indexOf(">")!=-1)&&(mvalue.indexOf("=")!=-1))
 							System.out.println("<=");
 							jo.accumulate("Value",m.get(0));
 							jo.accumulate("Op", "lte");
