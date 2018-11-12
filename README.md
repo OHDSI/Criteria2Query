@@ -9,10 +9,11 @@
 ### Name Entity Recognition
 We implemented our NER methods based on a sequence labeling method, Condition Random Fields (CRF), in CoreNLP with an empirical feature set. After NER, all entities were extracted from free-text criteria with predicted categories assigned automatically.
 
-|Category|Definition|Examples|
-| ------------- |:-------------:| -----:|
+||Category|Definition|Examples|
+|| ------------- |:-------------:| -----:|
 | Entity	|Condition	|Conditions are records of a Person suggesting the presence of a disease or medical condition stated as a diagnosis, a sign or a symptom.	|Type 2 diabetes mellitus, Alzheimer’s disease.|
-||-------|Drug	|Drugs are biochemical substances formulated in such ways that when administered to a Person it will exert a certain physiological effect. |Acetaminophen,
+|| ------------- |:-------------:| -----:|
+||Drug	|Drugs are biochemical substances formulated in such ways that when administered to a Person it will exert a certain physiological effect. |Acetaminophen,
 Furosemide|
 
 
