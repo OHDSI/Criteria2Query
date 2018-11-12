@@ -416,11 +416,27 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 						if(m!=null){
 							System.out.println("m_size="+m.size());
 							System.out.println("number="+m.get(0));
-							System.err.println("str="+agerangestr);
-							if(m.size()==1 && (((agerangestr.indexOf(">")!=-1 )&&agerangestr.indexOf("<")==-1&&agerangestr.indexOf("=")==-1)||(((agerangestr.indexOf("older") !=-1))&&(agerangestr.indexOf("younger") ==-1)))){
+							System.err.println("Age str="+agerangestr);
+							agerangestr=agerangestr.toLowerCase();
+							if(m.size()==1 && 
+									(
+											(agerangestr.indexOf(">")!=-1 &&agerangestr.indexOf("<")==-1&&agerangestr.indexOf("=")==-1)
+											||
+											(agerangestr.indexOf("older") !=-1&&agerangestr.indexOf("younger") ==-1)
+									)
+								)
+							{
+								System.out.println("gt-==?");
 								jo.accumulate("Value",m.get(0));
 								jo.accumulate("Op", "gt");
-							}else if(m.size()==1 &&((agerangestr.indexOf("<")!=-1 )&&agerangestr.indexOf(">")==-1&&agerangestr.indexOf("=")==-1)||((agerangestr.indexOf("younger") !=-1)&&( agerangestr.indexOf("older") ==-1))){
+							}else if(m.size()==1 && 
+										(
+												(agerangestr.indexOf("<")!=-1 &&agerangestr.indexOf(">")==-1&&agerangestr.indexOf("=")==-1)
+												||
+												(agerangestr.indexOf("younger") !=-1&&agerangestr.indexOf("older") ==-1)
+										)
+									)
+							{
 								jo.accumulate("Value",m.get(0));
 								jo.accumulate("Op", "lt");
 							}else if(m.size()==2){
@@ -605,6 +621,7 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 				JSONObject jo=new JSONObject();
 				if(mvalue!=null){					
 					List<Double> m=NumericConvert.recognizeNumbersAdvanced(mvalue);
+					mvalue=mvalue.toLowerCase();
 					if(m!=null){
 						if(m.size()==2){
 							if(mvalue.toLowerCase().contains("or")&&mvalue.contains(">")&&mvalue.contains("<")){
