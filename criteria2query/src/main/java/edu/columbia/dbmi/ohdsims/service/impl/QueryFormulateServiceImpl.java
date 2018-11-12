@@ -607,7 +607,7 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 					List<Double> m=NumericConvert.recognizeNumbersAdvanced(mvalue);
 					if(m!=null){
 						if(m.size()==2){
-							if(mvalue.toLowerCase().contains("or")){
+							if(mvalue.toLowerCase().contains("or")&&mvalue.contains(">")&&mvalue.contains("<")){
 								jo.accumulate("Value",m.get(0));
 								jo.accumulate("Extent",m.get(1));
 								jo.accumulate("Op", "!bt");
