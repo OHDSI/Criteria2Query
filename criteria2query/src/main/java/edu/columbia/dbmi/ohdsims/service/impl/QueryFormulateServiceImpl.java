@@ -427,14 +427,10 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 								jo.accumulate("Value",m.get(0));
 								jo.accumulate("Extent",m.get(1));
 								jo.accumulate("Op", "bt");
-							}else if(m.size()==1 && (agerangestr.indexOf("≤")!=-1 )){
-								System.out.println("lte=====>");
+							}else if(m.size()==1 && ((agerangestr.indexOf("≤")!=-1 )||(agerangestr.indexOf("at most")!=-1)||((agerangestr.indexOf("<")!=-1)&&(agerangestr.indexOf("=")!=-1)))){
 								jo.accumulate("Value",m.get(0));
 								jo.accumulate("Op", "lte");
-							}else if((m.size()==1 && (agerangestr.indexOf("≥")!=-1 )||((agerangestr.indexOf(">")!=-1)&&(agerangestr.indexOf("=")!=-1)))){
-								System.err.println("gte=========================================>");
-							
-								System.out.println("gte=====>");
+							}else if(m.size()==1 && ((agerangestr.indexOf("≥")!=-1 )||(agerangestr.indexOf("at least")!=-1)||((agerangestr.indexOf(">")!=-1)&&(agerangestr.indexOf("=")!=-1)))){
 								jo.accumulate("Value",m.get(0));
 								jo.accumulate("Op", "gte");
 							}
