@@ -1,6 +1,9 @@
 # Criteria2Query
 [In Development] An application to parse freetext inclusion criteria and produce a structured cohort definition that can be executed against OMOP CDM
 
+### [Criteria2Query Online Demo](http://www.ohdsi.org/web/criteria2query/)
+
+### Criteria2Query Introduction
 [![Criteria2Query instruction](https://img.youtube.com/vi/EYN2Md-DCR8/0.jpg)](https://www.youtube.com/watch?v=EYN2Md-DCR8)
 
 
