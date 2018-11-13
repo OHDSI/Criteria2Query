@@ -21,5 +21,13 @@ We developed a logic detection step following the information extraction pipelin
 
 ## Query Formulation
 
+### Entity Normalization
+We wrapped a lucene-based OMOP mapping tool called Usagi as a web service that queries entity terms and their domains to map terms to OMOP standard concepts. Using OHDSI APIs , we leverage the rich hierarchical relations among concepts in the OMOP CDM to include all descendants for condition concepts and all drugs sharing the same ingredient for drug concepts.
+
+### Logic Translation
+We developed a logic translation component in Criteria2Query to translate logic within structured criteria to the target data model. In cohort definitions in the OMOP CDM, the logic relations of “And” and “Or” are represented by the templates “have all of the following criteria” and “have any of the following criteria”, respectively. Exclusion criteria are represented by “with exactly 0 using all occurrences”. 
+
+### Attribute Normalization
+We adapted a library for recognizing and normalizing time expressions, SUTime, to standardized temporal expressions into TIMEX3 format first. We then use regular expressions to transform temporal information in TIMEX3 format into the target CDM format. We also developed a heuristic method for the numeric normalization using regular expressions to fill the results in the target format. Both temporal and numeric attributes are linked to their related criteria based on relation extraction results.
 
 ### [Criteria2Query Chat Room](https://gitter.im/Criteria2query/Lobby#)
