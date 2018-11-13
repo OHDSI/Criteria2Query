@@ -4,7 +4,7 @@
 ### [Criteria2Query Online Demo](http://www.ohdsi.org/web/criteria2query/)
 
 ### Criteria2Query Introduction
-[![Criteria2Query instruction](https://img.youtube.com/vi/EYN2Md-DCR8/0.jpg)](https://www.youtube.com/watch?v=EYN2Md-DCR8)
+[![Criteria2Query instruction](https://imgur.com/CshfWd4)](https://www.youtube.com/watch?v=EYN2Md-DCR8)
 
 
 ## Information Extraction
