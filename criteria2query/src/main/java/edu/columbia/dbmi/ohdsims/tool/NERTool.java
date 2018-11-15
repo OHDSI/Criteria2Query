@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import edu.columbia.dbmi.ohdsims.pojo.Cdmentity;
 import edu.columbia.dbmi.ohdsims.pojo.GlobalSetting;
 import edu.columbia.dbmi.ohdsims.pojo.Term;
+import edu.columbia.dbmi.ohdsims.util.HttpUtil;
 import edu.columbia.dbmi.ohdsims.util.StringUtil;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ie.crf.CRFClassifier;
@@ -23,11 +24,13 @@ import edu.stanford.nlp.trees.PennTreebankLanguagePack;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreebankLanguagePack;
 import edu.stanford.nlp.trees.TypedDependency;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 public class NERTool {
 	AbstractSequenceClassifier<CoreLabel> ner=CRFClassifier.getClassifierNoExceptions(GlobalSetting.crf_model);
 	public static final String grammars = GlobalSetting.dependence_model;
-	
+	private final static String diclookup = GlobalSetting.concepthub+"/omop/searchOneEntityByTerm";
 
 	public static void train(String traindatapath,String targetpath){
 		long startTime = System.nanoTime();
@@ -129,6 +132,30 @@ public class NERTool {
 		results=results.replace("<0>", "");
 		results=results.replace("</0>", "");
 		return results;
+	}
+	
+	public String nerByDic(String str){
+		String res=str;
+		JSONObject jo=new JSONObject();
+		jo.accumulate("term", str);
+		
+		String result=HttpUtil.doPost(diclookup, jo.toString());
+		System.out.println("result="+result);
+		JSONObject bestconcept=JSONObject.fromObject(result);
+		try{
+			System.out.println("matchScore="+bestconcept.getDouble("matchScore"));
+			if(bestconcept.getDouble("matchScore")>0.75)
+			{
+				JSONObject concept_jo=bestconcept.getJSONObject("concept");
+				String domain=concept_jo.getString("domainId");
+				res="<"+domain+">"+str+"</"+domain+">";
+			}
+				
+		}catch(Exception ex){
+			
+		}
+		System.out.println("dic_result="+res);
+		return res;
 	}
 	
 	
