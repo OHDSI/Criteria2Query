@@ -22,6 +22,11 @@ public class NumericConvert {
 	}
 	public static List<Double> recognizeNumbersAdvanced(String a) {
 		System.out.println("to be matched-->"+a);
+		if(a.contains("(")){
+			int start=a.indexOf("(");
+			a=a.substring(0,start);
+		}
+		System.out.println("after remove "+a);
 		List<Double> ssi = new ArrayList<Double>();
 		Pattern pattern = Pattern.compile("[\\d\\.]+");
 		Matcher matcher = pattern.matcher(a);
