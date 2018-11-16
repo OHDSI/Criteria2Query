@@ -1,8 +1,10 @@
 # Criteria2Query
-[In Development] An application to parse freetext inclusion criteria and produce a structured cohort definition that can be executed against OMOP CDM
 [![](https://img.shields.io/badge/online--demo-available-brightgreen.svg)](http://www.ohdsi.org/web/criteria2query/)
 [![](https://img.shields.io/badge/introduction--video-available-brightgreen.svg)](https://www.youtube.com/watch?v=EYN2Md-DCR8)
 [![](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Criteria2query/Lobby#)
+
+
+[In Development] An application to parse freetext inclusion criteria and produce a structured cohort definition that can be executed against OMOP CDM
 
 
 ### [Criteria2Query Online Demo](http://www.ohdsi.org/web/criteria2query/)
