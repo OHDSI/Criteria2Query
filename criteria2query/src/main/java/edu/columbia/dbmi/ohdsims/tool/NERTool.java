@@ -1,17 +1,32 @@
 package edu.columbia.dbmi.ohdsims.tool;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import edu.columbia.dbmi.ohdsims.pojo.Cdmentity;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import com.hankcs.algorithm.AhoCorasickDoubleArrayTrie;
+import com.hankcs.algorithm.AhoCorasickDoubleArrayTrie.Hit;
+
 import edu.columbia.dbmi.ohdsims.pojo.GlobalSetting;
+import edu.columbia.dbmi.ohdsims.pojo.Sentence;
 import edu.columbia.dbmi.ohdsims.pojo.Term;
+import edu.columbia.dbmi.ohdsims.util.FileUtil;
 import edu.columbia.dbmi.ohdsims.util.HttpUtil;
-import edu.columbia.dbmi.ohdsims.util.StringUtil;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ie.crf.CRFClassifier;
 import edu.stanford.nlp.ling.CoreLabel;
@@ -24,14 +39,52 @@ import edu.stanford.nlp.trees.PennTreebankLanguagePack;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreebankLanguagePack;
 import edu.stanford.nlp.trees.TypedDependency;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public class NERTool {
 	AbstractSequenceClassifier<CoreLabel> ner=CRFClassifier.getClassifierNoExceptions(GlobalSetting.crf_model);
 	public static final String grammars = GlobalSetting.dependence_model;
 	private final static String diclookup = GlobalSetting.concepthub+"/omop/searchOneEntityByTerm";
-
+	static AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
+	static HashMap<String,String> dir=new HashMap<String,String>();
+	
+	public NERTool(){
+		try {
+			
+			Resource acdat_res = new ClassPathResource(GlobalSetting.rule_base_acdat_model);
+	        ObjectInputStream ois;
+			ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(new FileInputStream(acdat_res.getFile())));
+			acdat =(AhoCorasickDoubleArrayTrie<String>)ois.readObject();
+			ois.close();
+			Resource dir_res = new ClassPathResource(GlobalSetting.rule_base_dict_model);
+			ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(new FileInputStream(dir_res.getFile())));
+			dir =(HashMap<String, String>)ois.readObject();
+			ois.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args) throws Exception{
+		NERTool ner=new NERTool();
+		String text="Patients with pregnancy test positive .";
+		Sentence sent = new Sentence(text);
+		String crf_results=sent.getText();
+		crf_results = ner.nerByCrf(sent.getText());
+		System.out.println("crf_results="+crf_results);
+		List<Term> terms = ner.formulateNerResult(sent.getText(), crf_results);
+		ner.nerEnhancedByACAlgorithm(text, terms);
+	}
+	
+	
+	
 	public static void train(String traindatapath,String targetpath){
 		long startTime = System.nanoTime();
 
@@ -126,6 +179,109 @@ public class NERTool {
 		return terms;
 	}
 	
+	public List<Term> nerEnhancedByACAlgorithm(String orignialstr,List<Term> terms){
+		List<AhoCorasickDoubleArrayTrie.Hit<String>> wordList = acdat.parseText(orignialstr.toLowerCase());
+		Integer last_start = 0;
+		Integer last_end = 0;
+		List<AhoCorasickDoubleArrayTrie.Hit<String>> longest = new ArrayList<AhoCorasickDoubleArrayTrie.Hit<String>>();
+		for (Hit<String> s : wordList) {
+			if ((s.begin <= last_start) && (s.end >= last_end)) {
+				if (longest.size() > 0) {
+					longest.remove(longest.size() - 1);
+				}
+			} else if (s.begin >= last_start && s.end <= last_end) {
+				continue;
+			}
+			longest.add(s);
+			last_start = s.begin;
+			last_end = s.end;
+		}
+		List<Term> enhancedNERResults=new ArrayList<Term>();
+		
+		List<Term> dicResults=new ArrayList<Term>();
+		int temporalId=terms.size();
+		for(Hit<String> s : longest){
+			Term t=new Term();
+			t.setTermId(temporalId++);
+			t.setText(s.value.trim());
+			t.setStart_index(s.begin+1);
+			t.setEnd_index(s.end-1);
+			t.setCategorey(dir.get(s.value.toLowerCase().trim()));//look up dic for the Category
+			t.setNeg(false);
+			dicResults.add(t);
+			System.out.println(s.value+"\t"+s.begin+","+s.end+"\t"+dir.get(s.value.trim().toLowerCase()));
+		}
+		enhancedNERResults=mergeResultsfromRuleAndML(orignialstr,dicResults,terms);
+		return enhancedNERResults;
+	}
+	
+	/**
+	 * Note: Author only implemented a over-simple method, it could be optimized by Segment tree 
+	 * 
+	 * */
+	public List<Term> mergeResultsfromRuleAndML(String text, List<Term> ruleresults,List<Term> mlresults){
+		List<Term> termlist=new ArrayList<Term>();	
+		if(ruleresults!=null){
+			termlist.addAll(ruleresults);
+		}
+		if(mlresults!=null){
+			termlist.addAll(mlresults);
+		}
+		Collections.sort(termlist, new Comparator<Term>() {
+			public int compare(Term t1, Term t2) {
+				if (t1.getStart_index() < t2.getStart_index()) {
+					return -1;
+				}
+				if (t1.getStart_index() == t2.getStart_index()) {
+					return 0;
+				}
+				return 1;
+			}
+		});
+		
+		for(int k=0;k<termlist.size();k++){
+			if(termlist.get(k).getTermId()<mlresults.size()){
+				if((k+1)<termlist.size()){
+					if(termlist.get(k).getEnd_index()>=termlist.get(k+1).getEnd_index()){
+						termlist.remove(k+1);
+					}else {
+						if(termlist.get(k+1).getStart_index()<=termlist.get(k).getEnd_index()){
+							System.out.println("remove "+termlist.get(k).getText());
+							System.out.println("remove "+termlist.get(k).getText());
+							Term t=new Term();
+							t.setText(text.substring(termlist.get(k).getStart_index(), termlist.get(k+1).getEnd_index()));
+							t.setStart_index(termlist.get(k).getStart_index());
+							t.setEnd_index(termlist.get(k+1).getEnd_index());
+							t.setCategorey(termlist.get(k+1).getCategorey());
+							t.setNeg(false);
+							termlist.remove(k);
+							termlist.remove(k);
+							termlist.add(k,t);
+						}else{
+							continue;
+						}
+					}
+				}
+			}else{
+				if((k+1)<termlist.size()){
+					if(termlist.get(k).getEnd_index()>=termlist.get(k+1).getEnd_index()){
+						termlist.remove(k+1);
+					}else{
+						if(termlist.get(k+1).getStart_index()<=termlist.get(k).getEnd_index()){
+							termlist.remove(k+1);
+						}
+					}
+				}
+			}
+		}	
+		//System.out.println("=====Merged Results==========");
+		int tId=0;
+		for(Term t:termlist){
+			t.setTermId(tId++);
+			System.out.println(t.getTermId()+"\t"+t.getText()+"\t"+t.getStart_index()+","+t.getEnd_index()+"\t"+t.getCategorey());
+		}
+		return termlist;
+	}
 	
 	public String nerByCrf(String str) {
 		String results= ner.classifyWithInlineXML(str);
@@ -134,7 +290,7 @@ public class NERTool {
 		return results;
 	}
 	
-	public String nerByDic(String str){
+	public String nerByDicLookUp(String str){
 		String res=str;
 		JSONObject jo=new JSONObject();
 		jo.accumulate("term", str);

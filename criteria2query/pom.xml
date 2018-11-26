@@ -131,6 +131,11 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.1.41</version>
 		</dependency>
+		<dependency>
+			<groupId>com.hankcs</groupId>
+			<artifactId>aho-corasick-double-array-trie</artifactId>
+			<version>1.2.0</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/postgresql/postgresql -->
 		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 		<dependency>

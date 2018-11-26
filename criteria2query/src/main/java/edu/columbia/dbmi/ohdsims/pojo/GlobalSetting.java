@@ -9,6 +9,8 @@ public class GlobalSetting {
 	public final static String negatemodel="edu/columbia/dbmi/ohdsims/model/negex_triggers.txt";//all-c2q-model. //ec-ner-model.ser.gz
 	public final static String instancefile="edu/columbia/dbmi/ohdsims/model/100trialsrels4weka.arff";//all-c2q-model. //ec-ner-model.ser.gz
 	//public final static String dependence_model="edu/columbia/dbmi/ohdsims/model/wsjPCFG.ser.gz";
+	public final static String rule_base_acdat_model="edu/columbia/dbmi/ohdsims/model/rule_base_acdat_model.ser.gz";
+	public final static String rule_base_dict_model="edu/columbia/dbmi/ohdsims/model/rule_base_dict_model.ser.gz";
 	public final static String dependence_model="edu/columbia/dbmi/ohdsims/model/wsjPCFG.ser.gz";//edu/columbia/dbmi/ohdsims/model/wsjPCFG.ser.gz
 	public final static String opennlp_model_dir="";
 	public final static String[] alldomains={"Condition","Observation","Drug","Measurement","Demographic","Temporal","Value","Negation_cue","Procedure","Device"};

@@ -81,10 +81,10 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				s = s.replaceAll("-RSB-", "]");
 				s = s.replaceAll("-LCB-", "{");
 				s = s.replaceAll("-RCB-", "}");
-				Sentence sent = new Sentence(s);
+				Sentence sent = new Sentence(s+" ");
 				String crf_results=sent.getText();
 				if(s.trim().split(" ").length<3){
-					crf_results=nertool.nerByDic(sent.getText());
+					crf_results=nertool.nerByDicLookUp(sent.getText());
 				}
 				
 				if(crf_results.length()<=sent.getText().length()){
@@ -92,10 +92,13 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				}
 				System.out.println("crf_results="+crf_results);
 				List<Term> terms = nertool.formulateNerResult(sent.getText(), crf_results);
+				
+				//Aho–Corasick for rule-based screening
+				terms=nertool.nerEnhancedByACAlgorithm(sent.getText(),terms);
+				
 				terms=patchTermLevel(terms);	
 				String display = nertool.trans4display(sent.getText(),terms);
-				//String display = nertool.trans2Html(crf_results);
-								
+				//String display = nertool.trans2Html(crf_results);			
 				// displaying
 				sent.setTerms(terms);
 				sent.setDisplay(display);
