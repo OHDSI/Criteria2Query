@@ -16,6 +16,7 @@ import java.util.Properties;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.GZIPInputStream;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -41,6 +42,7 @@ import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreebankLanguagePack;
 import edu.stanford.nlp.trees.TypedDependency;
 import net.sf.json.JSONObject;
+import weka.core.SerializationHelper;
 
 public class NERTool {
 	AbstractSequenceClassifier<CoreLabel> ner=CRFClassifier.getClassifierNoExceptions(GlobalSetting.crf_model);
@@ -183,17 +185,18 @@ public class NERTool {
 		return terms;
 	}
 	
-	public List<Term> nerEnhancedByACAlgorithm(String orignialstr,List<Term> terms) throws IOException, ClassNotFoundException{
+	public List<Term> nerEnhancedByACAlgorithm(String orignialstr,List<Term> terms) throws Exception{
 		Resource fileRource1 = new ClassPathResource(GlobalSetting.rule_base_acdat_model);
 		Resource fileRource2 = new ClassPathResource(GlobalSetting.rule_base_dict_model);
-        ObjectInputStream ois;
-		ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(new FileInputStream( fileRource1.getFile())));
-		AhoCorasickDoubleArrayTrie<String> acdat =(AhoCorasickDoubleArrayTrie<String>)ois.readObject();
-		ois.close();
-//		Resource dir_res = new ClassPathResource(GlobalSetting.rule_base_dict_model);
-		ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(new FileInputStream( fileRource2.getFile())));
-		HashMap<String,String> dir =(HashMap<String, String>)ois.readObject();
-		ois.close();
+//        ObjectInputStream ois;
+//		ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(new FileInputStream( fileRource1.getFile())));
+		AhoCorasickDoubleArrayTrie<String> acdat =(AhoCorasickDoubleArrayTrie<String>) SerializationHelper.read(new GZIPInputStream(fileRource1.getInputStream()));
+//		ois.close();
+////		Resource dir_res = new ClassPathResource(GlobalSetting.rule_base_dict_model);
+//		ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(new FileInputStream( fileRource2.getFile())));
+		HashMap<String,String> dir =(HashMap<String, String>)SerializationHelper.read(new GZIPInputStream(fileRource2.getInputStream()));
+		//ois.close();
+		
 		
 		List<AhoCorasickDoubleArrayTrie.Hit<String>> wordList = acdat.parseText(orignialstr.toLowerCase());
 		Integer last_start = 0;
