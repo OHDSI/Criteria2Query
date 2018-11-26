@@ -46,8 +46,8 @@ public class NERTool {
 	AbstractSequenceClassifier<CoreLabel> ner=CRFClassifier.getClassifierNoExceptions(GlobalSetting.crf_model);
 	public static final String grammars = GlobalSetting.dependence_model;
 	private final static String diclookup = GlobalSetting.concepthub+"/omop/searchOneEntityByTerm";
-	static AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
-	static HashMap<String,String> dir=new HashMap<String,String>();
+	AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
+	HashMap<String,String> dir=new HashMap<String,String>();
 	
 	public NERTool(){
 		try {
@@ -76,16 +76,16 @@ public class NERTool {
 		}
 	}
 	
-	public static void main(String[] args) throws Exception{
-		NERTool ner=new NERTool();
-		String text="Patients with pregnancy test positive .";
-		Sentence sent = new Sentence(text);
-		String crf_results=sent.getText();
-		crf_results = ner.nerByCrf(sent.getText());
-		System.out.println("crf_results="+crf_results);
-		List<Term> terms = ner.formulateNerResult(sent.getText(), crf_results);
-		ner.nerEnhancedByACAlgorithm(text, terms);
-	}
+//	public static void main(String[] args) throws Exception{
+//		NERTool ner=new NERTool();
+//		String text="Patients with pregnancy test positive .";
+//		Sentence sent = new Sentence(text);
+//		String crf_results=sent.getText();
+//		crf_results = ner.nerByCrf(sent.getText());
+//		System.out.println("crf_results="+crf_results);
+//		List<Term> terms = ner.formulateNerResult(sent.getText(), crf_results);
+//		ner.nerEnhancedByACAlgorithm(text, terms);
+//	}
 	
 	
 	
