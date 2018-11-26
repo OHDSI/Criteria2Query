@@ -184,15 +184,14 @@ public class NERTool {
 	}
 	
 	public List<Term> nerEnhancedByACAlgorithm(String orignialstr,List<Term> terms) throws IOException, ClassNotFoundException{
-		InputStream fileInputStream = NERTool.class.getClassLoader().getResourceAsStream(GlobalSetting.rule_base_acdat_model);
-		InputStream fileInputStream2 = NERTool.class.getClassLoader().getResourceAsStream(GlobalSetting.rule_base_dict_model);
-
+		Resource fileRource1 = new ClassPathResource(GlobalSetting.rule_base_acdat_model);
+		Resource fileRource2 = new ClassPathResource(GlobalSetting.rule_base_dict_model);
         ObjectInputStream ois;
-		ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(fileInputStream));
+		ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(new FileInputStream( fileRource1.getFile())));
 		AhoCorasickDoubleArrayTrie<String> acdat =(AhoCorasickDoubleArrayTrie<String>)ois.readObject();
 		ois.close();
 //		Resource dir_res = new ClassPathResource(GlobalSetting.rule_base_dict_model);
-		ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(fileInputStream2));
+		ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(new FileInputStream( fileRource2.getFile())));
 		HashMap<String,String> dir =(HashMap<String, String>)ois.readObject();
 		ois.close();
 		
