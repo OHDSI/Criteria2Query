@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,13 +52,16 @@ public class NERTool {
 	public NERTool(){
 		try {
 			
-			Resource acdat_res = new ClassPathResource(GlobalSetting.rule_base_acdat_model);
+			//Resource acdat_res = new ClassPathResource(GlobalSetting.rule_base_acdat_model);
+			InputStream fileInputStream = NERTool.class.getClassLoader().getResourceAsStream(GlobalSetting.rule_base_acdat_model);
+			InputStream fileInputStream2 = NERTool.class.getClassLoader().getResourceAsStream(GlobalSetting.rule_base_dict_model);
+
 	        ObjectInputStream ois;
-			ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(new FileInputStream(acdat_res.getFile())));
+			ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(fileInputStream));
 			acdat =(AhoCorasickDoubleArrayTrie<String>)ois.readObject();
 			ois.close();
-			Resource dir_res = new ClassPathResource(GlobalSetting.rule_base_dict_model);
-			ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(new FileInputStream(dir_res.getFile())));
+//			Resource dir_res = new ClassPathResource(GlobalSetting.rule_base_dict_model);
+			ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(fileInputStream2));
 			dir =(HashMap<String, String>)ois.readObject();
 			ois.close();
 		} catch (FileNotFoundException e) {
