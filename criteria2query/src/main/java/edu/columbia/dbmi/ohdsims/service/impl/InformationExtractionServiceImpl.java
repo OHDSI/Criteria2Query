@@ -1,5 +1,6 @@
 package edu.columbia.dbmi.ohdsims.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -94,7 +95,15 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				List<Term> terms = nertool.formulateNerResult(sent.getText(), crf_results);
 				
 				//Aho–Corasick for rule-based screening
+				try {
 				terms=nertool.nerEnhancedByACAlgorithm(sent.getText(),terms);
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				terms=patchTermLevel(terms);	
 				String display = nertool.trans4display(sent.getText(),terms);

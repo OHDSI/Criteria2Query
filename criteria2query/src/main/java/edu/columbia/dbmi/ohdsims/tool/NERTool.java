@@ -46,35 +46,35 @@ public class NERTool {
 	AbstractSequenceClassifier<CoreLabel> ner=CRFClassifier.getClassifierNoExceptions(GlobalSetting.crf_model);
 	public static final String grammars = GlobalSetting.dependence_model;
 	private final static String diclookup = GlobalSetting.concepthub+"/omop/searchOneEntityByTerm";
-	AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
-	HashMap<String,String> dir=new HashMap<String,String>();
+//	AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
+//	HashMap<String,String> dir=new HashMap<String,String>();
 	
-	public NERTool(){
-		try {
-			
-			//Resource acdat_res = new ClassPathResource(GlobalSetting.rule_base_acdat_model);
-			InputStream fileInputStream = NERTool.class.getClassLoader().getResourceAsStream(GlobalSetting.rule_base_acdat_model);
-			InputStream fileInputStream2 = NERTool.class.getClassLoader().getResourceAsStream(GlobalSetting.rule_base_dict_model);
-
-	        ObjectInputStream ois;
-			ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(fileInputStream));
-			acdat =(AhoCorasickDoubleArrayTrie<String>)ois.readObject();
-			ois.close();
-//			Resource dir_res = new ClassPathResource(GlobalSetting.rule_base_dict_model);
-			ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(fileInputStream2));
-			dir =(HashMap<String, String>)ois.readObject();
-			ois.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	public NERTool(){
+//		try {
+//			
+//			//Resource acdat_res = new ClassPathResource(GlobalSetting.rule_base_acdat_model);
+//			InputStream fileInputStream = NERTool.class.getClassLoader().getResourceAsStream(GlobalSetting.rule_base_acdat_model);
+//			InputStream fileInputStream2 = NERTool.class.getClassLoader().getResourceAsStream(GlobalSetting.rule_base_dict_model);
+//
+//	        ObjectInputStream ois;
+//			ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(fileInputStream));
+//			acdat =(AhoCorasickDoubleArrayTrie<String>)ois.readObject();
+//			ois.close();
+////			Resource dir_res = new ClassPathResource(GlobalSetting.rule_base_dict_model);
+//			ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(fileInputStream2));
+//			dir =(HashMap<String, String>)ois.readObject();
+//			ois.close();
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (ClassNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 	
 //	public static void main(String[] args) throws Exception{
 //		NERTool ner=new NERTool();
@@ -183,7 +183,19 @@ public class NERTool {
 		return terms;
 	}
 	
-	public List<Term> nerEnhancedByACAlgorithm(String orignialstr,List<Term> terms){
+	public List<Term> nerEnhancedByACAlgorithm(String orignialstr,List<Term> terms) throws IOException, ClassNotFoundException{
+		InputStream fileInputStream = NERTool.class.getClassLoader().getResourceAsStream(GlobalSetting.rule_base_acdat_model);
+		InputStream fileInputStream2 = NERTool.class.getClassLoader().getResourceAsStream(GlobalSetting.rule_base_dict_model);
+
+        ObjectInputStream ois;
+		ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(fileInputStream));
+		AhoCorasickDoubleArrayTrie<String> acdat =(AhoCorasickDoubleArrayTrie<String>)ois.readObject();
+		ois.close();
+//		Resource dir_res = new ClassPathResource(GlobalSetting.rule_base_dict_model);
+		ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(fileInputStream2));
+		HashMap<String,String> dir =(HashMap<String, String>)ois.readObject();
+		ois.close();
+		
 		List<AhoCorasickDoubleArrayTrie.Hit<String>> wordList = acdat.parseText(orignialstr.toLowerCase());
 		Integer last_start = 0;
 		Integer last_end = 0;
