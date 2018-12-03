@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,7 +13,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
@@ -25,9 +24,7 @@ import com.hankcs.algorithm.AhoCorasickDoubleArrayTrie;
 import com.hankcs.algorithm.AhoCorasickDoubleArrayTrie.Hit;
 
 import edu.columbia.dbmi.ohdsims.pojo.GlobalSetting;
-import edu.columbia.dbmi.ohdsims.pojo.Sentence;
 import edu.columbia.dbmi.ohdsims.pojo.Term;
-import edu.columbia.dbmi.ohdsims.util.FileUtil;
 import edu.columbia.dbmi.ohdsims.util.HttpUtil;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ie.crf.CRFClassifier;
@@ -48,35 +45,26 @@ public class NERTool {
 	AbstractSequenceClassifier<CoreLabel> ner=CRFClassifier.getClassifierNoExceptions(GlobalSetting.crf_model);
 	public static final String grammars = GlobalSetting.dependence_model;
 	private final static String diclookup = GlobalSetting.concepthub+"/omop/searchOneEntityByTerm";
-//	AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
-//	HashMap<String,String> dir=new HashMap<String,String>();
+	public static AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
+	public static HashMap<String,String> dir=new HashMap<String,String>();
 	
-//	public NERTool(){
-//		try {
-//			
-//			//Resource acdat_res = new ClassPathResource(GlobalSetting.rule_base_acdat_model);
-//			InputStream fileInputStream = NERTool.class.getClassLoader().getResourceAsStream(GlobalSetting.rule_base_acdat_model);
-//			InputStream fileInputStream2 = NERTool.class.getClassLoader().getResourceAsStream(GlobalSetting.rule_base_dict_model);
-//
-//	        ObjectInputStream ois;
-//			ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(fileInputStream));
-//			acdat =(AhoCorasickDoubleArrayTrie<String>)ois.readObject();
-//			ois.close();
-////			Resource dir_res = new ClassPathResource(GlobalSetting.rule_base_dict_model);
-//			ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(fileInputStream2));
-//			dir =(HashMap<String, String>)ois.readObject();
-//			ois.close();
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ClassNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
+	public NERTool(){
+		try {
+			
+			URL r = this.getClass().getResource("/");
+			String decoded = URLDecoder.decode(r.getFile(), "UTF-8");
+			if (decoded.startsWith("/")) {
+			    decoded = decoded.replaceFirst("/", "");
+			}
+			File fileRource1 = new File(decoded, GlobalSetting.rule_base_acdat_model);
+			File fileRource2 = new File(decoded, GlobalSetting.rule_base_dict_model);
+			acdat =(AhoCorasickDoubleArrayTrie<String>) SerializationHelper.read(new GZIPInputStream(new FileInputStream(fileRource1)));
+			dir =(HashMap<String, String>)SerializationHelper.read(new GZIPInputStream(new FileInputStream(fileRource2)));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 //	public static void main(String[] args) throws Exception{
 //		NERTool ner=new NERTool();
@@ -186,17 +174,6 @@ public class NERTool {
 	}
 	
 	public List<Term> nerEnhancedByACAlgorithm(String orignialstr,List<Term> terms) throws Exception{
-		Resource fileRource1 = new ClassPathResource(GlobalSetting.rule_base_acdat_model);
-		Resource fileRource2 = new ClassPathResource(GlobalSetting.rule_base_dict_model);
-//        ObjectInputStream ois;
-//		ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(new FileInputStream( fileRource1.getFile())));
-		AhoCorasickDoubleArrayTrie<String> acdat =(AhoCorasickDoubleArrayTrie<String>) SerializationHelper.read(new GZIPInputStream(fileRource1.getInputStream()));
-//		ois.close();
-////		Resource dir_res = new ClassPathResource(GlobalSetting.rule_base_dict_model);
-//		ois = new ObjectInputStream( new java.util.zip.GZIPInputStream(new FileInputStream( fileRource2.getFile())));
-		HashMap<String,String> dir =(HashMap<String, String>)SerializationHelper.read(new GZIPInputStream(fileRource2.getInputStream()));
-		//ois.close();
-		
 		
 		List<AhoCorasickDoubleArrayTrie.Hit<String>> wordList = acdat.parseText(orignialstr.toLowerCase());
 		Integer last_start = 0;
