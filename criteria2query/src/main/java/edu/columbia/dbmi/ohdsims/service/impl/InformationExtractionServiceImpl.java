@@ -100,8 +100,9 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				terms=nertool.nerEnhancedByACAlgorithm(sent.getText(),terms);
 					testmsg="success";
 				} catch (Exception e) {
+					testmsg="failed";
 					// TODO Auto-generated catch block
-					testmsg=e.getMessage();
+					//testmsg=e.getMessage();
 				}
 				System.out.println("===> after enhanced ====>");
 				
