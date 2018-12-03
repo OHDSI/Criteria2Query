@@ -52,6 +52,7 @@ public class NERTool {
 	private final static String diclookup = GlobalSetting.concepthub+"/omop/searchOneEntityByTerm";
 	private final static String rule_based_model = GlobalSetting.rule_base_model;
 	public RuleBasedModels rbm=new RuleBasedModels();
+	public static String errmsg=new String();
 	
 	public NERTool(){
 		try {
@@ -66,6 +67,7 @@ public class NERTool {
 			this.rbm =(RuleBasedModels) SerializationHelper.read(new GZIPInputStream(fileRource.getInputStream()));	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			errmsg=e.getMessage();
 			e.printStackTrace();
 		}
 	}
@@ -341,7 +343,7 @@ public class NERTool {
 		StringBuffer sb=new StringBuffer();
 		int endindex=0;
 		for(int i=0;i<terms.size();i++){
-			String s2="<mark data-entity=\""+terms.get(i).getCategorey().toLowerCase()+"\">"+terms.get(i).getText()+"</mark>";
+			String s2="<mark data-entity=\""+terms.get(i).getCategorey().toLowerCase()+"\">"+errmsg+terms.get(i).getText()+"</mark>";
 			//sent=sent.replace(.getText(), s2);
 			if(i==0){
 				sb.append(sent.substring(0,terms.get(i).getEnd_index()).replace(terms.get(i).getText(), s2));
