@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.hankcs.algorithm.AhoCorasickDoubleArrayTrie;
+import edu.columbia.dbmi.ohdsims.tool.AhoCorasickDoubleArrayTrie;
+
 
 public class RuleBasedModels implements Serializable{
 	private static final long serialVersionUID = 901126911124L;

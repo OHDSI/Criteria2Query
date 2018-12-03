@@ -24,12 +24,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.hankcs.algorithm.AhoCorasickDoubleArrayTrie;
-import com.hankcs.algorithm.AhoCorasickDoubleArrayTrie.Hit;
 
 import edu.columbia.dbmi.ohdsims.pojo.GlobalSetting;
 import edu.columbia.dbmi.ohdsims.pojo.RuleBasedModels;
 import edu.columbia.dbmi.ohdsims.pojo.Term;
+import edu.columbia.dbmi.ohdsims.tool.AhoCorasickDoubleArrayTrie.Hit;
 import edu.columbia.dbmi.ohdsims.util.HttpUtil;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ie.crf.CRFClassifier;
@@ -65,6 +64,7 @@ public class NERTool {
 //			System.out.println("f2="+fileRource2.getAbsolutePath());
 			Resource fileRource = new ClassPathResource(rule_based_model);
 			this.rbm =(RuleBasedModels) SerializationHelper.read(new GZIPInputStream(fileRource.getInputStream()));	
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			errmsg=e.getMessage();
