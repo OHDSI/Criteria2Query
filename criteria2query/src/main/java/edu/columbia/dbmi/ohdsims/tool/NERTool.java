@@ -62,11 +62,11 @@ public class NERTool {
 			File fileRource2 = new File(decoded, GlobalSetting.rule_base_dict_model);
 			System.out.println("f1="+fileRource1.getAbsolutePath());
 			System.out.println("f2="+fileRource2.getAbsolutePath());
-			teststr=fileRource1.getAbsolutePath();
 			this.acdat =(AhoCorasickDoubleArrayTrie<String>) SerializationHelper.read(new GZIPInputStream(new FileInputStream(fileRource1)));
 			this.dir =(HashMap<String, String>)SerializationHelper.read(new GZIPInputStream(new FileInputStream(fileRource2)));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			teststr=e.getMessage();
 			e.printStackTrace();
 		}
 	}
@@ -180,7 +180,7 @@ public class NERTool {
 	
 	public List<Term> nerEnhancedByACAlgorithm(String orignialstr,List<Term> terms){
 		
-		List<AhoCorasickDoubleArrayTrie.Hit<String>> wordList = acdat.parseText(orignialstr.toLowerCase());
+		List<AhoCorasickDoubleArrayTrie.Hit<String>> wordList = this.acdat.parseText(orignialstr.toLowerCase());
 		Integer last_start = 0;
 		Integer last_end = 0;
 		List<AhoCorasickDoubleArrayTrie.Hit<String>> longest = new ArrayList<AhoCorasickDoubleArrayTrie.Hit<String>>();
