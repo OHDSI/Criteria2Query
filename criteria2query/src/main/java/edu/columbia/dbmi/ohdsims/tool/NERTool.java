@@ -178,7 +178,7 @@ public class NERTool {
 		return terms;
 	}
 	
-	public List<Term> nerEnhancedByACAlgorithm(String orignialstr,List<Term> terms) throws Exception{
+	public List<Term> nerEnhancedByACAlgorithm(String orignialstr,List<Term> terms){
 		
 		List<AhoCorasickDoubleArrayTrie.Hit<String>> wordList = acdat.parseText(orignialstr.toLowerCase());
 		Integer last_start = 0;

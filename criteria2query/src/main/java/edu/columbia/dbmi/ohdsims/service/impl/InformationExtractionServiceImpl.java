@@ -96,14 +96,10 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				
 				//Aho–Corasick for rule-based screening
 				String testmsg=new String();
-				try {
+				
 				terms=nertool.nerEnhancedByACAlgorithm(sent.getText(),terms);
 					testmsg="success";
-				} catch (Exception e) {
-					testmsg="failed";
-					// TODO Auto-generated catch block
-					//testmsg=e.getMessage();
-				}
+				
 				System.out.println("===> after enhanced ====>");
 				
 				terms=patchTermLevel(terms);
