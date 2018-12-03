@@ -17,8 +17,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
+import javax.servlet.ServletContext;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.hankcs.algorithm.AhoCorasickDoubleArrayTrie;
 import com.hankcs.algorithm.AhoCorasickDoubleArrayTrie.Hit;
@@ -51,13 +55,14 @@ public class NERTool {
 	public NERTool(){
 		try {
 			
-			URL r = this.getClass().getResource("/");
-			String decoded = URLDecoder.decode(r.getFile(), "UTF-8");
-			if (decoded.startsWith("/")) {
-			    decoded = decoded.replaceFirst("/", "");
-			}
+	        
+	        URL realPath = Thread.currentThread().getContextClassLoader().getResource("");
+	        System.out.println("realPath:"+realPath);
+	        String decoded = URLDecoder.decode(realPath.getFile(), "UTF-8");
 			File fileRource1 = new File(decoded, GlobalSetting.rule_base_acdat_model);
 			File fileRource2 = new File(decoded, GlobalSetting.rule_base_dict_model);
+			System.out.println("f1="+fileRource1.getAbsolutePath());
+			System.out.println("f2="+fileRource2.getAbsolutePath());
 			acdat =(AhoCorasickDoubleArrayTrie<String>) SerializationHelper.read(new GZIPInputStream(new FileInputStream(fileRource1)));
 			dir =(HashMap<String, String>)SerializationHelper.read(new GZIPInputStream(new FileInputStream(fileRource2)));
 		} catch (Exception e) {
