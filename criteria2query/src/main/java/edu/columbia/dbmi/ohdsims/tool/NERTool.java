@@ -52,6 +52,7 @@ public class NERTool {
 	AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
 	HashMap<String,String> dir=new HashMap<String,String>();
 	String teststr=new String();
+	private static final long serialVersionUID = 6758999135472224142L;
 	
 	public NERTool(){
 		try {
