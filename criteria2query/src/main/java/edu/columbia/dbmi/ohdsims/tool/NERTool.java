@@ -49,8 +49,8 @@ public class NERTool {
 	AbstractSequenceClassifier<CoreLabel> ner=CRFClassifier.getClassifierNoExceptions(GlobalSetting.crf_model);
 	public static final String grammars = GlobalSetting.dependence_model;
 	private final static String diclookup = GlobalSetting.concepthub+"/omop/searchOneEntityByTerm";
-	public static AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
-	public static HashMap<String,String> dir=new HashMap<String,String>();
+	AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
+	HashMap<String,String> dir=new HashMap<String,String>();
 	
 	public NERTool(){
 		try {
@@ -63,8 +63,8 @@ public class NERTool {
 			File fileRource2 = new File(decoded, GlobalSetting.rule_base_dict_model);
 			System.out.println("f1="+fileRource1.getAbsolutePath());
 			System.out.println("f2="+fileRource2.getAbsolutePath());
-			acdat =(AhoCorasickDoubleArrayTrie<String>) SerializationHelper.read(new GZIPInputStream(new FileInputStream(fileRource1)));
-			dir =(HashMap<String, String>)SerializationHelper.read(new GZIPInputStream(new FileInputStream(fileRource2)));
+			this.acdat =(AhoCorasickDoubleArrayTrie<String>) SerializationHelper.read(new GZIPInputStream(new FileInputStream(fileRource1)));
+			this.dir =(HashMap<String, String>)SerializationHelper.read(new GZIPInputStream(new FileInputStream(fileRource2)));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -358,6 +358,7 @@ public class NERTool {
 		}else if(endindex!=text.length()){
 			sb.append(sent.substring(endindex+1));
 		}
+		System.out.println("to be displayed =>"+sb.toString());
 		return sb.toString();
 	}
 	
