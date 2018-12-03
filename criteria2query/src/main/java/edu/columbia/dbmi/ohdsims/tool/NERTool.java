@@ -28,6 +28,7 @@ import com.hankcs.algorithm.AhoCorasickDoubleArrayTrie;
 import com.hankcs.algorithm.AhoCorasickDoubleArrayTrie.Hit;
 
 import edu.columbia.dbmi.ohdsims.pojo.GlobalSetting;
+import edu.columbia.dbmi.ohdsims.pojo.RuleBasedModels;
 import edu.columbia.dbmi.ohdsims.pojo.Term;
 import edu.columbia.dbmi.ohdsims.util.HttpUtil;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
@@ -49,25 +50,22 @@ public class NERTool {
 	AbstractSequenceClassifier<CoreLabel> ner=CRFClassifier.getClassifierNoExceptions(GlobalSetting.crf_model);
 	public static final String grammars = GlobalSetting.dependence_model;
 	private final static String diclookup = GlobalSetting.concepthub+"/omop/searchOneEntityByTerm";
-	AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
-	HashMap<String,String> dir=new HashMap<String,String>();
-	String teststr=new String();
-	private static final long serialVersionUID = 6758999135472224142L;
+	private final static String rule_based_model = GlobalSetting.rule_base_model;
+	public RuleBasedModels rbm=new RuleBasedModels();
 	
 	public NERTool(){
 		try {
-	        URL realPath = Thread.currentThread().getContextClassLoader().getResource("");
-	        System.out.println("realPath:"+realPath);
-	        String decoded = URLDecoder.decode(realPath.getFile(), "UTF-8");
-			File fileRource1 = new File(decoded, GlobalSetting.rule_base_acdat_model);
-			File fileRource2 = new File(decoded, GlobalSetting.rule_base_dict_model);
-			System.out.println("f1="+fileRource1.getAbsolutePath());
-			System.out.println("f2="+fileRource2.getAbsolutePath());
-			this.acdat =(AhoCorasickDoubleArrayTrie<String>) SerializationHelper.read(new GZIPInputStream(new FileInputStream(fileRource1)));
-			this.dir =(HashMap<String, String>)SerializationHelper.read(new GZIPInputStream(new FileInputStream(fileRource2)));
+//	        URL realPath = Thread.currentThread().getContextClassLoader().getResource("");
+//	        System.out.println("realPath:"+realPath);
+//	        String decoded = URLDecoder.decode(realPath.getFile(), "UTF-8");
+//	        File fileRource1 = new File(decoded, GlobalSetting.rule_base_acdat_model);
+//			File fileRource2 = new File(decoded, GlobalSetting.rule_base_dict_model);
+//			System.out.println("f1="+fileRource1.getAbsolutePath());
+//			System.out.println("f2="+fileRource2.getAbsolutePath());
+			Resource fileRource = new ClassPathResource(rule_based_model);
+			this.rbm =(RuleBasedModels) SerializationHelper.read(new GZIPInputStream(fileRource.getInputStream()));	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			teststr=e.getMessage();
 			e.printStackTrace();
 		}
 	}
@@ -87,7 +85,6 @@ public class NERTool {
 	
 	public static void train(String traindatapath,String targetpath){
 		long startTime = System.nanoTime();
-
         /* Step 1: learn the classifier from the training data */
         String trainFile = traindatapath; 
         /* Learn the classifier from the training data */
@@ -181,7 +178,7 @@ public class NERTool {
 	
 	public List<Term> nerEnhancedByACAlgorithm(String orignialstr,List<Term> terms) throws Exception{
 		
-		List<AhoCorasickDoubleArrayTrie.Hit<String>> wordList = this.acdat.parseText(orignialstr.toLowerCase());
+		List<AhoCorasickDoubleArrayTrie.Hit<String>> wordList = this.rbm.getAcdat().parseText(orignialstr.toLowerCase());
 		Integer last_start = 0;
 		Integer last_end = 0;
 		List<AhoCorasickDoubleArrayTrie.Hit<String>> longest = new ArrayList<AhoCorasickDoubleArrayTrie.Hit<String>>();
@@ -207,10 +204,10 @@ public class NERTool {
 			t.setText(s.value.trim());
 			t.setStart_index(s.begin+1);
 			t.setEnd_index(s.end-1);
-			t.setCategorey(dir.get(s.value.toLowerCase().trim()));//look up dic for the Category
+			t.setCategorey(this.rbm.getDir().get(s.value.toLowerCase().trim()));//look up dic for the Category
 			t.setNeg(false);
 			dicResults.add(t);
-			System.out.println(s.value+"\t"+s.begin+","+s.end+"\t"+dir.get(s.value.trim().toLowerCase()));
+			System.out.println(s.value+"\t"+s.begin+","+s.end+"\t"+this.rbm.getDir().get(s.value.trim().toLowerCase()));
 		}
 		enhancedNERResults=mergeResultsfromRuleAndML(orignialstr,dicResults,terms);
 		return enhancedNERResults;
