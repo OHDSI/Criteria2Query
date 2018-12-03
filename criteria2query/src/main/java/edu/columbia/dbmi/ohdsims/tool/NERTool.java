@@ -51,11 +51,10 @@ public class NERTool {
 	private final static String diclookup = GlobalSetting.concepthub+"/omop/searchOneEntityByTerm";
 	AhoCorasickDoubleArrayTrie<String> acdat = new AhoCorasickDoubleArrayTrie<String>();
 	HashMap<String,String> dir=new HashMap<String,String>();
+	String teststr=new String();
 	
 	public NERTool(){
 		try {
-			
-	        
 	        URL realPath = Thread.currentThread().getContextClassLoader().getResource("");
 	        System.out.println("realPath:"+realPath);
 	        String decoded = URLDecoder.decode(realPath.getFile(), "UTF-8");
@@ -63,6 +62,7 @@ public class NERTool {
 			File fileRource2 = new File(decoded, GlobalSetting.rule_base_dict_model);
 			System.out.println("f1="+fileRource1.getAbsolutePath());
 			System.out.println("f2="+fileRource2.getAbsolutePath());
+			teststr=fileRource1.getAbsolutePath();
 			this.acdat =(AhoCorasickDoubleArrayTrie<String>) SerializationHelper.read(new GZIPInputStream(new FileInputStream(fileRource1)));
 			this.dir =(HashMap<String, String>)SerializationHelper.read(new GZIPInputStream(new FileInputStream(fileRource2)));
 		} catch (Exception e) {
@@ -343,7 +343,7 @@ public class NERTool {
 		StringBuffer sb=new StringBuffer();
 		int endindex=0;
 		for(int i=0;i<terms.size();i++){
-			String s2="<mark data-entity=\""+terms.get(i).getCategorey().toLowerCase()+"\">"+terms.get(i).getText()+"</mark>";
+			String s2="<mark data-entity=\""+terms.get(i).getCategorey().toLowerCase()+"\">"+teststr+terms.get(i).getText()+"</mark>";
 			//sent=sent.replace(.getText(), s2);
 			if(i==0){
 				sb.append(sent.substring(0,terms.get(i).getEnd_index()).replace(terms.get(i).getText(), s2));
