@@ -95,11 +95,13 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				List<Term> terms = nertool.formulateNerResult(sent.getText(), crf_results);
 				
 				//Aho–Corasick for rule-based screening
-				String testmsg=new String();
+				try{
 				
 				terms=nertool.nerEnhancedByACAlgorithm(sent.getText(),terms);
-					testmsg="success";
 				
+				}catch(Exception e){
+					
+				}
 				System.out.println("===> after enhanced ====>");
 				
 				terms=patchTermLevel(terms);
@@ -108,7 +110,7 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				//String display = nertool.trans2Html(crf_results);			
 				// displaying
 				sent.setTerms(terms);
-				sent.setDisplay(display+testmsg);
+				sent.setDisplay(display);
 				List<Term> primary_entities = new ArrayList<Term>();
 				List<Term> attributes = new ArrayList<Term>();
 				// Separate primary terms and attributes
