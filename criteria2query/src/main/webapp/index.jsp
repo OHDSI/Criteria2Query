@@ -95,7 +95,7 @@
 <script src="./js/ie10-viewport-bug-workaround.js"></script>
 <script src="./js/bootstrap-table.min.js"></script>
 <script type="text/javascript"
-	src="http://malsup.github.io/min/jquery.blockUI.min.js"></script>
+	src="./js/jquery.blockUI.js"></script>
 	<style>a{TEXT-DECORATION:none}</style> 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118282453-1"></script>
