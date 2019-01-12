@@ -105,7 +105,6 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				System.out.println("===> after enhanced ====>");
 				
 				terms=patchTermLevel(terms);
-				System.out.println("after process "+terms.size());
 				String display = nertool.trans4display(sent.getText(),terms);
 				//String display = nertool.trans2Html(crf_results);			
 				// displaying

@@ -201,7 +201,7 @@ public class NERTool {
 		for(Hit<String> s : longest){
 			Term t=new Term();
 			t.setTermId(temporalId++);
-			t.setText(s.value.trim());
+			t.setText(orignialstr.substring(s.begin+1,s.end-1));//t.setText(s.value.trim())
 			t.setStart_index(s.begin+1);
 			t.setEnd_index(s.end-1);
 			t.setCategorey(this.rbm.getDir().get(s.value.toLowerCase().trim()));//look up dic for the Category
@@ -237,6 +237,8 @@ public class NERTool {
 			}
 		});
 		
+		
+		
 		for(int k=0;k<termlist.size();k++){
 			if(termlist.get(k).getTermId()<mlresults.size()){
 				if((k+1)<termlist.size()){
@@ -244,8 +246,6 @@ public class NERTool {
 						termlist.remove(k+1);
 					}else {
 						if(termlist.get(k+1).getStart_index()<=termlist.get(k).getEnd_index()){
-							System.out.println("remove "+termlist.get(k).getText());
-							System.out.println("remove "+termlist.get(k).getText());
 							Term t=new Term();
 							t.setText(text.substring(termlist.get(k).getStart_index(), termlist.get(k+1).getEnd_index()));
 							t.setStart_index(termlist.get(k).getStart_index());
@@ -261,6 +261,15 @@ public class NERTool {
 					}
 				}
 			}else{
+				if((k)<termlist.size()){
+					if(termlist.get(k-1).getEnd_index()>=termlist.get(k).getEnd_index()){
+						termlist.remove(k);
+					}else{
+						if(termlist.get(k).getStart_index()<=termlist.get(k-1).getEnd_index()){
+							termlist.remove(k);
+						}
+					}
+				}
 				if((k+1)<termlist.size()){
 					if(termlist.get(k).getEnd_index()>=termlist.get(k+1).getEnd_index()){
 						termlist.remove(k+1);
@@ -270,15 +279,46 @@ public class NERTool {
 						}
 					}
 				}
+				/*
+				if((k-1)>=0){
+					if(termlist.get(k).getStart_index()<=termlist.get(k-1).getEnd_index()){
+						System.out.println("remove "+termlist.get(k).getText());
+						System.out.println("remove "+termlist.get(k).getText());
+						Term t=new Term();
+						t.setText(text.substring(termlist.get(k-1).getStart_index(), termlist.get(k).getEnd_index()));
+						t.setStart_index(termlist.get(k-1).getStart_index());
+						t.setEnd_index(termlist.get(k).getEnd_index());
+						t.setCategorey(termlist.get(k).getCategorey());
+						t.setNeg(false);
+						termlist.remove(k-1);
+						termlist.remove(k-1);
+						termlist.add(k-1,t);
+					}
+				}*/
+				
 			}
 		}	
 		//System.out.println("=====Merged Results==========");
 		int tId=0;
 		for(Term t:termlist){
 			t.setTermId(tId++);
-			System.out.println(t.getTermId()+"\t"+t.getText()+"\t"+t.getStart_index()+","+t.getEnd_index()+"\t"+t.getCategorey());
 		}
-		return termlist;
+		List<Term> newtermlist=new ArrayList<Term>();	
+		
+		int newtId=0;
+		if(termlist.size()>0){
+			termlist.get(0).setTermId(newtId++);
+			newtermlist.add(termlist.get(0));
+		}
+		for(int k=1;k<termlist.size();k++){
+			if((termlist.get(k).getStart_index()>=termlist.get(k-1).getStart_index())
+				&&(termlist.get(k).getEnd_index()<=termlist.get(k-1).getEnd_index())){
+				continue;
+			}
+			termlist.get(k).setTermId(newtId++);
+			newtermlist.add(termlist.get(k));
+		}
+		return newtermlist;
 	}
 	
 	public String nerByCrf(String str) {
