@@ -563,8 +563,7 @@
 			});
 			$.ajax({
 						type : 'POST',
-						url : basePath + "main/autoparse",//nlpmethod/parsebycdm
-						timeout : 0,
+						url : basePath + "main/autoparse",
 						data : {
 							'inc' : inc,
 							'exc' : exc,
@@ -579,6 +578,7 @@
 							'limitto':limitto
 						},
 						dataType : "json",
+						timeout: 300000, 
 						success : function(data) {
 							window.location.href=basePath + "main/gojson";
 						},
