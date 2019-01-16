@@ -564,6 +564,7 @@
 			$.ajax({
 						type : 'POST',
 						url : basePath + "main/autoparse",//nlpmethod/parsebycdm
+						timeout : 0,
 						data : {
 							'inc' : inc,
 							'exc' : exc,
