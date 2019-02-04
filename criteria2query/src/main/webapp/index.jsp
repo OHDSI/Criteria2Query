@@ -762,6 +762,9 @@
 							}, 200)
 							$("#mapping").show();
 							$("#downloadfile").show();
+						},
+						error: function(e) { 
+							alert('Parsing Error...');
 						}
 					});
 		}
