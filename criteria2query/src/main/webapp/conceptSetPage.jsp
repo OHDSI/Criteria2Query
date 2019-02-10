@@ -243,6 +243,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				alert("Cannot connect to OHDSI API, Please check your network or contact OHDSI Administrator!");
 			} 
 		});
+		
   	}
 	 
 	function createconceptset(vdata,name){
@@ -507,21 +508,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							$(document).ajaxStop($.unblockUI);
 
 							var nav1 = '';
-							count = getJsonObjLength(data) / 3;
+							count = getJsonObjLength(data) / 4;
 							conceptsetname = new Array(count);
 							conceptdomain = new Array(count);
+							autoconceptSetId=new Array(count);
 							var conceptsetcand = new Array(count);
 							for ( var o in data) {
 								if (o.indexOf('cstname') != -1) {
 									a1 = o.substring(7);
 									conceptsetname[a1] = data[o];
-									
 								} else if (o.indexOf('conceptset') != -1) {
 									a2 = o.substring(10);
 									conceptsetcand[a2] = data[o];
 								} else if (o.indexOf('domain') != -1) {
 									a3 = o.substring(6);
 									conceptdomain[a3] = data[o];
+								}else if (o.indexOf('csetid') != -1) {
+									a4 = o.substring(6);
+									autoconceptSetId[a4] = data[o];
 								}
 							}
 							for (var i = 0; i < conceptsetname.length; i++) {
@@ -550,7 +554,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									clickToSelect : true,
 									data : conceptsetcand[i],
 									columns : [ {
-										checkbox : true
+										//checkbox : true,
+										field : 'checked',
+            							checkbox : true,
+										formatter: 
+										function (value, row, index) {
+											if (autoconceptSetId[i]==row.id)
+										        return {
+										            checked : true
+										        };
+										    return {
+									            	checked : false
+									        };;		
+										}
 									}, {
 										field : 'id',
 										width : '10%',

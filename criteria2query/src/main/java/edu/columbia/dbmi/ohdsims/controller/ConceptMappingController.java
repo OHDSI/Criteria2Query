@@ -58,6 +58,7 @@ public class ConceptMappingController {
 			List<ConceptSet> lscst = this.conceptMappingService.mapAndSortConceptSetByEntityName(conceptsetname);
 			map.put("conceptset" + index, lscst);
 			map.put("cstname" + index, conceptsetname);
+			map.put("csetid" + index, terms.get(j).getVocabularyId());
 			map.put("domain" + index, domain);
 			index++;
 		}

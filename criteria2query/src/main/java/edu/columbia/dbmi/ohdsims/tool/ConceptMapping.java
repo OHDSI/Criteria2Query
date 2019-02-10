@@ -100,6 +100,7 @@ public class ConceptMapping {
 		Integer conceptId=0;
 		//the most related one
 		try{
+			deleteConceptSetBySubString("[C2Q]"+term);
 		String[] res=getConceptListByUsagi(term,domain);
 		long t1=System.currentTimeMillis();  
 		JSONObject jo=new JSONObject();
@@ -119,6 +120,19 @@ public class ConceptMapping {
 		}
 		
 		
+	}
+	
+	public void deleteConceptSetBySubString(String str){
+		int count=0;
+		ConceptMapping cm = new ConceptMapping();
+		LinkedHashMap<ConceptSet, Integer> hcs = cm.mapConceptSetByEntity(str);
+		for (Map.Entry<ConceptSet, Integer> entry : hcs.entrySet()) {
+			String url=conceptseturl+entry.getKey().getId();
+			System.out.println(url);
+			HttpUtil.doDelete(url, "");
+			count++;
+		}
+		System.out.println("count="+count);
 	}
 	
 	public String extendByUMLS(String term){

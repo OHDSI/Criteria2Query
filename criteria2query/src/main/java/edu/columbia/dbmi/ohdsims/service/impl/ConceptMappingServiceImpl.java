@@ -147,10 +147,10 @@ public class ConceptMappingServiceImpl implements IConceptMappingService{
 		
 		//filter out
 		for (Map.Entry<ConceptSet, Integer> entry : hcs.entrySet()) {
-			if(conceptSetlist.contains(entry.getKey().getName())==false){
+			//if(conceptSetlist.contains(entry.getKey().getName())==false){
 				lscst.add(entry.getKey());
-				conceptSetlist.add(entry.getKey().getName());
-			}
+				//conceptSetlist.add(entry.getKey().getName());
+			//}
 		}
 		return lscst;
 	}
