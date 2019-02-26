@@ -43,15 +43,17 @@ public class ConceptFilteringServiceImpl implements IConceptFilteringService {
 
 	// 
 	public List<Paragraph> filterOutTerms(List<Paragraph> originalp, Set<String> terms) {
-		Set<String> tset=terms;
+		System.err.println("Filter_Out_Terms");
 		for (Paragraph p : originalp) {
+		Set<String> tset=terms;
 			if (p.getSents() != null) {
 				for (Sentence s : p.getSents()) {
 					if (s.getTerms() != null) {
 						for (int i = 0; i < s.getTerms().size(); i++) {
 								if(tset.contains(s.getTerms().get(i).getText())){
+									System.err.println("remove "+s.getTerms().get(i).getText());
 									s.getTerms().remove(i);
-									System.err.println("remove");
+									//System.err.println("remove");
 									
 									break;
 								}else{
