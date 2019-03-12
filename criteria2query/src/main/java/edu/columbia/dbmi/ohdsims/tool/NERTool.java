@@ -261,7 +261,7 @@ public class NERTool {
 					}
 				}
 			}else{
-				if((k)<termlist.size()){
+				if((k)<termlist.size()&&(k-1)>=0){
 					if(termlist.get(k-1).getEnd_index()>=termlist.get(k).getEnd_index()){
 						termlist.remove(k);
 					}else{
@@ -279,26 +279,9 @@ public class NERTool {
 						}
 					}
 				}
-				/*
-				if((k-1)>=0){
-					if(termlist.get(k).getStart_index()<=termlist.get(k-1).getEnd_index()){
-						System.out.println("remove "+termlist.get(k).getText());
-						System.out.println("remove "+termlist.get(k).getText());
-						Term t=new Term();
-						t.setText(text.substring(termlist.get(k-1).getStart_index(), termlist.get(k).getEnd_index()));
-						t.setStart_index(termlist.get(k-1).getStart_index());
-						t.setEnd_index(termlist.get(k).getEnd_index());
-						t.setCategorey(termlist.get(k).getCategorey());
-						t.setNeg(false);
-						termlist.remove(k-1);
-						termlist.remove(k-1);
-						termlist.add(k-1,t);
-					}
-				}*/
 				
 			}
 		}	
-		//System.out.println("=====Merged Results==========");
 		int tId=0;
 		for(Term t:termlist){
 			t.setTermId(tId++);
