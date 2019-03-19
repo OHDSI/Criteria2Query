@@ -82,7 +82,7 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				s = s.replaceAll("-RSB-", "]");
 				s = s.replaceAll("-LCB-", "{");
 				s = s.replaceAll("-RCB-", "}");
-				Sentence sent = new Sentence(s+" ");
+				Sentence sent = new Sentence(" "+s+" ");
 				String crf_results=sent.getText();
 				if(s.trim().split(" ").length<3){
 					crf_results=nertool.nerByDicLookUp(sent.getText());
@@ -105,7 +105,12 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				System.out.println("===> after enhanced ====>");
 				
 				terms=patchTermLevel(terms);
-				String display = nertool.trans4display(sent.getText(),terms);
+				String display="";
+				try{
+					display = nertool.trans4display(sent.getText(),terms);
+				}catch(Exception ex){
+					
+				}
 				//String display = nertool.trans2Html(crf_results);			
 				// displaying
 				sent.setTerms(terms);
