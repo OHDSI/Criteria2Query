@@ -312,7 +312,13 @@ public class NERTool {
 	}
 	
 	public String nerByDicLookUp(String str){
+		System.out.println("======nerByDicLookUp=====");
 		String res=str;
+		if(str.trim().toLowerCase().equals("male")||str.trim().toLowerCase().equals("female")||str.trim().toLowerCase().equals("women")||str.trim().toLowerCase().equals("men")||str.trim().toLowerCase().equals("man")||str.trim().toLowerCase().equals("woman")){
+			res="<"+"Demographic"+">"+str+"</"+"Demographic"+">";
+			return res;
+		}
+		
 		JSONObject jo=new JSONObject();
 		jo.accumulate("term", str);
 		
