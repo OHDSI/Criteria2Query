@@ -456,13 +456,14 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 					agejson.accumulate("Age", jo);
 					demographicarr.add(agejson);
 				}
-				if(Arrays.asList(GenderGroup.maletriggers).contains(cdmcriterion.getOrginialtext().toLowerCase())||Arrays.asList(GenderGroup.femaletriggers).contains(cdmcriterion.getOrginialtext().toLowerCase())){
+				System.out.println("gender===>");
+				if(Arrays.asList(GenderGroup.maletriggers).contains(cdmcriterion.getOrginialtext().trim().toLowerCase())||Arrays.asList(GenderGroup.femaletriggers).contains(cdmcriterion.getOrginialtext().trim().toLowerCase())){
 					JSONArray genderarr=new JSONArray();
 					JSONObject genderjson=new JSONObject();
-					if(Arrays.asList(GenderGroup.maletriggers).contains(cdmcriterion.getOrginialtext().toLowerCase())){
+					if(Arrays.asList(GenderGroup.maletriggers).contains(cdmcriterion.getOrginialtext().trim().toLowerCase())){
 						genderarr.add(setMale());
 					}
-					if(Arrays.asList(GenderGroup.femaletriggers).contains(cdmcriterion.getOrginialtext().toLowerCase())){
+					if(Arrays.asList(GenderGroup.femaletriggers).contains(cdmcriterion.getOrginialtext().trim().toLowerCase())){
 						genderarr.add(setFeMale());
 					}
 					genderjson.accumulate("Gender", genderarr);
