@@ -411,7 +411,6 @@
   var $initialeventtable = $('#initialeventtable');
   var basePath = "./";
 		$(function() {
-		alert("Some of our services are suffering from cyber attacks. A few features may be not working for now. We are fixing it!");
 			$("#startdatepicker").datepicker({dateFormat: 'yy-mm-dd'});
 			$("#enddatepicker").datepicker({dateFormat: 'yy-mm-dd'});
 			$("#total").hide();

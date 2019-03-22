@@ -19,5 +19,5 @@ public class GlobalSetting {
 	public final static String[] combo={"Measurement_Value","Drug_Temporal","Demographic_Value","Observation_Value","Condition_Value","Condition_Temporal","Procedure_Temporal","Drug_Value","Procedure_Value","Observation_Temporal","Measurement_Temporal","Demographic_Temporal"};
 	public final static String[] relations={"no_relation","has_value","has_temporal"};
 	public final static String negateTag="Negation_cue";
-	public final static String concepthub="http://45.77.96.239:8080/concepthub";
+	public final static String concepthub="http://149.28.237.139:8002/concepthub";
 }
