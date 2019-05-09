@@ -85,7 +85,7 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				Sentence sent = new Sentence(" "+s+" ");
 				String crf_results=sent.getText();
 				if(s.trim().split(" ").length<3){
-					crf_results=nertool.nerByDicLookUp(sent.getText());
+					crf_results=nertool.nerByDicLookUp(sent.getText().trim());
 				}
 				
 				if(crf_results.length()<=sent.getText().length()){
