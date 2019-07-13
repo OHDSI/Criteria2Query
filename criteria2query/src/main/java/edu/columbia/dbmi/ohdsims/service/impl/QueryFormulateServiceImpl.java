@@ -703,13 +703,18 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 	@Override
 	public Integer storeInATLAS(JSONObject expression,String cohortname) {
 		// TODO Auto-generated method stub
-		HashMap<String,String> cohortmap=new HashMap<String,String>();
-		cohortmap.put("name", cohortname);
-		cohortmap.put("expressionType", "SIMPLE_EXPRESSION");
+		
+		JSONObject cohortdef=new JSONObject();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH_mm");
+		String date = df.format(new Date());
+		
+		cohortdef.put("name", cohortname+date);
+		cohortdef.put("expressionType", "SIMPLE_EXPRESSION");
 		String jsonstr=expression.toString();
 		System.out.println("jsonstr="+jsonstr);
-		cohortmap.put("expression",jsonstr);
-		String result=HttpUtil.doPost(cohorturl, JSONObject.fromObject(cohortmap).toString());
+		cohortdef.put("expression",jsonstr);
+		String result=HttpUtil.doPost(cohorturl, cohortdef.toString());
+		System.out.println("cohort="+cohortdef.toString());
 		JSONObject resultjson=JSONObject.fromObject(result);
 		Integer cohortId=(Integer) resultjson.get("id");
 		return cohortId;
