@@ -15,4 +15,5 @@ public interface IInformationExtractionService {
 	public Document patchIEResults(Document doc);
 	public Document abbrExtensionByDoc(Document doc);
 	public List<String> getAllInitialEvents(Document doc);
+	public Document reconIEResults(Document doc);
 }

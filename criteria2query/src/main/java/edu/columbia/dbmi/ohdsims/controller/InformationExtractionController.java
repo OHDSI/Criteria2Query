@@ -55,10 +55,14 @@ public class InformationExtractionController {
 	
 	@RequestMapping("/parse")
 	@ResponseBody
-	public Map<String, Object> parseAllCriteria(HttpSession httpSession, HttpServletRequest request,String initialevent, String inc, String exc,boolean abb,String obstart,String obend,String daysbefore,String daysafter,String limitto) {
+	public Map<String, Object> parseAllCriteria(HttpSession httpSession, HttpServletRequest request,String initialevent, String inc, String exc,boolean abb, boolean recon,String obstart,String obend,String daysbefore,String daysafter,String limitto) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println("recon="+recon);
 		Document doc = this.ieService.translateByDoc(initialevent, inc, exc);
 		doc = this.ieService.patchIEResults(doc);
+		if(recon){
+			doc=this.ieService.reconIEResults(doc);
+		}
 		ObservationConstraint oc=new ObservationConstraint();
 		oc.setDaysAfter(Integer.valueOf(daysafter));
 		oc.setDaysBefore(Integer.valueOf(daysbefore));

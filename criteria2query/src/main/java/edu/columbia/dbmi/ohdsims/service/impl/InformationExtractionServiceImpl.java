@@ -22,7 +22,15 @@ import edu.columbia.dbmi.ohdsims.tool.FeedBackTool;
 import edu.columbia.dbmi.ohdsims.tool.LogicAnalysisTool;
 import edu.columbia.dbmi.ohdsims.tool.NERTool;
 import edu.columbia.dbmi.ohdsims.tool.NegReTool;
+import edu.columbia.dbmi.ohdsims.tool.ReconTool;
 import edu.columbia.dbmi.ohdsims.tool.RelExTool;
+import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation;
+import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
+import edu.stanford.nlp.ling.CoreAnnotations.TextAnnotation;
+import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
+import edu.stanford.nlp.pipeline.Annotation;
+import edu.stanford.nlp.util.CoreMap;
 import edu.stanford.nlp.util.Triple;
 import net.sf.json.JSONObject;
 
@@ -38,7 +46,8 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 	LogicAnalysisTool logictool = new LogicAnalysisTool();
 	RelExTool reltool = new RelExTool();
 	ConceptMapping cptmap = new ConceptMapping();
-
+	ReconTool recontool=new ReconTool();
+	
 	@Override
 	public Paragraph translateText(String freetext, boolean include) {
 		// TODO Auto-generated method stub
@@ -91,7 +100,7 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				if(crf_results.length()<=sent.getText().length()){
 					crf_results = nertool.nerByCrf(sent.getText());
 				}
-				System.out.println("crf_results="+crf_results);
+				//System.out.println("crf_results="+crf_results);
 				List<Term> terms = nertool.formulateNerResult(sent.getText(), crf_results);
 				
 				//Aho–Corasick for rule-based screening
@@ -102,9 +111,14 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				}catch(Exception e){
 					
 				}
-				System.out.println("===> after enhanced ====>");
+				//System.out.println("===> after enhanced ====>");
 				
+				
+				//
 				terms=patchTermLevel(terms);
+				
+				
+				
 				String display="";
 				try{
 					display = nertool.trans4display(sent.getText(),terms);
@@ -226,6 +240,70 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 		return doc;
 	}
 	
+	
+	@Override
+	public Document reconIEResults(Document doc) {
+		// TODO Auto-generated method stub
+		if (doc.getInitial_event() != null) {
+			List<Paragraph> originalp = doc.getInitial_event();
+			originalp = reconOnDocLevel(originalp);
+			doc.setInitial_event(originalp);
+		}
+		if (doc.getInclusion_criteria() != null) {
+			List<Paragraph> originalp = doc.getInclusion_criteria();
+			originalp = reconOnDocLevel(originalp);
+			doc.setInclusion_criteria(originalp);
+		}
+		if (doc.getExclusion_criteria() != null) {
+			List<Paragraph> originalp = doc.getExclusion_criteria();
+			originalp = reconOnDocLevel(originalp);
+			doc.setExclusion_criteria(originalp);
+		}
+		return doc;
+	}
+	
+	// term-level calibration
+	public List<Paragraph> reconOnDocLevel(List<Paragraph> originalp) {
+			for (Paragraph p : originalp) {
+				if (p.getSents() != null) {
+					for (Sentence s : p.getSents()) {
+						if (s.getTerms() != null) {
+							for (int i = 0; i < s.getTerms().size(); i++) {
+								if (s.getTerms().get(i).getCategorey().equals("Condition")
+										||s.getTerms().get(i).getCategorey().equals("Drug")
+										||s.getTerms().get(i).getCategorey().equals("Measurement")
+										||s.getTerms().get(i).getCategorey().equals("Procedure")
+										||s.getTerms().get(i).getCategorey().equals("Observation")) {
+									String text = s.getTerms().get(i).getText();
+									if(recontool.isCEE(text)){
+										Term t=s.getTerms().get(i);
+										String category=t.getCategorey();
+										String entity=t.getText();
+										Integer start_index=t.getStart_index();
+										Integer end_index=t.getEnd_index();
+										List<String> concepts=recontool.resolve(t.getText());
+										for(String c:concepts){
+											//System.out.println("=>"+c);
+											Term ret=new Term();
+											ret.setText(c);
+											ret.setNeg(t.isNeg());
+											ret.setCategorey(t.getCategorey());
+											ret.setStart_index(t.getStart_index());
+											ret.setEnd_index(t.getEnd_index());
+											s.getTerms().add(ret);
+										}
+										s.getTerms().remove(i);
+									}
+								}
+								
+							}
+						}
+					}
+				}
+			}
+			return originalp;
+		}
+	
 	public List<Term> patchTermLevel(List<Term> terms){
 		for(int i=0;i<terms.size();i++){
 			List<String> lemmas = corenlp.getLemmasList(terms.get(i).getText());
@@ -235,12 +313,10 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				}
 				
 			}
-			if(terms.get(i).getText().endsWith("therapy")&&terms.get(i).getText().contains(" ")==false){
-				terms.get(i).setCategorey("Procedure");
-			}
 		}
 		return terms;
 	}
+	
 	
 
 	// term-level calibration
