@@ -186,6 +186,7 @@
 		<div class="row">
 		<div class="projects-header">
 		</div>
+
 		<div class="col-sm-12 col-md-12 col-lg-12">	
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -216,7 +217,7 @@
 					<h4 class="panel-title">
 						<a data-toggle="collapse" data-parent="#accordion" 
 				   				href="#collapseOne"><span class="glyphicon glyphicon-dashboard"></span>
-						Initial Events (Optional)
+						Cohort Entry Events (Optional)
 						</a>
 					</h4>
 				</div>
@@ -359,6 +360,16 @@
 											</label>
 										</div>
 									</div>
+								</form>
+							</div>	
+							<div class="form-group col-sm-12 col-md-12 col-lg-12">
+								<form class="form-inline">
+								<div class="form-group col-sm-4 col-md-4 col-lg-4">
+										<div class="checkbox">
+											<label> <input id="recon" type="checkbox"> Coordination Ellipsis Reconstruction 
+											</label>
+										</div>
+								</div>
 								</form>
 							</div>	
 				</div>
@@ -550,6 +561,7 @@
 			var rule=$("#rule").is(':checked');
 			var ml=$("#ml").is(':checked');
 			var abb=$("#abbr").is(':checked');
+			var recon=$("#recon").is(':checked');
 			var obstart=$("#startdatepicker").val();
 			var obend=$("#enddatepicker").val();
 			var daysbefore=$("#obstart").val();
@@ -571,6 +583,7 @@
 							'rule':rule,
 							'ml':ml,
 							'abb':abb,
+							'recon':recon,
 							'obstart':obstart,
 							'obend':obend,
 							'daysbefore':daysbefore,
@@ -631,6 +644,7 @@
 			var rule=$("#rule").is(':checked');
 			var ml=$("#ml").is(':checked');
 			var abb=$("#abbr").is(':checked');
+			var recon=$("#recon").is(':checked');
 			var obstart=$("#startdatepicker").val();
 			var obend=$("#enddatepicker").val();
 			var daysbefore=$("#obstart").val();
@@ -652,6 +666,7 @@
 							'rule':rule,
 							'ml':ml,
 							'abb':abb,
+							'recon':recon,
 							'obstart':obstart,
 							'obend':obend,
 							'daysbefore':daysbefore,
