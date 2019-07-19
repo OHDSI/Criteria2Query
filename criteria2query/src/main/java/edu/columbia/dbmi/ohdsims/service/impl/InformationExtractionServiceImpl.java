@@ -294,13 +294,13 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 											ret.setStart_index(t.getStart_index());
 											ret.setEnd_index(t.getEnd_index());
 											s.getTerms().add(ret);
-											List<Triple<Integer, Integer, String>> itsrelations=s.getRelations();
-											for(Triple<Integer, Integer, String> rel:itsrelations){
-												if(rel.first==t.getTermId()){
-													Triple<Integer, Integer, String> newrel=new Triple<Integer, Integer, String>(newtId, rel.second, rel.third);
-													s.getRelations().add(newrel);
-												}
-										}
+//											List<Triple<Integer, Integer, String>> itsrelations=s.getRelations();
+//											for(Triple<Integer, Integer, String> rel:itsrelations){
+//												if(rel.first==t.getTermId()){
+//													Triple<Integer, Integer, String> newrel=new Triple<Integer, Integer, String>(newtId, rel.second, rel.third);
+//													s.getRelations().add(newrel);
+//												}
+//											}
 											count++;
 										}
 										
