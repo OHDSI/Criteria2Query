@@ -282,16 +282,29 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 										Integer start_index=t.getStart_index();
 										Integer end_index=t.getEnd_index();
 										List<String> concepts=recontool.resolve(t.getText());
+										int count=0;
 										for(String c:concepts){
 											//System.out.println("=>"+c);
 											Term ret=new Term();
+											Integer newtId=t.getTermId()+100+count;
+											ret.setTermId(newtId);
 											ret.setText(c);
 											ret.setNeg(t.isNeg());
 											ret.setCategorey(t.getCategorey());
 											ret.setStart_index(t.getStart_index());
 											ret.setEnd_index(t.getEnd_index());
 											s.getTerms().add(ret);
+											List<Triple<Integer, Integer, String>> itsrelations=s.getRelations();
+											for(Triple<Integer, Integer, String> rel:itsrelations){
+												if(rel.first==t.getTermId()){
+													Triple<Integer, Integer, String> newrel=new Triple<Integer, Integer, String>(newtId, rel.second, rel.third);
+													s.getRelations().add(newrel);
+												}
 										}
+											count++;
+										}
+										
+										
 										s.getTerms().remove(i);
 									}
 								}
