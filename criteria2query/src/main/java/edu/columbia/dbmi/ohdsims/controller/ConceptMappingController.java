@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,22 +36,39 @@ import net.sf.json.JSONObject;
 @Controller
 @RequestMapping("/map")
 public class ConceptMappingController {
+	private Logger logger = Logger.getLogger(ConceptMappingController.class);
 	
 	@Resource
 	private IConceptMappingService conceptMappingService;
-	
 
 	@RequestMapping("/mapConceptSets")
 	@ResponseBody
 	public Map<String, Object> mapConceptSetsByDoc(HttpSession httpSession, HttpServletRequest request)
 			throws Exception {
+		String remoteAddr = "";
+	    if (request != null) {
+	            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+	            if (remoteAddr == null || "".equals(remoteAddr)) {
+	                remoteAddr = request.getRemoteAddr();
+	            }
+	     }
+		logger.info("[IP:"+remoteAddr+"][Jump to ConceptSet Mapping");
 		Map<String, Object> map = new HashMap<String, Object>();
 		Document doc = (Document) httpSession.getAttribute("allcriteria");
 		List<Term> terms = this.conceptMappingService.getDistinctTerm(doc);
+		logger.info("[IP:"+remoteAddr+"][Start Creating Concept Set");
 		Map<String, Integer> conceptSetIds = this.conceptMappingService.createConceptsByTerms(terms);
+		logger.info("[IP:"+remoteAddr+"][Finish Creating Concept Set");
+		System.out.println("after create concepts by terms");
+		logger.info("[IP:"+remoteAddr+"][Start Linking Concept Set");
 		Document newdoc = this.conceptMappingService.linkConceptSetsToTerms(doc, conceptSetIds);
+		logger.info("[IP:"+remoteAddr+"][Finish Linking Concept Set");
+		System.out.println("set link concept sets");
 		httpSession.setAttribute("allcriteria", newdoc);
+		System.out.println("set http sessions");
 		int index = 0; 
+		System.out.println("term size="+terms.size());
+		logger.info("[IP:"+remoteAddr+"][Start Concept Set Visualization");
 		// query all concept set for display purpose (map and sort them by similarity (string distance) )
 		for (int j = 0; j < terms.size(); j++) {
 			String conceptsetname = terms.get(j).getText();
@@ -60,8 +78,13 @@ public class ConceptMappingController {
 			map.put("cstname" + index, conceptsetname);
 			map.put("csetid" + index, terms.get(j).getVocabularyId());
 			map.put("domain" + index, domain);
+			System.out.println("conceptset"+index+":"+lscst);
+			System.out.println("cstname"+index+":"+conceptsetname);
+			System.out.println("csetid"+index+":"+terms.get(j).getVocabularyId());
+			System.out.println("domain"+index+":"+domain);
 			index++;
 		}
+		logger.info("[IP:"+remoteAddr+"][Finish Concept Set Visualization");
 		return map;
 	}
 	

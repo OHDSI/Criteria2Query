@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,6 +31,7 @@ import net.sf.json.JSONObject;
 @RequestMapping("/queryformulate")
 
 public class QueryFormulationController {
+	private Logger logger = Logger.getLogger(QueryFormulationController.class);
 	@Resource
 	private IQueryFormulateService qfService;
 	@Resource
@@ -36,19 +39,36 @@ public class QueryFormulationController {
 
 	@RequestMapping("/formulateCohort")
 	@ResponseBody
-	public Map<String, Object> formulateCohort(HttpSession httpSession, String conceptsets){
+	public Map<String, Object> formulateCohort(HttpSession httpSession, HttpServletRequest request, String conceptsets){
+		String remoteAddr = "";
+	    if (request != null) {
+	            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+	            if (remoteAddr == null || "".equals(remoteAddr)) {
+	                remoteAddr = request.getRemoteAddr();
+	            }
+	    }
+	    logger.info("[IP:"+remoteAddr+"][Start formulateCohort]");
 		Document doc = (Document) httpSession.getAttribute("allcriteria");
 		JSONObject cohortjson=this.qfService.formualteCohortQuery(doc);
 		System.out.println(cohortjson);
 		httpSession.setAttribute("jsonResult",cohortjson);
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("jsonResult", cohortjson.toString());
+		logger.info("[IP:"+remoteAddr+"][End formulateCohort]");
 		return map;
 	}
 	
 	@RequestMapping("/storeInATLAS")
 	@ResponseBody
-	public Map<String, Object> storeCohortInATLAS(HttpSession httpSession, String conceptsets){
+	public Map<String, Object> storeCohortInATLAS(HttpSession httpSession, HttpServletRequest request, String conceptsets){
+		String remoteAddr = "";
+	    if (request != null) {
+	            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+	            if (remoteAddr == null || "".equals(remoteAddr)) {
+	                remoteAddr = request.getRemoteAddr();
+	            }
+	    }
+	    logger.info("[IP:"+remoteAddr+"][Start connecting to ATLAS]");
 		Document doc = (Document) httpSession.getAttribute("allcriteria");
 		Map<String,Object> map=new HashMap<String,Object>();
 		JSONObject expression=(JSONObject) httpSession.getAttribute("jsonResult");
@@ -60,6 +80,7 @@ public class QueryFormulationController {
 		
 		Integer cohortId=this.qfService.storeInATLAS(expression,"[C2Q]"+sb.toString());
 		map.put("id", cohortId);
+		logger.info("[IP:"+remoteAddr+"][Finish connecting to ATLAS]");
 		return map;
 	}
 

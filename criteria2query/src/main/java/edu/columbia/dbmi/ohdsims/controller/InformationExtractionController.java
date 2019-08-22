@@ -32,6 +32,7 @@ import edu.columbia.dbmi.ohdsims.pojo.ObservationConstraint;
 import edu.columbia.dbmi.ohdsims.pojo.Sentence;
 import edu.columbia.dbmi.ohdsims.service.IConceptFilteringService;
 import edu.columbia.dbmi.ohdsims.service.IInformationExtractionService;
+import edu.columbia.dbmi.ohdsims.service.impl.InformationExtractionServiceImpl;
 import edu.columbia.dbmi.ohdsims.tool.CoreNLP;
 import edu.columbia.dbmi.ohdsims.tool.FeedBackTool;
 import edu.columbia.dbmi.ohdsims.tool.NERTool;
@@ -48,6 +49,7 @@ import net.sf.json.JSONObject;
 @Controller
 @RequestMapping("/ie")
 public class InformationExtractionController {
+	private Logger logger = Logger.getLogger(InformationExtractionController.class);
 	@Resource
 	private IInformationExtractionService ieService;
 	@Resource
@@ -58,6 +60,18 @@ public class InformationExtractionController {
 	public Map<String, Object> parseAllCriteria(HttpSession httpSession, HttpServletRequest request,String initialevent, String inc, String exc,boolean abb, boolean recon,String obstart,String obend,String daysbefore,String daysafter,String limitto) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		System.out.println("recon="+recon);
+		
+		String remoteAddr = "";
+	     if (request != null) {
+	            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+	            if (remoteAddr == null || "".equals(remoteAddr)) {
+	                remoteAddr = request.getRemoteAddr();
+	            }
+	     }
+		logger.info("[IP:"+remoteAddr+"][Click Parse]");
+		logger.info("[IP:"+remoteAddr+"][Initial Event]"+initialevent);
+		logger.info("[IP:"+remoteAddr+"][Inclusion Criteria]"+inc);
+		logger.info("[IP:"+remoteAddr+"][Exclusion Criteria]"+exc);
 		Document doc = this.ieService.translateByDoc(initialevent, inc, exc);
 		doc = this.ieService.patchIEResults(doc);
 		if(recon){
@@ -85,12 +99,16 @@ public class InformationExtractionController {
 			doc= this.ieService.abbrExtensionByDoc(doc);
 		}
 		doc=this.cfService.removeRedundency(doc);
+		logger.info("[IP:"+remoteAddr+"][Parsing Results]"+JSONObject.fromObject(doc));
 		httpSession.setAttribute("allcriteria", doc);
 		map.put("initial_event", display_initial_event);
 		map.put("include", display_inclusion_criteria);
 		map.put("exclude", display_exclusion_criteria);
+		logger.info("[IP:"+remoteAddr+"][Parse Finished]");
 		return map;
 	}
+	
+	
 
 	/**
 	 * download json format criteria
@@ -99,6 +117,14 @@ public class InformationExtractionController {
 	 * */
 	@RequestMapping("/download")
 	public void saveFile(HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
+		String remoteAddr = "";
+	     if (request != null) {
+	            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+	            if (remoteAddr == null || "".equals(remoteAddr)) {
+	                remoteAddr = request.getRemoteAddr();
+	            }
+	     }
+		logger.info("[IP:"+remoteAddr+"][Download Parsing Results]");
 		Document doc = (Document) httpSession.getAttribute("allcriteria");
 		
 		StringBuffer jsonsb = new StringBuffer();
@@ -139,6 +165,14 @@ public class InformationExtractionController {
 	@ResponseBody
 	public Map<String, Object> getCrteriafromCT(HttpSession httpSession, HttpServletRequest request, String nctid)
 			throws Exception {
+		String remoteAddr = "";
+	    if (request != null) {
+	            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+	            if (remoteAddr == null || "".equals(remoteAddr)) {
+	                remoteAddr = request.getRemoteAddr();
+	            }
+	     }
+		logger.info("[IP:"+remoteAddr+"][Fetch Criteria From ClinicalTrials.gov]");
 		String url = "https://clinicaltrials.gov/show/" + nctid + "?displayxml=true";
 		String response = WebUtil.getCTByNctid(nctid);
 		String[] criteria = WebUtil.parse(response);
