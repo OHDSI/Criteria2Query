@@ -38,7 +38,7 @@ import net.sf.json.JSONObject;
 @Service("ieService")
 public class InformationExtractionServiceImpl implements IInformationExtractionService {
 	
-	private static Logger logger = Logger.getLogger(FeedBackTool.class);
+	private static Logger logger = Logger.getLogger(InformationExtractionServiceImpl.class);
 	
 	CoreNLP corenlp = new CoreNLP();
 	NERTool nertool = new NERTool();
@@ -64,8 +64,11 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 	public Document translateByDoc(String initial_event, String inclusion_criteria, String exclusion_criteria) {
 		Document doc = new Document();
 		doc.setInitial_event(translateByBlock(initial_event));
+		logger.info("initial_event="+initial_event);
 		doc.setInclusion_criteria(translateByBlock(inclusion_criteria));
+		logger.info("inclusion_criteria="+initial_event);
 		doc.setExclusion_criteria(translateByBlock(exclusion_criteria));
+		logger.info("exclusion_criteria="+initial_event);
 		return doc;
 	}
 
@@ -116,9 +119,7 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				
 				//
 				terms=patchTermLevel(terms);
-				
-				
-				
+
 				String display="";
 				try{
 					display = nertool.trans4display(sent.getText(),terms);
@@ -143,6 +144,32 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 						attributes.add(t);
 					}
 				}
+				//added complex entity method
+//				
+//				for(int a=0;a<primary_entities.size();a++){
+//					System.out.println("=>"+primary_entities.get(a).getText());
+//					if(recontool.isCEE(primary_entities.get(a).getText())){
+//						Term t=primary_entities.get(a);
+////						String category=t.getCategorey();
+////						String entity=t.getText();
+////						Integer start_index=t.getStart_index();
+////						Integer end_index=t.getEnd_index();
+//						List<String> concepts=recontool.resolve(t.getText());
+//						for(String c:concepts){
+//							//System.out.println("=>"+c);
+//							Term ret=new Term();
+//							ret.setText(c);
+//							ret.setNeg(t.isNeg());
+//							ret.setCategorey(t.getCategorey());
+//							ret.setStart_index(t.getStart_index());
+//							ret.setEnd_index(t.getEnd_index());
+//							primary_entities.add(ret);
+//						}
+//						primary_entities.remove(a);
+//					}
+//				}
+				//end complex entity handling
+				
 				List<Term> allterms = new ArrayList<Term>();
 				allterms.addAll(primary_entities);
 				allterms.addAll(attributes);
@@ -181,7 +208,6 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 				long startTime = System.currentTimeMillis();
 				List<LinkedHashSet<Integer>> logic_groups =logictool.ddep(sent.getText(), primary_entities);
 				long endTime = System.currentTimeMillis();
-				//System.out.println("Time consuming:"+(endTime-startTime));
 				sent.setLogic_groups(logic_groups);
 				sents.add(sent);
 			}
@@ -189,8 +215,6 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 			logger.info(JSONObject.fromObject(pa));
 			spas.add(pa);
 		}
-		//System.out.println("pair count="+pairs);
-		
 		return spas;
 	}
 
@@ -275,7 +299,9 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 										||s.getTerms().get(i).getCategorey().equals("Procedure")
 										||s.getTerms().get(i).getCategorey().equals("Observation")) {
 									String text = s.getTerms().get(i).getText();
+									
 									if(recontool.isCEE(text)){
+										
 										Term t=s.getTerms().get(i);
 										String category=t.getCategorey();
 										String entity=t.getText();

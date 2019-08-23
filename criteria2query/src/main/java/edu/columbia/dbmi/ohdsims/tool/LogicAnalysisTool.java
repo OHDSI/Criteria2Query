@@ -1,5 +1,8 @@
 package edu.columbia.dbmi.ohdsims.tool;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -8,17 +11,14 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.alg.ConnectivityInspector;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
-
 import edu.columbia.dbmi.ohdsims.pojo.Sentence;
 import edu.columbia.dbmi.ohdsims.pojo.Term;
-import edu.stanford.nlp.ling.IndexedWord;
+import edu.columbia.dbmi.ohdsims.util.FileUtil;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
+import edu.stanford.nlp.ling.IndexedWord;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.AnnotationPipeline;
+import edu.stanford.nlp.pipeline.POSTaggerAnnotator;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
 import edu.stanford.nlp.semgraph.SemanticGraphEdge;

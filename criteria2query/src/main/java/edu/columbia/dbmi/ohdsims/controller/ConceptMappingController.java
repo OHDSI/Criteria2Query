@@ -52,17 +52,18 @@ public class ConceptMappingController {
 	                remoteAddr = request.getRemoteAddr();
 	            }
 	     }
-		logger.info("[IP:"+remoteAddr+"][Jump to ConceptSet Mapping");
+	    List<ConceptSet> allsts=this.conceptMappingService.getAllConceptSets();
+		logger.info("[IP:"+remoteAddr+"][Jump to ConceptSet Mapping]");
 		Map<String, Object> map = new HashMap<String, Object>();
 		Document doc = (Document) httpSession.getAttribute("allcriteria");
 		List<Term> terms = this.conceptMappingService.getDistinctTerm(doc);
-		logger.info("[IP:"+remoteAddr+"][Start Creating Concept Set");
-		Map<String, Integer> conceptSetIds = this.conceptMappingService.createConceptsByTerms(terms);
-		logger.info("[IP:"+remoteAddr+"][Finish Creating Concept Set");
+		logger.info("[IP:"+remoteAddr+"][Start Creating Concept Set]");
+		Map<String, Integer> conceptSetIds = this.conceptMappingService.createConceptsByTerms(allsts,terms);
+		logger.info("[IP:"+remoteAddr+"][Finish Creating Concept Set]");
 		System.out.println("after create concepts by terms");
-		logger.info("[IP:"+remoteAddr+"][Start Linking Concept Set");
+		logger.info("[IP:"+remoteAddr+"][Start Linking Concept Set]");
 		Document newdoc = this.conceptMappingService.linkConceptSetsToTerms(doc, conceptSetIds);
-		logger.info("[IP:"+remoteAddr+"][Finish Linking Concept Set");
+		logger.info("[IP:"+remoteAddr+"][Finish Linking Concept Set]");
 		System.out.println("set link concept sets");
 		httpSession.setAttribute("allcriteria", newdoc);
 		System.out.println("set http sessions");
@@ -73,7 +74,8 @@ public class ConceptMappingController {
 		for (int j = 0; j < terms.size(); j++) {
 			String conceptsetname = terms.get(j).getText();
 			String domain = terms.get(j).getCategorey();
-			List<ConceptSet> lscst = this.conceptMappingService.mapAndSortConceptSetByEntityName(conceptsetname);
+			
+			List<ConceptSet> lscst = this.conceptMappingService.mapAndSortConceptSetByEntityNameFromALlConceptSets(allsts,conceptsetname);
 			map.put("conceptset" + index, lscst);
 			map.put("cstname" + index, conceptsetname);
 			map.put("csetid" + index, terms.get(j).getVocabularyId());

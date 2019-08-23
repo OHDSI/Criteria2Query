@@ -22,18 +22,21 @@ public class ConceptFilteringServiceImpl implements IConceptFilteringService {
 		// TODO Auto-generated method stub
 		Set<String> termpool=new HashSet<String>();
 		if (doc.getInitial_event() != null) {
+			System.out.println("Initial event");
 			List<Paragraph> originalp = doc.getInitial_event();
 			originalp = filterOutTerms(originalp, termpool);
 			termpool = updateTermSet(originalp, termpool);
 			doc.setInitial_event(originalp);
 		}
 		if (doc.getInclusion_criteria() != null) {
+			System.out.println("Inclusion Criteria");
 			List<Paragraph> originalp = doc.getInclusion_criteria();
 			originalp = filterOutTerms(originalp, termpool);
 			termpool = updateTermSet(originalp, termpool);
 			doc.setInclusion_criteria(originalp);
 		}
 		if (doc.getExclusion_criteria() != null) {
+			System.out.println("Exclusion Criteria");
 			List<Paragraph> originalp = doc.getExclusion_criteria();
 			originalp = filterOutTerms(originalp, termpool);
 			doc.setExclusion_criteria(originalp);

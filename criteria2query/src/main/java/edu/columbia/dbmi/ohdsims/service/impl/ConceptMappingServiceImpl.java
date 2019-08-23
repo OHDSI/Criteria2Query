@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import edu.columbia.dbmi.ohdsims.pojo.ConceptSet;
@@ -31,6 +32,7 @@ import net.sf.json.JSONObject;
 
 @Service("conceptMappingService")
 public class ConceptMappingServiceImpl implements IConceptMappingService{
+	private static Logger logger = Logger.getLogger(ConceptMappingServiceImpl.class);
 	ConceptMapping cptmap=new ConceptMapping();
 	
 	@Override
@@ -86,10 +88,10 @@ public class ConceptMappingServiceImpl implements IConceptMappingService{
 	}
 
 	@Override
-	public Map<String,Integer> createConceptsByTerms(List<Term> terms) {
+	public Map<String,Integer> createConceptsByTerms(List<ConceptSet> cslist, List<Term> terms) {
 		Map<String,Integer> conceptsets=new HashMap<String,Integer>();
 		for(Term t:terms){
-			Integer conceptSetId=cptmap.createConceptSetByUsagi(t.getText(), t.getCategorey());
+			Integer conceptSetId=cptmap.createConceptSetByUsagi(cslist, t.getText(), t.getCategorey());
 			conceptsets.put(t.getText(),conceptSetId);
 		}
 		return conceptsets;
@@ -130,6 +132,8 @@ public class ConceptMappingServiceImpl implements IConceptMappingService{
 					if (s.getTerms() != null) {
 						for (int i = 0; i < s.getTerms().size(); i++) {
 							Integer conceptSetId=conceptSetIds.get(s.getTerms().get(i).getText());
+							
+							System.out.println(s.getTerms().get(i).getText()+" linked?=>"+conceptSetId);
 							s.getTerms().get(i).setVocabularyId(conceptSetId);
 						}
 					}
@@ -145,6 +149,25 @@ public class ConceptMappingServiceImpl implements IConceptMappingService{
 		LinkedHashMap<ConceptSet, Integer> hcs = cptmap.mapConceptSetByEntity(entityname);
 		Set<String> conceptSetlist=new HashSet<String>();
 		
+		//filter out
+		for (Map.Entry<ConceptSet, Integer> entry : hcs.entrySet()) {
+			//if(conceptSetlist.contains(entry.getKey().getName())==false){
+				lscst.add(entry.getKey());
+				//conceptSetlist.add(entry.getKey().getName());
+			//}
+		}
+		return lscst;
+	}
+		
+	@Override
+	public List<ConceptSet> getAllConceptSets(){
+		List<ConceptSet> cslist = cptmap.getallConceptSet();
+		return cslist;
+	}
+	@Override
+	public List<ConceptSet> mapAndSortConceptSetByEntityNameFromALlConceptSets(List<ConceptSet> conceptsets, String entityname) {
+		List<ConceptSet> lscst=new ArrayList<ConceptSet>();
+		LinkedHashMap<ConceptSet, Integer> hcs = cptmap.mapConceptSetByEntityFromAllConceptSets(conceptsets,entityname);
 		//filter out
 		for (Map.Entry<ConceptSet, Integer> entry : hcs.entrySet()) {
 			//if(conceptSetlist.contains(entry.getKey().getName())==false){

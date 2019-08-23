@@ -180,6 +180,7 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 						if(s.getTerms()!=null){
 							for(Term t:s.getTerms()){
 								if(Arrays.asList(GlobalSetting.conceptSetDomains).contains(t.getCategorey())){
+									System.out.println("add Concept SetId:"+t.getVocabularyId());
 								conceptSetIds.add(t.getVocabularyId());
 								}
 							}
@@ -236,9 +237,14 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 
 	public JSONArray formulateConceptSet(List<Integer> conceptsetIds) {
 		JSONArray conceptsetarr = new JSONArray();
+		System.out.println("conceptId size=>"+conceptsetIds.size());
+		System.out.println("conceptId =>"+conceptsetIds.get(0));
+		
 		for (Integer i:conceptsetIds) {
-			System.out.println(i);
+			if(i!=null){
+				System.out.println("conceptId=>"+i);
 			conceptsetarr.add(OHDSIApis.querybyconceptSetid(i));
+		}
 		}
 		return conceptsetarr;
 	}

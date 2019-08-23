@@ -160,6 +160,7 @@ public class OHDSIApis {
 	}
 	
 	public static JSONObject querybyconceptSetid(int conceptid){
+		System.out.println("===>querybyconceptSetid");
 		JSONObject jot=new JSONObject();
     	String re2=HttpUtil.doGet(conceptseturl+conceptid);
     	JSONObject jore2=JSONObject.fromObject(re2);

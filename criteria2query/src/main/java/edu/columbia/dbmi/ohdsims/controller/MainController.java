@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.columbia.dbmi.ohdsims.pojo.ConceptSet;
 import edu.columbia.dbmi.ohdsims.pojo.DisplayCriterion;
 import edu.columbia.dbmi.ohdsims.pojo.Document;
 import edu.columbia.dbmi.ohdsims.pojo.ObservationConstraint;
@@ -85,8 +86,9 @@ public class MainController {
 		if (abb == true) {
 			doc = this.ieService.abbrExtensionByDoc(doc);
 		}
+		List<ConceptSet> allsts=this.conceptMappingService.getAllConceptSets();
 		List<Term> terms = this.conceptMappingService.getDistinctTerm(doc);
-		Map<String, Integer> conceptSetIds = this.conceptMappingService.createConceptsByTerms(terms);
+		Map<String, Integer> conceptSetIds = this.conceptMappingService.createConceptsByTerms(allsts,terms);
 		doc = this.conceptMappingService.linkConceptSetsToTerms(doc, conceptSetIds);
 //		JSONObject cohortjson = this.qfService.formualteCohortQuery(doc);
 //		Map<String,Object> map=new HashMap<String,Object>();

@@ -64,6 +64,7 @@ public class ConceptMapping {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Set<String> filterset=new HashSet<String>();
 		int index = 0;
+		List<ConceptSet> cpslist=getallConceptSet();
 		try {
 			for (int j = 0; j < tlist.size(); j++) {
 				if(filterset.contains(tlist.get(j).getText())){
@@ -73,11 +74,11 @@ public class ConceptMapping {
 					String conceptsetname = tlist.get(j).getText();
 					String domain = tlist.get(j).getCategorey();
 					if(ignore==false){
-						createConceptSetByUsagi(conceptsetname,domain);
+						createConceptSetByUsagi(cpslist, conceptsetname,domain);
 					}
 					filterset.add(conceptsetname);
 					System.out.println("2");
-					LinkedHashMap<ConceptSet, Integer> hcs = mapConceptSetByEntity(conceptsetname);
+					LinkedHashMap<ConceptSet, Integer> hcs = mapConceptSetByEntityFromAllConceptSets(cpslist,conceptsetname);
 					System.out.println("3");
 					List<ConceptSet> lscst = new ArrayList<ConceptSet>();
 					for (Map.Entry<ConceptSet, Integer> entry : hcs.entrySet()) {
@@ -96,11 +97,13 @@ public class ConceptMapping {
 		return map;
 	}
 	
-	public Integer createConceptSetByUsagi(String term,String domain){
+	public Integer createConceptSetByUsagi(List<ConceptSet> cslist,String term,String domain){
 		Integer conceptId=0;
 		//the most related one
 		try{
-			deleteConceptSetBySubString("[C2Q]"+term);
+			int conceptsetId=reuseConceptSetByStringMatching(cslist,"[C2Q]"+term);
+			if(conceptsetId==0){
+				System.out.println("NEW CREATED->");
 		String[] res=getConceptListByUsagi(term,domain);
 		long t1=System.currentTimeMillis();  
 		JSONObject jo=new JSONObject();
@@ -114,7 +117,12 @@ public class ConceptMapping {
 		System.out.println("conceptset->"+result);
 		JSONObject rejo=JSONObject.fromObject(result);
 		HttpUtil.doPut(conceptseturl+rejo.getString("id")+"/items",res[0]);	
+				System.out.println("-return id-->"+rejo.getString("id"));
 		return Integer.valueOf(rejo.getString("id"));
+			}else{
+				System.out.println("REUSE:"+conceptsetId);
+				return conceptsetId;
+			}
 		}catch (Exception ex){
 			return 0;
 		}
@@ -122,10 +130,26 @@ public class ConceptMapping {
 		
 	}
 	
-	public void deleteConceptSetBySubString(String str){
+	public Integer reuseConceptSetByStringMatching(List<ConceptSet> cslist,String str){
+		ConceptMapping cm = new ConceptMapping();
+		LinkedHashMap<ConceptSet, Integer> hcs = cm.strictlyMapConceptSetByEntityFromAllConceptSets(cslist, str);
+		for (Map.Entry<ConceptSet, Integer> entry : hcs.entrySet()) {
+			/*
+			String url=conceptseturl+entry.getKey().getId();
+			System.out.println(url);
+			HttpUtil.doDelete(url, "");
+			*/
+			return entry.getKey().getId();
+		}
+		return 0;
+		
+	}
+	
+	
+	public void deleteConceptSetBySubString(List<ConceptSet> cslist, String str){
 		int count=0;
 		ConceptMapping cm = new ConceptMapping();
-		LinkedHashMap<ConceptSet, Integer> hcs = cm.mapConceptSetByEntity(str);
+		LinkedHashMap<ConceptSet, Integer> hcs = cm.mapConceptSetByEntityFromAllConceptSets(cslist,str);
 		for (Map.Entry<ConceptSet, Integer> entry : hcs.entrySet()) {
 			String url=conceptseturl+entry.getKey().getId();
 			System.out.println(url);
@@ -205,6 +229,61 @@ public class ConceptMapping {
 		return res;
 	}
 	
+	public LinkedHashMap<ConceptSet, Integer> strictlyMapConceptSetByEntityFromAllConceptSets(List<ConceptSet> cslist,String entityname) {
+		HashMap<ConceptSet, Integer> candidatecs = new HashMap<ConceptSet, Integer>();
+		int distance = 0;
+		for (int k = 0; k < cslist.size(); k++) {
+			if (cslist.get(k).getName().toLowerCase().equals(entityname.toLowerCase().trim())) {
+				// add your own recommendation here
+				// Similarity between this word and
+				distance = cslist.get(k).getName().length() - entityname.trim().length();
+				candidatecs.put(cslist.get(k), distance);
+			}
+		}
+		LinkedHashMap<ConceptSet, Integer> lm = new LinkedHashMap<ConceptSet, Integer>();
+		List<Map.Entry<ConceptSet, Integer>> conceptsets = new ArrayList<Map.Entry<ConceptSet, Integer>>(
+				candidatecs.entrySet());
+		
+		Collections.sort(conceptsets, new Comparator<Map.Entry<ConceptSet, Integer>>() {
+			public int compare(Map.Entry<ConceptSet, Integer> o1, Map.Entry<ConceptSet, Integer> o2) {
+				return (o1.getValue()).toString().compareTo(o2.getValue().toString());
+			}
+		});
+		for (int i = conceptsets.size() - 1; i >= 0; i--) {
+			lm.put(conceptsets.get(i).getKey(), conceptsets.get(i).getValue());
+		}
+		return lm;
+
+	}
+	
+	
+	public LinkedHashMap<ConceptSet, Integer> mapConceptSetByEntityFromAllConceptSets(List<ConceptSet> cslist,String entityname) {
+		HashMap<ConceptSet, Integer> candidatecs = new HashMap<ConceptSet, Integer>();
+		int distance = 0;
+		for (int k = 0; k < cslist.size(); k++) {
+			if (cslist.get(k).getName().toLowerCase().contains(entityname.toLowerCase().trim())) {
+				// add your own recommendation here
+				// Similarity between this word and
+				distance = cslist.get(k).getName().length() - entityname.trim().length();
+				candidatecs.put(cslist.get(k), distance);
+				
+			}
+		}
+		LinkedHashMap<ConceptSet, Integer> lm = new LinkedHashMap<ConceptSet, Integer>();
+		List<Map.Entry<ConceptSet, Integer>> conceptsets = new ArrayList<Map.Entry<ConceptSet, Integer>>(
+				candidatecs.entrySet());
+		
+		Collections.sort(conceptsets, new Comparator<Map.Entry<ConceptSet, Integer>>() {
+			public int compare(Map.Entry<ConceptSet, Integer> o1, Map.Entry<ConceptSet, Integer> o2) {
+				return (o1.getValue()).toString().compareTo(o2.getValue().toString());
+			}
+		});
+		for (int i = conceptsets.size() - 1; i >= 0; i--) {
+			lm.put(conceptsets.get(i).getKey(), conceptsets.get(i).getValue());
+		}
+		return lm;
+
+	}
 	
 	/**
 	 * Map one term to a set of Concept Set
@@ -213,7 +292,7 @@ public class ConceptMapping {
 	public LinkedHashMap<ConceptSet, Integer> mapConceptSetByEntity(String entityname) {
 		HashMap<ConceptSet, Integer> candidatecs = new HashMap<ConceptSet, Integer>();
 		int distance = 0;
-		List<ConceptSet> cslist = getallConceptSet();
+		List<ConceptSet> cslist=getallConceptSet();
 		for (int k = 0; k < cslist.size(); k++) {
 			if (cslist.get(k).getName().toLowerCase().contains(entityname.toLowerCase().trim())) {
 				// add your own recommendation here

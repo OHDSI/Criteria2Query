@@ -69,7 +69,7 @@ public class RelExTool {
 		List<Sentence> newsents =new ArrayList<Sentence>();
 		for(Sentence s:sents){
 			String string=s.getText();
-			System.out.println(string);
+			//System.out.println(string);
 			if(string.startsWith(">>")){
 				continue;
 			}else if(string.startsWith("\n- INCLU")){
@@ -218,6 +218,7 @@ public class RelExTool {
 		Classifier classifier = null;
 		try {
 			Resource fileRource = new ClassPathResource(modelName);
+			
 			classifier = (Classifier) SerializationHelper.read(fileRource.getInputStream());
 		} catch (Exception e) {
 			e.printStackTrace();

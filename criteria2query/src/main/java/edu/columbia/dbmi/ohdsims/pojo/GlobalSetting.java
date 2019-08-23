@@ -1,8 +1,8 @@
 package edu.columbia.dbmi.ohdsims.pojo;
 
 public class GlobalSetting {
-	public final static String c2qversion="criteria2query v0.8.2.1";
-	public final static String ohdsi_api_base_url="http://api.ohdsi.org/WebAPI/";//http://api.ohdsi.org/WebAPI/
+	public final static String c2qversion="criteria2query v0.8.3.5";
+	public final static String ohdsi_api_base_url="http://api.ohdsi.org/WebAPI/";//http://api.ohdsi.org/WebAPI/ http://localhost:8080/WebAPI/
 	public final static String crf_model="edu/columbia/dbmi/ohdsims/model/c2q_all_model_advanced.ser.gz";//all-c2q-model. //ec-ner-model.ser.gz
 	public final static String relexmodel="edu/columbia/dbmi/ohdsims/model/re.model";//all-c2q-model. //ec-ner-model.ser.gz
 	public final static String relExmodel="edu/columbia/dbmi/ohdsims/model/RelEx.model";
