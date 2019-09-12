@@ -711,7 +711,7 @@ public class QueryFormulateServiceImpl implements IQueryFormulateService {
 		// TODO Auto-generated method stub
 		
 		JSONObject cohortdef=new JSONObject();
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH_mm");
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss_SSS");
 		String date = df.format(new Date());
 		
 		cohortdef.put("name", cohortname+date);
