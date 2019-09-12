@@ -150,8 +150,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div class="container">
 		<div class="row footer-top">
 			<div class="col-sm-6 col-lg-6">
-			    <p><strong>Criteria2query v0.8.5.0</strong></p>
-				<p>This website was developed by Chi Yuan,Patrick Ryan, Yixuan Guo, Chunhua Weng</p>
+			    <p><strong>Criteria2query v0.8.6.0</strong></p>
+				<p>This website was developed by Chi Yuan, Patrick Ryan, Yixuan Guo, Chunhua Weng</p>
 			</div>
 		</div>
 	</div>
@@ -226,7 +226,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			dataType : "json",
   			async : false,
   			success : function(data) {
-  				openNewWin("http://www.ohdsi.org/web/atlas/#/cohortdefinition/"+data['id']);
+  				openNewWin("http://atlas-tutorial.ohdsi.org/#/cohortdefinition/"+data['id']);
   			}
   	  });
   	  //window.location.href=basePath + "nlpmethod/jsonpage";
