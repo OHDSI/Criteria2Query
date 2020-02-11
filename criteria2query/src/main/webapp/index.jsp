@@ -361,8 +361,8 @@
 										</div>
 									</div>
 								</form>
-							</div>	
-							<div class="form-group col-sm-12 col-md-12 col-lg-12">
+							</div>
+							<!-- <div class="form-group col-sm-12 col-md-12 col-lg-12">
 								<form class="form-inline">
 								<div class="form-group col-sm-4 col-md-4 col-lg-4">
 										<div class="checkbox">
@@ -371,7 +371,7 @@
 										</div>
 								</div>
 								</form>
-							</div>	
+							</div> -->
 				</div>
 				</div>
 			</div>
