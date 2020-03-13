@@ -105,6 +105,14 @@
   gtag('js', new Date());
   gtag('config', 'UA-118282453-1');
 </script>
+
+<script type="text/javascript">
+function formReset()
+  {
+  document.getElementById("myForm").reset()
+  }
+</script>
+
 </head>
 <body>
 
@@ -134,8 +142,12 @@
 				eligibility criteria to OMOP Common Data Model-based executable
 				cohort queries.</h3>
 			<p class="masthead-button-links">
+			
+			<!--
 				<a class="btn btn-lg btn-success" id="starttoinput" target="_blank"
-					role="button">&nbsp;&nbsp;Start&nbsp;&nbsp;</a> <a
+					role="button">&nbsp;&nbsp;Start&nbsp;&nbsp;</a> 
+					-->
+					<a
 					class="btn btn-lg btn-info" id="feedback" data-toggle="modal"
 					data-target="#myModal" role="button">&nbsp;&nbsp;FeedBack&nbsp;&nbsp;</a>
 			</p>
@@ -203,7 +215,7 @@
 									<div class="form-group">
 									<label>Please input a NCTID :</label>
 								<input class="input-sm" type="text" id="nctid" name="nctid" placeholder="e.g., NCT01640873">
-								<a class="btn btn-primary" id="fetchct" role="button">Fetch</a>
+								<a class="btn btn-primary" id="fetchct" role="button">Extract Criteria</a>
 								</div>
 								</form>
 							</div>	
@@ -211,6 +223,48 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="col-sm-12 col-md-12 col-lg-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion" 
+				  			href="#collapseTwo"><span class="glyphicon glyphicon-ok"></span>
+						Inclusion Criteria
+						</a>
+					</h4>
+				</div>
+				<div id="collapseTwo" class="panel-collapse collapse in">
+					<div class="panel-body">
+						<div class="form-group">
+							<span class="help-block">Tips: Please input criteria line by line</span>
+	  						<textarea class="form-control" rows="12" id="incriteria"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-12 col-md-12 col-lg-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">
+						<a data-toggle="collapse" data-parent="#accordion" 
+						   href="#collapseThree"><span class="glyphicon glyphicon-remove"></span>
+						   Exclusion Criteria
+						</a>
+					</h4>
+				</div>
+				<div id="collapseThree" class="panel-collapse collapse in">
+					<div class="panel-body">
+						<div class="form-group">
+						<span class="help-block">Tips: Please input criteria line by line</span>
+		  				<textarea class="form-control" rows="12" id="excriteria"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
 		<div class="col-sm-12 col-md-12 col-lg-12">	
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -221,7 +275,8 @@
 						</a>
 					</h4>
 				</div>
-				<div id="collapseOne" class="panel-collapse collapse in">
+				<div id="collapseOne" class="panel-collapse collapse" style="height: 0px;">
+				
 				<div class="panel-body">
 							<div class="form-group">
 								<span class="help-block"><strong>Initial event
@@ -288,46 +343,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-12 col-md-12 col-lg-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4 class="panel-title">
-						<a data-toggle="collapse" data-parent="#accordion" 
-				  			href="#collapseTwo"><span class="glyphicon glyphicon-ok"></span>
-						Inclusion Criteria
-						</a>
-					</h4>
-				</div>
-				<div id="collapseTwo" class="panel-collapse collapse in">
-					<div class="panel-body">
-						<div class="form-group">
-							<span class="help-block">Tips: Please input criteria line by line</span>
-	  						<textarea class="form-control" rows="12" id="incriteria"></textarea>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-sm-12 col-md-12 col-lg-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4 class="panel-title">
-						<a data-toggle="collapse" data-parent="#accordion" 
-						   href="#collapseThree"><span class="glyphicon glyphicon-remove"></span>
-						   Exclusion Criteria
-						</a>
-					</h4>
-				</div>
-				<div id="collapseThree" class="panel-collapse collapse in">
-					<div class="panel-body">
-						<div class="form-group">
-						<span class="help-block">Tips: Please input criteria line by line</span>
-		  				<textarea class="form-control" rows="12" id="excriteria"></textarea>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+		
 		<div class="col-sm-12 col-md-12 col-lg-12">	
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -361,7 +377,7 @@
 										</div>
 									</div>
 								</form>
-							</div>
+							</div>	
 							<!-- <div class="form-group col-sm-12 col-md-12 col-lg-12">
 								<form class="form-inline">
 								<div class="form-group col-sm-4 col-md-4 col-lg-4">
@@ -378,9 +394,9 @@
 		</div>
 		<div class="col-sm-12 col-md-12 col-lg-12">	
 			<p class="masthead-button-links">
-				<a class="btn btn-success" id="start" target="_blank" role="button">&nbsp;&nbsp;Parse&nbsp;&nbsp;</a>
+				<a class="btn btn-success" id="start" target="_blank" role="button">&nbsp;&nbsp;Analyze Criteria&nbsp;&nbsp;</a>
 				<a class="btn btn-info" id="reset" role="button">&nbsp;&nbsp;&nbsp;Reset&nbsp;&nbsp;&nbsp;</a>
-				<a class="btn btn-warning" id="auto" role="button">&nbsp;&nbsp;Generate Query&nbsp;&nbsp;</a>	
+							
 			</p>  	
 		</div>	
 			<div class="col-sm-12 col-md-12 col-lg-12">
@@ -396,8 +412,10 @@
 			</div>
 			<div class="col-sm-12 col-md-12 col-lg-12">	
 				<p class="masthead-button-links">
-					<a class="btn btn-primary" id="mapping" style="display:none" role="button">&nbsp;&nbsp;Next&nbsp;&nbsp;</a>
-					<a class="btn btn-success" id="downloadfile" style="display:none" role="button">&nbsp;&nbsp;Download&nbsp;&nbsp;</a>
+				<!--  <a class="btn btn-warning" id="auto" style="display:none"  role="button">&nbsp;&nbsp;Identify Patients in ATLAS&nbsp;&nbsp;</a>	-->
+					<a class="btn btn-primary" id="mapping" style="display:none" role="button">&nbsp;&nbsp;Identify Patients in ATLAS&nbsp;&nbsp;</a>
+					<a class="btn btn-success" id="downloadfile" style="display:none" role="button">&nbsp;&nbsp;Download Criteria JSON File&nbsp;&nbsp;</a>
+					
 				</p>
 		   	</div>	
 		</div>
@@ -432,7 +450,8 @@
 				formatdata();
 			});
 			$("#reset").click(function() {
-				$("#abbr").attr("checked",false);
+				//$("#abbr").attr("checked",false);
+				top.location='index.jsp';  
 			});
 			
 			$("#fbsubmit").click(function() {
