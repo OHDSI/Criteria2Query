@@ -133,7 +133,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div class="container">
 		<div class="row footer-top">
 			<div class="col-sm-6 col-lg-6">
-
+ 				<p><strong>Criteria2query v0.8.6.0</strong></p>
 				<p>This website was developed by ChiYuan, Chunhua Weng</p>
 			</div>
 

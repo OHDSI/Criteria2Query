@@ -226,7 +226,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			dataType : "json",
   			async : false,
   			success : function(data) {
-  				openNewWin("http://atlas-tutorial.ohdsi.org/#/cohortdefinition/"+data['id']);
+  				openNewWin("http://www.ohdsi.org/web/atlas/#/cohortdefinitions/"+data['id']);
   			}
   	  });
   	  //window.location.href=basePath + "nlpmethod/jsonpage";
