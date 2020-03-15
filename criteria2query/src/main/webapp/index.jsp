@@ -411,10 +411,9 @@ function formReset()
 				</table>
 			</div>
 			<div class="col-sm-12 col-md-12 col-lg-12">	
-				<p class="masthead-button-links">
-				<!--  <a class="btn btn-warning" id="auto" style="display:none"  role="button">&nbsp;&nbsp;Identify Patients in ATLAS&nbsp;&nbsp;</a>	-->
-					<a class="btn btn-primary" id="mapping" style="display:none" role="button">&nbsp;&nbsp;Identify Patients in ATLAS&nbsp;&nbsp;</a>
-					<a class="btn btn-success" id="downloadfile" style="display:none" role="button">&nbsp;&nbsp;Download Criteria JSON File&nbsp;&nbsp;</a>
+				<p class="masthead-button-links">		
+					<a class="btn btn-success" id="auto" style="display:none" role="button">&nbsp;&nbsp;Identify Patients in ATLAS&nbsp;&nbsp;</a>
+					<a class="btn btn-primary" id="downloadfile" style="display:none" role="button">&nbsp;&nbsp;Download Criteria JSON File&nbsp;&nbsp;</a>
 					
 				</p>
 		   	</div>	
@@ -798,6 +797,7 @@ function formReset()
 								'scrollTop' : t + 1000
 							}, 200)
 							$("#mapping").show();
+							$("#auto").show();
 							$("#downloadfile").show();
 						},
 						error: function(e) { 
