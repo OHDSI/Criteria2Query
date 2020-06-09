@@ -426,9 +426,9 @@ function formReset()
 		<div class="row footer-top">
 			<div class="col-sm-6 col-lg-6">
 				<p>
-					<strong>Criteria2query v0.8.6.0</strong>
+					<strong>Criteria2query v0.8.6.1</strong>
 				</p>
-				<p>This website was developed by Chi Yuan,Patrick Ryan, Yixuan
+				<p>This website was developed by Chi Yuan,Patrick Ryan, Yingcheng Sun, Yixuan
 					Guo, Chunhua Weng</p>
 			</div>
 		</div>
