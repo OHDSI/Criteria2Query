@@ -7,7 +7,7 @@ public class Term implements Cloneable{
 	private Integer vocabularyId;
 	private String text;
 	private boolean neg;
-	private String categorey;
+	private String category;
 	private Integer start_index;
 	private Integer end_index;
 	private HashMap<Integer, String> relations;
@@ -32,10 +32,10 @@ public class Term implements Cloneable{
 		this.text = text;
 	}
 	public String getCategorey() {
-		return categorey;
+		return category;
 	}
 	public void setCategorey(String categorey) {
-		this.categorey = categorey;
+		this.category = categorey;
 	}
 	public Integer getStart_index() {
 		return start_index;
@@ -51,7 +51,7 @@ public class Term implements Cloneable{
 	}
 	
 	public String toString(){
-		String tostr="<"+this.termId.toString()+">["+this.categorey+"]:"+this.text;
+		String tostr="<"+this.termId.toString()+">["+this.category+"]:"+this.text;
 		return tostr;
 	}
 	public boolean isNeg() {
