@@ -140,7 +140,7 @@ public class NegReTool {
 		// Tag the phrases we want to detect for negation.
 		// Should happen before rule detection.
 		String phrase = phraseString;
-		Pattern pph = Pattern.compile(phrase.trim(), Pattern.CASE_INSENSITIVE);
+		Pattern pph = Pattern.compile(Pattern.quote(phrase.trim()), Pattern.CASE_INSENSITIVE);
 		Matcher mph = pph.matcher(sentence);
 
 		while (mph.find() == true) {
