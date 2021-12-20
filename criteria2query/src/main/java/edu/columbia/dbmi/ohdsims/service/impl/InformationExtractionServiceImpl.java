@@ -6,7 +6,8 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Service;
 
 import edu.columbia.dbmi.ohdsims.pojo.DisplayCriterion;
@@ -38,7 +39,7 @@ import net.sf.json.JSONObject;
 @Service("ieService")
 public class InformationExtractionServiceImpl implements IInformationExtractionService {
 	
-	private static Logger logger = Logger.getLogger(InformationExtractionServiceImpl.class);
+	private static Logger logger = LogManager.getLogger(InformationExtractionServiceImpl.class);
 	
 	CoreNLP corenlp = new CoreNLP();
 	NERTool nertool = new NERTool();

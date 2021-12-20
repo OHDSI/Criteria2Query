@@ -1,55 +1,36 @@
 package edu.columbia.dbmi.ohdsims.controller;
 
-import java.io.BufferedOutputStream;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.alibaba.fastjson.JSON;
+import edu.columbia.dbmi.ohdsims.pojo.DisplayCriterion;
+import edu.columbia.dbmi.ohdsims.pojo.Document;
+import edu.columbia.dbmi.ohdsims.pojo.ObservationConstraint;
+import edu.columbia.dbmi.ohdsims.service.IConceptFilteringService;
+import edu.columbia.dbmi.ohdsims.service.IInformationExtractionService;
+import edu.columbia.dbmi.ohdsims.util.IOUtil;
+import edu.columbia.dbmi.ohdsims.util.WebUtil;
+import net.sf.json.JSONObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.alibaba.fastjson.JSON;
-
-import edu.columbia.dbmi.ohdsims.pojo.Cdmentity;
-import edu.columbia.dbmi.ohdsims.pojo.DisplayCriterion;
-import edu.columbia.dbmi.ohdsims.pojo.Document;
-import edu.columbia.dbmi.ohdsims.pojo.ObservationConstraint;
-import edu.columbia.dbmi.ohdsims.pojo.Sentence;
-import edu.columbia.dbmi.ohdsims.service.IConceptFilteringService;
-import edu.columbia.dbmi.ohdsims.service.IInformationExtractionService;
-import edu.columbia.dbmi.ohdsims.service.impl.InformationExtractionServiceImpl;
-import edu.columbia.dbmi.ohdsims.tool.CoreNLP;
-import edu.columbia.dbmi.ohdsims.tool.FeedBackTool;
-import edu.columbia.dbmi.ohdsims.tool.NERTool;
-import edu.columbia.dbmi.ohdsims.tool.NegReTool;
-import edu.columbia.dbmi.ohdsims.util.IOUtil;
-import edu.columbia.dbmi.ohdsims.util.StringUtil;
-import edu.columbia.dbmi.ohdsims.util.TemporalNormalize;
-import edu.columbia.dbmi.ohdsims.util.WebUtil;
-import edu.stanford.nlp.ling.HasWord;
-import edu.stanford.nlp.ling.SentenceUtils;
-import edu.stanford.nlp.process.DocumentPreprocessor;
-import net.sf.json.JSONObject;
+import java.io.BufferedOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/ie")
 public class InformationExtractionController {
-	private Logger logger = Logger.getLogger(InformationExtractionController.class);
+	private Logger logger = LogManager.getLogger(InformationExtractionController.class);
 	@Resource
 	private IInformationExtractionService ieService;
 	@Resource

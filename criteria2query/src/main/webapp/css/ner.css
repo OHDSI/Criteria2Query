@@ -1,0 +1,168 @@
+.entities {
+     line-height: 2; 
+}
+
+[data-entity] {
+     padding: 0.25em 0.35em;
+     margin: 0px 0.25em;
+     line-height: 1;
+     display: inline-block;
+     border-radius: 0.25em;
+     border: 1px solid; 
+}
+
+[data-entity]::after {
+     box-sizing: border-box;
+     content: attr(data-entity);
+     font-size: 0.6em;
+     line-height: 1;
+     padding: 0.35em;
+     border-radius: 0.35em;
+     text-transform: uppercase;
+     display: inline-block;
+     vertical-align: middle;
+     margin: 0px 0px 0.1rem 0.5rem; 
+}
+
+[data-entity][data-entity="observation"] {
+     background: rgba(166, 226, 45, 0.2);
+     border-color: rgb(166, 226, 45); 
+}
+
+[data-entity][data-entity="observation"]::after {
+     background: rgb(166, 226, 45); 
+}
+
+[data-entity][data-entity="condition"] {
+     background: rgba(224, 0, 132, 0.2);
+     border-color: rgb(224, 0, 132); 
+}
+
+[data-entity][data-entity="condition"]::after {
+     background: rgb(224, 0, 132); 
+}
+
+[data-entity][data-entity="drug"] {
+     background: rgba(67, 198, 252, 0.2);
+     border-color: rgb(67, 198, 252); 
+}
+
+[data-entity][data-entity="drug"]::after {
+     background: rgb(67, 198, 252); 
+}
+
+
+[data-entity][data-entity="measurement"] {
+     background: rgba(253, 151, 32, 0.2);
+     border-color: rgb(253, 151, 32); 
+}
+
+[data-entity][data-entity="measurement"]::after {
+     background: rgb(253, 151, 32); 
+}
+
+[data-entity][data-entity="procedure"] {
+     background: rgba(253, 151, 32, 0.2);
+     border-color: rgb(253, 151, 32); 
+}
+
+[data-entity][data-entity="procedure"]::after {
+     background: rgb(253, 151, 32); 
+}
+
+
+[data-entity][data-entity="value"] {
+     background: rgba(142, 125, 255, 0.2);
+     border-color: rgb(142, 125, 255); 
+}
+
+[data-entity][data-entity="value"]::after {
+     background: rgb(142, 125, 255); 
+}
+
+[data-entity][data-entity="temporal"] {
+     background: rgba(255, 204, 0, 0.2);
+     border-color: rgb(255, 204, 0); 
+}
+
+[data-entity][data-entity="temporal"]::after {
+     background: rgb(255, 204, 0); 
+}
+
+[data-entity][data-entity="negation_cue"] {
+     background: rgba(255, 51, 51, 0.2);
+     border-color: rgb(255, 51, 51); 
+}
+
+[data-entity][data-entity="negation_cue"]::after {
+     background: rgb(255, 51, 51); 
+}
+
+
+[data-entity][data-entity="device"] {
+     background: rgba(47, 187, 171, 0.2);
+     border-color: rgb(47, 187, 171); 
+}
+
+[data-entity][data-entity="device"]::after {
+     background: rgb(47, 187, 171); 
+}
+
+[data-entity][data-entity="demographic"] {
+     background: rgba(47, 187, 171, 0.2);
+     border-color: rgb(47, 187, 171); 
+}
+
+[data-entity][data-entity="demographic"]::after {
+     background: rgb(47, 187, 171); 
+}
+
+[data-entity][data-entity="percent"] {
+     background: rgba(153, 153, 153, 0.2);
+     border-color: rgb(153, 153, 153); 
+}
+
+[data-entity][data-entity="percent"]::after {
+     background: rgb(153, 153, 153); 
+}
+
+[data-entity][data-entity="money"] {
+     background: rgba(153, 153, 153, 0.2);
+     border-color: rgb(153, 153, 153); 
+}
+
+[data-entity][data-entity="money"]::after {
+     background: rgb(153, 153, 153); 
+}
+
+[data-entity][data-entity="quantity"] {
+     background: rgba(153, 153, 153, 0.2);
+     border-color: rgb(153, 153, 153); 
+}
+
+[data-entity][data-entity="quantity"]::after {
+     background: rgb(153, 153, 153); 
+}
+
+[data-entity][data-entity="ordinal"] {
+     background: rgba(153, 153, 153, 0.2);
+     border-color: rgb(153, 153, 153); 
+}
+
+[data-entity][data-entity="ordinal"]::after {
+     background: rgb(153, 153, 153); 
+}
+
+[data-entity][data-entity="cardinal"] {
+     background: rgba(153, 153, 153, 0.2);
+     border-color: rgb(153, 153, 153); 
+}
+
+[data-entity][data-entity="cardinal"]::after {
+     background: rgb(153, 153, 153); 
+}
+
+body {
+    /* padding: 25px 50px;
+    font: 18px Helvetica, Arial, sans-serif; */
+}

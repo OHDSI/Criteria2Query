@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Service;
 
 import edu.columbia.dbmi.ohdsims.pojo.ConceptSet;
@@ -32,7 +33,7 @@ import net.sf.json.JSONObject;
 
 @Service("conceptMappingService")
 public class ConceptMappingServiceImpl implements IConceptMappingService{
-	private static Logger logger = Logger.getLogger(ConceptMappingServiceImpl.class);
+	private static Logger logger = LogManager.getLogger(ConceptMappingServiceImpl.class);
 	ConceptMapping cptmap=new ConceptMapping();
 	
 	@Override

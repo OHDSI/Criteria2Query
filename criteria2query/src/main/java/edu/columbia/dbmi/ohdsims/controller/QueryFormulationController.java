@@ -9,7 +9,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,7 +32,7 @@ import net.sf.json.JSONObject;
 @RequestMapping("/queryformulate")
 
 public class QueryFormulationController {
-	private Logger logger = Logger.getLogger(QueryFormulationController.class);
+	private Logger logger = LogManager.getLogger(QueryFormulationController.class);
 	@Resource
 	private IQueryFormulateService qfService;
 	@Resource
