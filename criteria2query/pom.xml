@@ -9,11 +9,11 @@
     <url>http://maven.apache.org</url>
     <properties>
         <!-- spring version -->
-        <spring.version>5.3.13</spring.version>
+        <spring.version>5.3.14</spring.version>
         <slf4j.version>2.0.0-alpha5</slf4j.version>
-        <log4j2.version>2.17.0</log4j2.version>
-        <log4j-core.version>2.17.0</log4j-core.version>
-        <log4j-api.version>2.17.0</log4j-api.version>
+        <log4j2.version>2.17.1</log4j2.version>
+        <log4j-core.version>2.17.1</log4j-core.version>
+        <log4j-api.version>2.17.1</log4j-api.version>
     </properties>
     <dependencies>
         <dependency>
@@ -231,12 +231,12 @@
         <dependency>
             <groupId>edu.stanford.nlp</groupId>
             <artifactId>stanford-corenlp</artifactId>
-            <version>3.8.0</version>
+            <version>4.3.2</version>
         </dependency>
         <dependency>
             <groupId>edu.stanford.nlp</groupId>
             <artifactId>stanford-corenlp</artifactId>
-            <version>3.8.0</version>
+            <version>4.3.2</version>
             <classifier>models</classifier>
         </dependency>
         <dependency>
