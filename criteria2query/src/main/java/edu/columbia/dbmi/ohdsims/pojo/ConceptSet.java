@@ -1,14 +1,24 @@
 package edu.columbia.dbmi.ohdsims.pojo;
 
-import java.util.List;
+import net.sf.json.JSONArray;
 
 public class ConceptSet {
 	Integer id;
-	String name;
-	String createdBy;
-	String modifiedBy;
+//	String createdBy;
+//	String modifiedBy;
 	String createdDate;
 	String modifiedDate;
+	JSONArray tags;
+	Boolean hasWriteAccess;
+	String name;
+
+	public JSONArray getTags() {
+		return tags;
+	}
+
+	public void setTags(JSONArray id) {
+		this.tags = tags;
+	}
 
 	public Integer getId() {
 		return id;
@@ -26,21 +36,21 @@ public class ConceptSet {
 		this.name = name;
 	}
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
+//	public String getCreatedBy() {
+//		return createdBy;
+//	}
+//
+//	public void setCreatedBy(String createdBy) {
+//		this.createdBy = createdBy;
+//	}
+//
+//	public String getModifiedBy() {
+//		return modifiedBy;
+//	}
+//
+//	public void setModifiedBy(String modifiedBy) {
+//		this.modifiedBy = modifiedBy;
+//	}
 
 	public String getCreatedDate() {
 		return createdDate;

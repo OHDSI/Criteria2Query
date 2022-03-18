@@ -23,15 +23,16 @@ public class ConceptMapping {
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         ConceptMapping cm = new ConceptMapping();
+        cm.getallConceptSet();
         //cm.mapConceptSetByEntity("type 2 diabetes");
         //cm.getConceptListByUsagi("type 2 diabetes", "Condition");
-        LinkedHashMap<ConceptSet, Integer> hcs = cm.mapConceptSetByEntity("criteria2query");
-        for (Map.Entry<ConceptSet, Integer> entry : hcs.entrySet()) {
-            String url = conceptseturl + entry.getKey().getId();
-            System.out.println(url);
-            HttpUtil.doDelete(url, "");
-        }
-        System.out.println("size=" + hcs.size());
+//        LinkedHashMap<ConceptSet, Integer> hcs = cm.mapConceptSetByEntity("criteria2query");
+//        for (Map.Entry<ConceptSet, Integer> entry : hcs.entrySet()) {
+//            String url = conceptseturl + entry.getKey().getId();
+//            System.out.println(url);
+//            HttpUtil.doDelete(url, "");
+//        }
+//        System.out.println("size=" + hcs.size());
 
     }
 
@@ -87,8 +88,7 @@ public class ConceptMapping {
         Integer conceptId = 0;
         //the most related one
         try {
-            Integer conceptsetId=0;
-//            int conceptsetId = reuseConceptSetByStringMatching(cslist, "[C2Q]" + term);
+            int conceptsetId = reuseConceptSetByStringMatching(cslist, "[C2Q]" + term);
             if (conceptsetId == 0) {
                 System.out.println("NEW CREATED->");
                 String[] res = getConceptListByUsagi(term, domain);
@@ -307,7 +307,17 @@ public class ConceptMapping {
     public static List<ConceptSet> getallConceptSet() {
         String strResult = HttpUtil.doGet(conceptseturl);
         JSONArray array = JSONArray.fromObject(strResult);
-        List<ConceptSet> list = JSONArray.toList(array, ConceptSet.class);
+        JSONArray arrayC2Q = new JSONArray();
+        for(int n = 0; n < array.size(); n++)
+        {
+            JSONObject object = array.getJSONObject(n);
+            if (object.get("name").toString().contains("[C2Q]")){
+                arrayC2Q.add(object);
+            };
+
+        }
+//        List list = (List) JSONArray.toCollection(array);
+        List<ConceptSet> list = (List<ConceptSet>) JSONArray.toCollection(arrayC2Q, ConceptSet.class);
         return list;
     }
 

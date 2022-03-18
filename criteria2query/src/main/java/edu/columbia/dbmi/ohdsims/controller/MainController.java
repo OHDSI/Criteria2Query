@@ -1,44 +1,24 @@
 package edu.columbia.dbmi.ohdsims.controller;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.sql.DataSource;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.MutablePropertySources;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.support.ResourcePropertySource;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import edu.columbia.dbmi.ohdsims.pojo.ConceptSet;
-import edu.columbia.dbmi.ohdsims.pojo.DisplayCriterion;
 import edu.columbia.dbmi.ohdsims.pojo.Document;
 import edu.columbia.dbmi.ohdsims.pojo.ObservationConstraint;
-import edu.columbia.dbmi.ohdsims.pojo.OccurrenceStart;
-import edu.columbia.dbmi.ohdsims.pojo.Paragraph;
-import edu.columbia.dbmi.ohdsims.pojo.Sentence;
 import edu.columbia.dbmi.ohdsims.pojo.Term;
 import edu.columbia.dbmi.ohdsims.service.IConceptFilteringService;
 import edu.columbia.dbmi.ohdsims.service.IConceptMappingService;
 import edu.columbia.dbmi.ohdsims.service.IInformationExtractionService;
 import edu.columbia.dbmi.ohdsims.service.IQueryFormulateService;
-import edu.stanford.nlp.util.Triple;
-import net.sf.json.JSONObject;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/main")
@@ -86,7 +66,7 @@ public class MainController {
 		if (abb == true) {
 			doc = this.ieService.abbrExtensionByDoc(doc);
 		}
-		List<ConceptSet> allsts=this.conceptMappingService.getAllConceptSets();
+		List<ConceptSet> allsts= this.conceptMappingService.getAllConceptSets();
 		List<Term> terms = this.conceptMappingService.getDistinctTerm(doc);
 		Map<String, Integer> conceptSetIds = this.conceptMappingService.createConceptsByTerms(allsts,terms);
 		doc = this.conceptMappingService.linkConceptSetsToTerms(doc, conceptSetIds);
