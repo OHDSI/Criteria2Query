@@ -1,39 +1,18 @@
 package edu.columbia.dbmi.ohdsims.service.impl;
 
-import java.io.IOException;
+import edu.columbia.dbmi.ohdsims.pojo.*;
+import edu.columbia.dbmi.ohdsims.service.IInformationExtractionService;
+import edu.columbia.dbmi.ohdsims.tool.*;
+import edu.stanford.nlp.util.Triple;
+import net.sf.json.JSONObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
-
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.stereotype.Service;
-
-import edu.columbia.dbmi.ohdsims.pojo.DisplayCriterion;
-import edu.columbia.dbmi.ohdsims.pojo.Document;
-import edu.columbia.dbmi.ohdsims.pojo.GlobalSetting;
-import edu.columbia.dbmi.ohdsims.pojo.Paragraph;
-import edu.columbia.dbmi.ohdsims.pojo.Sentence;
-import edu.columbia.dbmi.ohdsims.pojo.Term;
-import edu.columbia.dbmi.ohdsims.service.IInformationExtractionService;
-import edu.columbia.dbmi.ohdsims.tool.ConceptMapping;
-import edu.columbia.dbmi.ohdsims.tool.CoreNLP;
-import edu.columbia.dbmi.ohdsims.tool.FeedBackTool;
-import edu.columbia.dbmi.ohdsims.tool.LogicAnalysisTool;
-import edu.columbia.dbmi.ohdsims.tool.NERTool;
-import edu.columbia.dbmi.ohdsims.tool.NegReTool;
-import edu.columbia.dbmi.ohdsims.tool.ReconTool;
-import edu.columbia.dbmi.ohdsims.tool.RelExTool;
-import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.TextAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
-import edu.stanford.nlp.pipeline.Annotation;
-import edu.stanford.nlp.util.CoreMap;
-import edu.stanford.nlp.util.Triple;
-import net.sf.json.JSONObject;
 
 
 @Service("ieService")
@@ -409,17 +388,17 @@ public class InformationExtractionServiceImpl implements IInformationExtractionS
 
 	public Document abbrExtensionByDoc(Document doc) {
 		// TODO Auto-generated method stub
-		if (doc.getInitial_event() != null) {
+		if (doc.getInitial_event().isEmpty()) {
 			List<Paragraph> originalp = doc.getInitial_event();
 			originalp = abbrExtension(originalp);
 			doc.setInitial_event(originalp);
 		}
-		if (doc.getInclusion_criteria() != null) {
+		if (!doc.getInclusion_criteria().isEmpty())  {
 			List<Paragraph> originalp = doc.getInclusion_criteria();
 			originalp = abbrExtension(originalp);
 			doc.setInclusion_criteria(originalp);
 		}
-		if (doc.getExclusion_criteria() != null) {
+		if (doc.getExclusion_criteria().isEmpty())  {
 			List<Paragraph> originalp = doc.getExclusion_criteria();
 			originalp = abbrExtension(originalp);
 			doc.setExclusion_criteria(originalp);
