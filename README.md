@@ -3,8 +3,7 @@
 [![](https://img.shields.io/badge/introduction--video-available-brightgreen.svg)](https://www.youtube.com/watch?v=EYN2Md-DCR8)
 [![](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Criteria2query/Lobby#)
 
-
-[In Development] An application to parse freetext inclusion criteria and produce a structured cohort definition that can be executed against OMOP CDM
+C2Q 2.0 will be published here shortly. Please hold until we update this page with C2Q 2.0 before April 15th, 2022. 
 
 
 ### [Criteria2Query Online Demo](http://www.ohdsi.org/web/criteria2query/)
@@ -37,3 +36,5 @@ We developed a logic translation component in Criteria2Query to translate logic 
 We adapted a library for recognizing and normalizing time expressions, SUTime, to standardized temporal expressions into TIMEX3 format first. We then use regular expressions to transform temporal information in TIMEX3 format into the target CDM format. We also developed a heuristic method for the numeric normalization using regular expressions to fill the results in the target format. Both temporal and numeric attributes are linked to their related criteria based on relation extraction results.
 
 ### [Criteria2Query Chat Room](https://gitter.im/Criteria2query/Lobby#)
+
+If you have any question, please contact Dr. Chunhua Weng at Columbia University.
