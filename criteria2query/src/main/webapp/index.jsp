@@ -166,31 +166,14 @@ function formReset()
 						<h4 class="modal-title" id="myModalLabel">Comments &
 							Suggestions</h4>
 					</div>
-					<div class="modal-body">
-					 <form role="form" name="form1" id="myForm" class="form-horizontal" action="">
-						<fieldset>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">Email</label>
-							<div class="col-sm-4">
-								<input type="text" class="form-control col-sm-4"
-									id="fbemail" name="newconceptname" placeholder="">
-							</div>
-
-						</div>
-						<div class="form-group">
-							<label for="IDCard" class="col-sm-2 control-label">FeedBack</label>
-							<div class="col-sm-10">
-								<textarea id="fbcontent" class="form-control" rows="12" id="" name="">
-							</textarea>
-							</div>
-						</div>
-						</form>
-						</fieldset>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button  id="fbsubmit" type="button" class="btn btn-primary">Submit</button>
-					</div>
+					<p align="center">
+					<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfIRr_9jSkyHRoEDCJKdPpMIxUTDKUrB2meJ2ILA4BI3Hp6Sw/viewform?embedded=true"
+							width="500" height="600" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+					</p>
+<%--					<div class="modal-footer">--%>
+<%--						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>--%>
+<%--&lt;%&ndash;						<button  id="fbsubmit" type="button" class="btn btn-primary">Submit</button>&ndash;%&gt;--%>
+<%--					</div>--%>
 				</div>
 			</div>
 		</div>
@@ -519,7 +502,7 @@ function formReset()
 					$("#fbcontent").val('');
 				},
 				error:function(data) {
-					alert('Sent failed!');	
+					alert('Sent failed!');
 				}
 			})
 			$('#myModal').modal('hide');

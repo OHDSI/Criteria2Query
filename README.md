@@ -1,40 +1,36 @@
 # Criteria2Query
-[![](https://img.shields.io/badge/online--demo-available-brightgreen.svg)](http://www.ohdsi.org/web/criteria2query/)
-[![](https://img.shields.io/badge/introduction--video-available-brightgreen.svg)](https://www.youtube.com/watch?v=EYN2Md-DCR8)
-[![](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Criteria2query/Lobby#)
+<!-- [![](https://img.shields.io/badge/online--demo-available-brightgreen.svg)](http://www.ohdsi.org/web/criteria2query/)
+[![](https://img.shields.io/badge/introduction--video-available-brightgreen.svg)](https://www.youtube.com/watch?v=EYN2Md-DCR8) -->
+<!-- [![](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Criteria2query/Lobby#) -->
 
-C2Q 2.0 will be published here shortly. Please hold until we update this page with C2Q 2.0 before April 15th, 2022. 
+<img src="/pictures/website.png" width="800"/>
+
+*If you are interested in the code of C2Q 2.0, please contact Dr. Chunhua Weng at Columbia University.*
+
+Introduction
+ ========
+Criteria2Query (C2Q) is an automatic cohort identification system. It enhances human-computer collaboration to convert complex eligibility criteria text into more accurate and feasible cohort SQL queries. It synergizes machine efficiency and human intelligence of domain experts to enable real-time user intervention for criteria selection and simplification, parsing error correction, and context-dependent concept mapping.
+
+ ## Features
+ * An editable user interface with functions to prioritize or simplify the eligibility criteria text for cohort querying; 
+ * Accessible and portable cohort SQL query formulation based on the Observational Medical Outcomes Partnership (OMOP) Common Data Model (CDM) version 5;
+ * Real-time cohort query execution with result visualization. 
 
 
-### [Criteria2Query Online Demo](http://www.ohdsi.org/web/criteria2query/)
+## Demo 
+[Demo and tutorial video](https://www.youtube.com/watch?v=LJsWgE0EZ-o)
 
-### Criteria2Query Introduction
-[![Criteria2Query instruction](https://i.imgur.com/CshfWd4.png)](https://www.youtube.com/watch?v=EYN2Md-DCR8)
-
-
-## Information Extraction
-
-### Name Entity Recognition
-We implemented our NER methods based on a sequence labeling method, Condition Random Fields (CRF), in CoreNLP with an empirical feature set. After NER, all entities were extracted from free-text criteria with predicted categories assigned automatically.
+## Interface and use case example 
+<img src="/pictures/example.png" width="800"/>
 
 
-### Relation Extraction
-Our pipeline implements binary relation extraction with two relationships: has_temp (temporal) and has_value (Table 2). Relations between entities are determined by reachability according to enhanced++ English universal dependency parsing results.
+Publications
+======
+Fang, Y., Idnay, B., Sun, Y., Liu, H., Chen, Z., Marder, K., Xu, H., Schnall, R., & Weng, C. (2022). Combining human and machine intelligence for clinical trial eligibility querying. Journal of the American Medical Informatics Association : JAMIA, ocac051. Advance online publication. https://doi.org/10.1093/jamia/ocac051
 
-### Logic Detection
-We developed a logic detection step following the information extraction pipeline to resolve the logic operators connecting clinical entities. Our heuristic method uses the conjunct tags in enhanced English universal dependency parsing results to group the entities and decompose the logic relations between entities and groups.
+Yuan, C., Ryan, P. B., Ta, C., Guo, Y., Li, Z., Hardin, J., Makadia, R., Jin, P., Shang, N., Kang, T., & Weng, C. (2019). Criteria2Query: a natural language interface to clinical databases for cohort definition. Journal of the American Medical Informatics Association : JAMIA, 26(4), 294–305. https://doi.org/10.1093/jamia/ocy178
 
-## Query Formulation
 
-### Entity Normalization
-We wrapped a lucene-based OMOP mapping tool called Usagi as a web service that queries entity terms and their domains to map terms to OMOP standard concepts. Using OHDSI APIs , we leverage the rich hierarchical relations among concepts in the OMOP CDM to include all descendants for condition concepts and all drugs sharing the same ingredient for drug concepts.
-
-### Logic Translation
-We developed a logic translation component in Criteria2Query to translate logic within structured criteria to the target data model. In cohort definitions in the OMOP CDM, the logic relations of “And” and “Or” are represented by the templates “have all of the following criteria” and “have any of the following criteria”, respectively. Exclusion criteria are represented by “with exactly 0 using all occurrences”. 
-
-### Attribute Normalization
-We adapted a library for recognizing and normalizing time expressions, SUTime, to standardized temporal expressions into TIMEX3 format first. We then use regular expressions to transform temporal information in TIMEX3 format into the target CDM format. We also developed a heuristic method for the numeric normalization using regular expressions to fill the results in the target format. Both temporal and numeric attributes are linked to their related criteria based on relation extraction results.
-
-### [Criteria2Query Chat Room](https://gitter.im/Criteria2query/Lobby#)
-
-If you have any question, please contact Dr. Chunhua Weng at Columbia University.
+Support
+=======
+If you have any questions/comments/feedback, please submit a [form](https://forms.gle/gQxnsrmsuJCmrn4R8) here or contact Dr. Chunhua Weng at Columbia University.
