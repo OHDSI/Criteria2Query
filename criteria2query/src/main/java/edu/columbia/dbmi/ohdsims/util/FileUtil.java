@@ -1,24 +1,28 @@
 package edu.columbia.dbmi.ohdsims.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import edu.columbia.dbmi.ohdsims.pojo.GlobalSetting;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import java.io.*;
 import java.util.ArrayList;
 
 public class FileUtil {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+
+
+		System.out.println(Readfile("edu/columbia/dbmi/ohdsims/model/phraseNormalization.txt"));
 		
 	}
 	
 	public static String Readfile(String path){
 		try {
-
+			Resource fileRource = new ClassPathResource(path);
 			StringBuffer readsb = new StringBuffer();
-			InputStream in = new FileInputStream(new File(path));
+			//InputStream in = new FileInputStream(new File(path));
+			InputStream in = new FileInputStream(fileRource.getFile());
 			ArrayList<String> alist = new ArrayList<String>();
 
 			int count;
@@ -81,5 +85,6 @@ public class FileUtil {
 		}
 
 	}
+
 
 }

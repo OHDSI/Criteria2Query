@@ -101,24 +101,7 @@ public class NlpController {
 		}
 		ArrayList<String> inlist = new ArrayList<String>();
 		ArrayList<String> exlist = new ArrayList<String>();
-//		if (gender.length() > 0) {
-//			inlist.add("Gender Eligible for Study: " + gender);
-//		}
-//		if (minimum_age.length() > 0) {
-//			inlist.add("Minimum Age Eligible for Study: " + minimum_age);
-//		}
-//		if (maxmum_age.length() > 0) {
-//			inlist.add("Maximum Age Eligible for Study: " + maxmum_age);
-//		}
-//		if (healthy_volunteers.length() > 0) {
-//			inlist.add("Accepts Healthy Volunteers: " + healthy_volunteers);
-//		}
-//		if (sampling_method.length() > 0) {
-//			inlist.add("Sampling Method :" + sampling_method);
-//		}
-//		if (study_pop.length() > 0) {
-//			inlist.add("Study Population :" + StringEscapeUtils.escapeHtml(study_pop));
-//		}
+
 		
 		boolean flag = false;
 		for (String sentence : sentenceList) {
@@ -208,13 +191,7 @@ public class NlpController {
 //		httpSession.setAttribute("cohortid", id);
 		return "sqlPage";
 	}
-	
-//	@RequestMapping("/sqlpage")
-//	public String toSQLPage(HttpSession httpSession) throws Exception {
-//		System.out.println("id="+id);
-//		httpSession.setAttribute("cohortid", id);
-//		return "sqlPage";
-//	}
+
 	
 	@RequestMapping("/sqlget")
 	@ResponseBody
@@ -237,6 +214,7 @@ public class NlpController {
 		return map;
 	}
 
+	//sendFeedback method is used to generate the timestamp and record the feedback with the timestamp.
 	@RequestMapping("/feedback")
 	@ResponseBody
 	public Map<String, Object> sendFeedback(HttpSession httpSession, String email, String content)

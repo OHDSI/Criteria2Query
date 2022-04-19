@@ -1,0 +1,42 @@
+at least,>=
+minimum,>=
+inclusive,=
+inclusively,=
+equal,=
+more,>
+or more,>=
+longer,>
+or longer,>=
+over,>
+or over,>=
++,>
+greater,>
+or greater,>=
+above,>
+or above,>=
+beyond,>
+or beyond,>=
+exceeding,>
+excess,>
+less,<
+or less,<=
+fewer,<
+or fewer,<=
+shorter,<
+or shorter,<=
+below,<
+or below,<=
+under,<
+down,<
+within,<=
+in,<=
+maximum,<=
+up to,<=
+<,<
+>,>
+=,=
+≥,>=
+≤,<=
+current,=
+upon,=
+up,>

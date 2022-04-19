@@ -1,5 +1,6 @@
 package edu.columbia.dbmi.ohdsims.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import edu.columbia.dbmi.ohdsims.pojo.ConceptSet;
 import edu.columbia.dbmi.ohdsims.pojo.Document;
 import edu.columbia.dbmi.ohdsims.pojo.Term;
 import edu.stanford.nlp.util.Triple;
+import net.sf.json.JSONArray;
 
 
 public interface IConceptMappingService {
@@ -22,4 +24,9 @@ public interface IConceptMappingService {
 	public List<ConceptSet> mapAndSortConceptSetByEntityNameFromALlConceptSets(List<ConceptSet> conceptsets,
 			String entityname);
 	public List<ConceptSet> getAllConceptSets();
+
+	public Map<String, Integer> getDistinctConceptSet(String initialEvent, String inc, String exc);
+
+
+
 }

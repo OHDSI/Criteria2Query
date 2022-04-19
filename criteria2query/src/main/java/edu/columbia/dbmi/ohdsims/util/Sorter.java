@@ -26,7 +26,7 @@ public class Sorter {
 					String a = (String) unsortedRules.get(i);
 					String b = (String) unsortedRules.get(j);
 					if (a.trim().length() < b.trim().length()) {
-						// Sorting into descending order by lebgth of string.
+						// Sorting into descending order by length of string.
 						unsortedRules.set(i, b);
 						unsortedRules.set(j, a);
 					}

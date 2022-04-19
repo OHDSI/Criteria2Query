@@ -638,9 +638,7 @@ public class AhoCorasickDoubleArrayTrie<V> implements Serializable
 //                ;
 //    }
 //
-//    /**
-//     * 一个顺序输出变量名与变量值的调试类
-//     */
+
 //    private static class DebugArray
 //    {
 //        Map<String, String> nameValueMap = new LinkedHashMap<String, String>();
@@ -726,16 +724,12 @@ public class AhoCorasickDoubleArrayTrie<V> implements Serializable
         @SuppressWarnings("unchecked")
         public void build(Map<String, V> map)
         {
-            // 把值保存下来
             v = (V[]) map.values().toArray();
             l = new int[v.length];
             Set<String> keySet = map.keySet();
-            // 构建二分trie树
             addAllKeyword(keySet);
-            // 在二分trie树的基础上构建双数组trie树
             buildDoubleArrayTrie(keySet.size());
             used = null;
-            // 构建failure表并且合并output表
             constructFailureStates();
             rootState = null;
             loseWeight();
@@ -752,7 +746,7 @@ public class AhoCorasickDoubleArrayTrie<V> implements Serializable
         {
             if (parent.isAcceptable())
             {
-                State fakeNode = new State(-(parent.getDepth() + 1));  // 此节点是parent的子节点，同时具备parent的输出
+                State fakeNode = new State(-(parent.getDepth() + 1));
                 fakeNode.addEmit(parent.getLargestValueId());
                 siblings.add(new AbstractMap.SimpleEntry<Integer, State>(0, fakeNode));
             }
@@ -804,7 +798,6 @@ public class AhoCorasickDoubleArrayTrie<V> implements Serializable
             output = new int[size + 1][];
             Queue<State> queue = new ArrayDeque<State>();
 
-            // 第一步，将深度为1的节点的failure设为根节点
             for (State depthOneState : this.rootState.getStates())
             {
                 depthOneState.setFailure(this.rootState, fail);
@@ -812,7 +805,6 @@ public class AhoCorasickDoubleArrayTrie<V> implements Serializable
                 constructOutput(depthOneState);
             }
 
-            // 第二步，为深度 > 1 的节点建立failure表，这是一个bfs
             while (!queue.isEmpty())
             {
                 State currentState = queue.remove();
@@ -855,7 +847,7 @@ public class AhoCorasickDoubleArrayTrie<V> implements Serializable
         {
             progress = 0;
             this.keySize = keySize;
-            resize(65536 * 32); // 32个双字节
+            resize(65536 * 32);
 
             base[0] = 1;
             nextCheckPos = 0;
@@ -909,7 +901,6 @@ public class AhoCorasickDoubleArrayTrie<V> implements Serializable
                 resize(pos + 1);
 
             outer:
-            // 此循环体的目标是找出满足base[begin + a1...an]  == 0的n个空闲空间,a1...an是siblings中的n个节点
             while (true)
             {
                 pos++;
@@ -928,10 +919,10 @@ public class AhoCorasickDoubleArrayTrie<V> implements Serializable
                     first = 1;
                 }
 
-                begin = pos - siblings.get(0).getKey(); // 当前位置离第一个兄弟节点的距离
+                begin = pos - siblings.get(0).getKey();
                 if (allocSize <= (begin + siblings.get(siblings.size() - 1).getKey()))
                 {
-                    // progress can be zero // 防止progress产生除零错误
+                    // progress can be zero
                     double l = (1.05 > 1.0 * keySize / (progress + 1)) ? 1.05 : 1.0 * keySize / (progress + 1);
                     resize((int) (allocSize * l));
                 }
@@ -953,7 +944,7 @@ public class AhoCorasickDoubleArrayTrie<V> implements Serializable
             // (e.g. 0.9),
             // new 'next_check_pos' index is written by 'check'.
             if (1.0 * nonzero_num / (pos - nextCheckPos + 1) >= 0.95)
-                nextCheckPos = pos; // 从位置 next_check_pos 开始到 pos 间，如果已占用的空间在95%以上，下次插入节点时，直接从 pos 位置处开始查找
+                nextCheckPos = pos;
             used[begin] = true;
 
             size = (size > begin + siblings.get(siblings.size() - 1).getKey() + 1) ? size : begin + siblings.get(siblings.size() - 1).getKey() + 1;
@@ -967,7 +958,7 @@ public class AhoCorasickDoubleArrayTrie<V> implements Serializable
             {
                 List<Map.Entry<Integer, State>> new_siblings = new ArrayList<Map.Entry<Integer, State>>(sibling.getValue().getSuccess().entrySet().size() + 1);
 
-                if (fetch(sibling.getValue(), new_siblings) == 0)  // 一个词的终止且不为其他词的前缀，其实就是叶子节点
+                if (fetch(sibling.getValue(), new_siblings) == 0)
                 {
                     base[begin + sibling.getKey()] = (-sibling.getValue().getLargestValueId() - 1);
                     progress++;

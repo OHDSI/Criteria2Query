@@ -107,6 +107,7 @@ public class WebUtil {
 		}
 	}
 	/**
+	 * getCTByNctid function is used to scrape XML file from the clinicaltrials.gov website and save it as a string
 	 * @return 
 	 */
 	public static String getCTByNctid(String nctid) {
@@ -138,12 +139,18 @@ public class WebUtil {
 
 	}
 
+	//parse function is used to parse the XML file that we scrape from the ClinicalTrial.gov website,
+	// and save the useful information into a String array, including criteria, gender, minimum_age, maximum_age,
+	// sampling_method, study_pop, healthy_volunteers.
 	public static String[] parse(String protocolXML) {
 
 		try {
 			String[] arr=new String[7];
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
+			//InputSource inputSource = new InputSource(new StringReader(protocolXML));
+			//inputSource.setEncoding("UTF-8");
+			//Document doc = builder.parse(inputSource);
 			Document doc = builder.parse(new InputSource(new StringReader(protocolXML)));
 			NodeList list = doc.getElementsByTagName("eligibility");
 			for (int i1 = 0; i1 < list.getLength(); i1++) {

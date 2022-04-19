@@ -158,13 +158,14 @@ public class OHDSIApis {
 		}
 		return jo;
 	}
-	
+
+	//Make two Get requests to the conceptseturl and save the responses in a JSONObject with keys createdBy, modifiedBy, createdDate, modifiedDate, id, name, expression.
 	public static JSONObject querybyconceptSetid(int conceptid){
-		System.out.println("===>querybyconceptSetid");
+		//System.out.println("===>querybyconceptSetid");
 		JSONObject jot=new JSONObject();
     	String re2=HttpUtil.doGet(conceptseturl+conceptid);
     	JSONObject jore2=JSONObject.fromObject(re2);
-    	System.out.println("jore2="+jore2);
+    	//System.out.println("jore2="+jore2);
     	jot.accumulateAll(jore2);
     	String re3=HttpUtil.doGet(conceptseturl+conceptid+"/expression");
     	

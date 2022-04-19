@@ -44,17 +44,18 @@ public class CoreNLP {
 		for(String lem:llist){
 			System.out.println("->"+lem);
 		}
-	List<String> sss=snlp.splitParagraph("Patients have a history of type 2 diabetes within 10 years. Patients have no hypertension. ");
+		List<String> sss=snlp.splitParagraph("Patients have a history of type 2 diabetes within 10 years. Patients have no hypertension.");
 		for(String s:sss){
 			System.out.println(s);
 		}
 		//output tree structure
-//		System.out.println("----word pos-------");
-//		snlp.outputTreeStruture(tree);
-//		System.out.println("---dependency--------");
-//		Collection<TypedDependency> tdl=snlp.outputDependency(tree);
-//		System.out.println("---dependency-end--------");
-//		//System.out.println(snlp.extractTree(tree));
+		System.out.println("----word pos-------");
+		snlp.outputTreeStruture(tree);
+		System.out.println("---dependency--------");
+		Collection<TypedDependency> tdl=snlp.outputDependency(tree);
+		System.out.println(tdl);
+		System.out.println("---dependency-end--------");
+		//System.out.println(snlp.extractTree(tree));
 //		DirectedGraph<String, DefaultEdge> g2 = new DefaultDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
 //		Set<IndexedWord> itemset=new HashSet<IndexedWord>();
 //		for (TypedDependency item : tdl) {
@@ -219,7 +220,8 @@ public class CoreNLP {
 		Collection<TypedDependency> tdl=outputDependency(tree);
 		return tdl;
 	}
-	
+
+	//Lemmatize the input text and return a list of string
 	public List<String> getLemmasList(String text) {
 		  Sentence sentence = new Sentence(text);
 		  return sentence.lemmas();

@@ -1,5 +1,7 @@
 package edu.columbia.dbmi.ohdsims.pojo;
 
+import jnr.ffi.annotations.In;
+
 import java.util.List;
 
 /**
@@ -9,8 +11,8 @@ public class Paragraph implements Cloneable{
 	int pid;
 	List<Sentence> sents;
 	boolean include;
-	int pattern;// 
-	
+	int pattern;
+
 	public List<Sentence> getSents() {
 		return sents;
 	}

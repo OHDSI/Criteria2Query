@@ -1,23 +1,38 @@
 package edu.columbia.dbmi.ohdsims.controller;
 
-import edu.columbia.dbmi.ohdsims.pojo.ConceptSet;
-import edu.columbia.dbmi.ohdsims.pojo.Document;
-import edu.columbia.dbmi.ohdsims.pojo.Term;
-import edu.columbia.dbmi.ohdsims.service.IConceptMappingService;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import edu.columbia.dbmi.ohdsims.pojo.Cdmentity;
+import edu.columbia.dbmi.ohdsims.pojo.ConceptSet;
+import edu.columbia.dbmi.ohdsims.pojo.Document;
+import edu.columbia.dbmi.ohdsims.pojo.GlobalSetting;
+import edu.columbia.dbmi.ohdsims.pojo.Sentence;
+import edu.columbia.dbmi.ohdsims.pojo.Term;
+import edu.columbia.dbmi.ohdsims.service.IConceptFilteringService;
+import edu.columbia.dbmi.ohdsims.service.IConceptMappingService;
+import edu.columbia.dbmi.ohdsims.service.IInformationExtractionService;
+import edu.columbia.dbmi.ohdsims.tool.ConceptMapping;
+import edu.columbia.dbmi.ohdsims.tool.NERTool;
+import edu.columbia.dbmi.ohdsims.util.ATLASUtil;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/map")
@@ -56,7 +71,7 @@ public class ConceptMappingController {
 		int index = 0; 
 		System.out.println("term size="+terms.size());
 		logger.info("[IP:"+remoteAddr+"][Start Concept Set Visualization");
-		// query all concept set for display purpose (map and sort them by similarity (string distance) )
+		// query all concept set for display purpose (map and sort them by similarity (string distance))
 		for (int j = 0; j < terms.size(); j++) {
 			String conceptsetname = terms.get(j).getText();
 			String domain = terms.get(j).getCategorey();

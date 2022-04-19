@@ -75,9 +75,14 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
   <session-config>
-    <session-timeout>30</session-timeout>
+    <session-timeout>120</session-timeout>
   </session-config>
   <welcome-file-list>
     <welcome-file>/index.jsp</welcome-file>
   </welcome-file-list>
+
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.mp4</url-pattern>
+  </servlet-mapping>
 </web-app>

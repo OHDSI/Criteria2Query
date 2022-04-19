@@ -55,9 +55,9 @@ import net.sf.json.JSONObject;
 */
 
 public class ATLASUtil {
-	// 接口地址
 	private final static String recordcounturl =GlobalSetting.ohdsi_api_base_url+ "cdmresults/1PCT/conceptRecordCount";
-	private final static String vocubularyurl =GlobalSetting.ohdsi_api_base_url+"vocabulary/1PCT/search";
+	//private final static String vocubularyurl =GlobalSetting.ohdsi_api_base_url+"vocabulary/1PCT/search";
+	private final static String vocubularyurl =GlobalSetting.ohdsi_api_base_url+"vocabulary/search";
 	private final static String conceptseturl = GlobalSetting.ohdsi_api_base_url+"conceptset/";
 	private final String pattern = "yyyy-MM-dd HH:mm:ss:SSS";
 	private HttpClient httpClient = null;
@@ -70,8 +70,9 @@ public class ATLASUtil {
 		// Concept concept=getMaxCountConcept("type 2 diabetes","Condition");
 		// System.out.println("----->"+concept.getCONCEPT_NAME());
 		// System.out.println("conceptid="+conceptidindex.get(rindex));
-		searchConcept("insulin", "Drug");
+		//searchConcept("insulin", "Drug");
 		//searchConceptByNameAndDomain("","");
+		searchConceptByName("alcohol");
 	}
 
 	// public static Concept getMaxCountConcept(String entity,String domainid)
@@ -312,6 +313,9 @@ public class ATLASUtil {
 	public static List<Concept> searchConceptByName(String entity)
 			throws UnsupportedEncodingException, IOException, ClientProtocolException {
 		JSONObject queryjson = new JSONObject();
+
+		queryjson.accumulate("STANDARD_CONCEPT","S");
+
 		queryjson.accumulate("QUERY", entity);
 		System.out.println("queryjson:" + queryjson);
 		String vocabularyresult = getConcept(queryjson);

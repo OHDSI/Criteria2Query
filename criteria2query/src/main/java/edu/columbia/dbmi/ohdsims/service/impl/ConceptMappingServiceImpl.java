@@ -1,20 +1,17 @@
 package edu.columbia.dbmi.ohdsims.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.apache.logging.log4j.Logger;
+//import com.sleepycat.je.tree.INTargetRep;
+//import net.sf.json.JSON;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+//import org.apache.xpath.objects.XObject;
+//import org.python.modules._systemrestart;
+//import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import edu.columbia.dbmi.ohdsims.pojo.ConceptSet;
@@ -26,10 +23,12 @@ import edu.columbia.dbmi.ohdsims.pojo.Term;
 import edu.columbia.dbmi.ohdsims.service.IConceptMappingService;
 import edu.columbia.dbmi.ohdsims.tool.ConceptMapping;
 import edu.columbia.dbmi.ohdsims.tool.OHDSIApis;
-import edu.columbia.dbmi.ohdsims.util.HttpUtil;
 import edu.stanford.nlp.util.Triple;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
+import javax.json.Json;
+import javax.validation.constraints.Null;
 
 @Service("conceptMappingService")
 public class ConceptMappingServiceImpl implements IConceptMappingService{
@@ -41,11 +40,13 @@ public class ConceptMappingServiceImpl implements IConceptMappingService{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	//Return term list which only contains distinct terms with category: "Condition","Observation","Measurement","Drug","Procedure", "Device"
 	@Override
 	public List<Term> getDistinctTerm(Document doc) {
 		List<Term> allterms=new ArrayList<Term>();
 		LinkedHashSet<String> termtexts=new LinkedHashSet<String>();
-		for(Term t:getAllTermsByDoc(doc)){
+		for(Term t:getAllTermsByDoc(doc)){//Traverse term in the term list.
 			if(Arrays.asList(GlobalSetting.conceptSetDomains).contains(t.getCategorey())){
 				if(termtexts.contains(t.getText())==false){
 					allterms.add(t);
@@ -89,10 +90,11 @@ public class ConceptMappingServiceImpl implements IConceptMappingService{
 	}
 
 	@Override
+	//Get a map whose keys are the names of entities, and the values are the matched concept IDs.
 	public Map<String,Integer> createConceptsByTerms(List<ConceptSet> cslist, List<Term> terms) {
 		Map<String,Integer> conceptsets=new HashMap<String,Integer>();
 		for(Term t:terms){
-			Integer conceptSetId=cptmap.createConceptSetByUsagi(cslist, t.getText(), t.getCategorey());
+			Integer conceptSetId=cptmap.createConceptSetByUsagi(cslist, t.getText(), t.getCategorey());//Get the ID of the concept whose name is the same as the entity name.
 			conceptsets.put(t.getText(),conceptSetId);
 		}
 		return conceptsets;
@@ -162,7 +164,7 @@ public class ConceptMappingServiceImpl implements IConceptMappingService{
 		
 	@Override
 	public List<ConceptSet> getAllConceptSets(){
-		List<ConceptSet> cslist = cptmap.getallConceptSet();
+		List<ConceptSet> cslist = cptmap.getallConceptSet();//Get all concept sets in a ConceptSet list format  from http://api.ohdsi.org/WebAPI/conceptset/
 		return cslist;
 	}
 	@Override
@@ -300,6 +302,25 @@ public class ConceptMappingServiceImpl implements IConceptMappingService{
 		return allrels;
 		
 	}
-	
+
+	//Get all distinct concept sets from the initial event, inclusion crteria and exclusion criteria.
+	//Return a map where the key is term.text+" "+conceptId, and the value is the conceptsetId.
+	public Map<String, Integer> getDistinctConceptSet(String initialEvent, String inc, String exc){
+		String text = initialEvent+"\n"+inc+"\n"+exc;
+		Map<String, Integer> conceptSetMap = new HashMap<String, Integer>();
+		String pattern = "<mark data-entity=\"(value|demographic|condition|qualifier|measurement|observation|drug|procedure|temporal|negation_cue|device)\" concept-id=\"([0-9]*)\">([\\s\\S]*?) <b><i>\\[([\\s\\S]*?)\\]</i></b></mark>";
+		Pattern pat = Pattern.compile(pattern);
+		Matcher mat = pat.matcher(text);
+		int count = 0;
+		while(mat.find()){
+			count += 1;
+			conceptSetMap.put(mat.group(3).trim()+" "+mat.group(2), count);
+		}
+		return conceptSetMap;
+	}
+
+
+
+
 	
 }

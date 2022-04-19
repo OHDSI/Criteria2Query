@@ -1,10 +1,13 @@
 package edu.columbia.dbmi.ohdsims.util;
 
+import edu.stanford.nlp.ie.NumberNormalizer;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 public class NumericConvert {
 
@@ -17,9 +20,13 @@ public class NumericConvert {
 
 		// System.out.println(recognizeNumbers(a));
 
-		recognizeNumbersAdvanced(a);
+		//recognizeNumbersAdvanced(a);
 		// System.out.println(checkFloat("2.5","+"));
+		System.out.println(NumberNormalizer.wordToNumber("2"));
+
 	}
+
+	//Recognize the numbers in the text of the attribute
 	public static List<Double> recognizeNumbersAdvanced(String a) {
 		System.out.println("to be matched-->"+a);
 		if(a.contains("(")){
@@ -53,7 +60,7 @@ public class NumericConvert {
 		Matcher matcher = pattern.matcher(a);
 		while (matcher.find()) {
 			Double[] numpos=new Double[3];
-			//System.out.println(matcher.group()); // 打印
+			//System.out.println(matcher.group());
 			if(matcher.group().equals(".")){
 				continue;
 			}

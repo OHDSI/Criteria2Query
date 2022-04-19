@@ -2,6 +2,9 @@ package edu.columbia.dbmi.ohdsims.tool;
 
 import edu.columbia.dbmi.ohdsims.pojo.TemporalConstraint;
 import edu.columbia.dbmi.ohdsims.util.TemporalNormalize;
+import jnr.ffi.annotations.In;
+
+import java.util.List;
 
 public class TemporalNormalization {
 
@@ -19,11 +22,19 @@ public class TemporalNormalization {
 		tc[0]=new TemporalConstraint();
 		tc[1]=new TemporalConstraint();
 		TemporalNormalize tn = new TemporalNormalize();
-		Integer days = tn.temporalNormalizeforNumberUnit(plaintext);
-		tc[0].setStart_days(days);
-		tc[0].setStart_offset(-1);
-		tc[0].setEnd_days(0);
-		tc[0].setEnd_offset(1);
+		//Integer days = tn.temporalNormalizeforNumberUnit(plaintext);
+		List<Integer> days = tn.temporalNormalizeforNumberUnit(plaintext);
+		if(days.size()==1){
+			tc[0].setStart_days(days.get(0));
+			tc[0].setStart_offset(-1);
+			tc[0].setEnd_days(0);
+			tc[0].setEnd_offset(1);
+		}else{
+			tc[0].setStart_days(days.get(0));
+			tc[0].setStart_offset(-1);
+			tc[0].setEnd_days(days.get(1));
+			tc[0].setEnd_offset(1);
+		}
 		return tc;
 	}
 	

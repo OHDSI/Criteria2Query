@@ -1,31 +1,44 @@
 package edu.columbia.dbmi.ohdsims.controller;
 
-import com.alibaba.fastjson.JSON;
-import edu.columbia.dbmi.ohdsims.pojo.DisplayCriterion;
-import edu.columbia.dbmi.ohdsims.pojo.Document;
-import edu.columbia.dbmi.ohdsims.pojo.ObservationConstraint;
-import edu.columbia.dbmi.ohdsims.service.IConceptFilteringService;
-import edu.columbia.dbmi.ohdsims.service.IInformationExtractionService;
-import edu.columbia.dbmi.ohdsims.util.IOUtil;
-import edu.columbia.dbmi.ohdsims.util.WebUtil;
-import net.sf.json.JSONObject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import java.io.*;
+import java.net.URLEncoder;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import edu.columbia.dbmi.ohdsims.pojo.*;
+import edu.columbia.dbmi.ohdsims.service.IConceptMappingService;
+import net.sf.json.JSONArray;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSON;
+
+import edu.columbia.dbmi.ohdsims.service.IConceptFilteringService;
+import edu.columbia.dbmi.ohdsims.service.IInformationExtractionService;
+import edu.columbia.dbmi.ohdsims.service.impl.InformationExtractionServiceImpl;
+import edu.columbia.dbmi.ohdsims.tool.CoreNLP;
+import edu.columbia.dbmi.ohdsims.tool.FeedBackTool;
+import edu.columbia.dbmi.ohdsims.tool.NERTool;
+import edu.columbia.dbmi.ohdsims.tool.NegReTool;
+import edu.columbia.dbmi.ohdsims.util.IOUtil;
+import edu.columbia.dbmi.ohdsims.util.StringUtil;
+import edu.columbia.dbmi.ohdsims.util.TemporalNormalize;
+import edu.columbia.dbmi.ohdsims.util.WebUtil;
+import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.ling.SentenceUtils;
+import edu.stanford.nlp.process.DocumentPreprocessor;
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/ie")
@@ -35,12 +48,14 @@ public class InformationExtractionController {
 	private IInformationExtractionService ieService;
 	@Resource
 	private IConceptFilteringService cfService;
-	
+	@Resource
+	private IConceptMappingService conceptMappingService;
+
 	@RequestMapping("/parse")
 	@ResponseBody
-	public Map<String, Object> parseAllCriteria(HttpSession httpSession, HttpServletRequest request,String initialevent, String inc, String exc,boolean abb, boolean recon,String obstart,String obend,String daysbefore,String daysafter,String limitto) {
+	public Map<String, Object> parseAllCriteria(HttpSession httpSession, HttpServletRequest request,String initialevent, String inc, String exc,boolean abb, boolean recon,String obstart,String obend,String daysbefore,String daysafter,String limitto){
 		Map<String, Object> map = new HashMap<String, Object>();
-		System.out.println("recon="+recon);
+		//System.out.println("recon="+recon);
 		
 		String remoteAddr = "";
 	     if (request != null) {
@@ -53,39 +68,22 @@ public class InformationExtractionController {
 		logger.info("[IP:"+remoteAddr+"][Initial Event]"+initialevent);
 		logger.info("[IP:"+remoteAddr+"][Inclusion Criteria]"+inc);
 		logger.info("[IP:"+remoteAddr+"][Exclusion Criteria]"+exc);
+
 		Document doc = this.ieService.translateByDoc(initialevent, inc, exc);
-		doc = this.ieService.patchIEResults(doc);
-		if(recon){
-			doc=this.ieService.reconIEResults(doc);
-		}
-		ObservationConstraint oc=new ObservationConstraint();
-		oc.setDaysAfter(Integer.valueOf(daysafter));
-		oc.setDaysBefore(Integer.valueOf(daysbefore));
-		oc.setLimitTo(limitto);
-		if(obstart.length()>0){
-			oc.setStartDate(obstart);
-		}else{
-			oc.setStartDate(null);
-		}
-		if(obend.length()>0){
-			oc.setEndDate(obend);
-		}else{
-			oc.setEndDate(null);
-		}
-		doc.setInitial_event_constraint(oc);
+
 		List<DisplayCriterion> display_initial_event=this.ieService.displayDoc(doc.getInitial_event());
 		List<DisplayCriterion> display_inclusion_criteria=this.ieService.displayDoc(doc.getInclusion_criteria());
 		List<DisplayCriterion> display_exclusion_criteria=this.ieService.displayDoc(doc.getExclusion_criteria());
-		if(abb==true){
-			doc= this.ieService.abbrExtensionByDoc(doc);
-		}
-		doc=this.cfService.removeRedundency(doc);
-		logger.info("[IP:"+remoteAddr+"][Parsing Results]"+JSONObject.fromObject(doc));
+
+
+
+		logger.info("[IP:"+remoteAddr+"][Information Extraction Process Part 1 Parsing Results]"+JSONObject.fromObject(doc));
 		httpSession.setAttribute("allcriteria", doc);
 		map.put("initial_event", display_initial_event);
 		map.put("include", display_inclusion_criteria);
 		map.put("exclude", display_exclusion_criteria);
-		logger.info("[IP:"+remoteAddr+"][Parse Finished]");
+
+		logger.info("[IP:"+remoteAddr+"][Part 1 Finished]");
 		return map;
 	}
 	
@@ -141,7 +139,10 @@ public class InformationExtractionController {
 		}
 
 	}
-	
+
+	//Get criteria from ClinicalTrials.gov with a given NCTID,
+	//remove the extra spaces and bullet symbols from the sentences,
+	//and split the criteria into inclusion criteria and exclusion criteria.
 	@RequestMapping(value = "/getct", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public Map<String, Object> getCrteriafromCT(HttpSession httpSession, HttpServletRequest request, String nctid)
@@ -156,6 +157,8 @@ public class InformationExtractionController {
 		logger.info("[IP:"+remoteAddr+"][Fetch Criteria From ClinicalTrials.gov]");
 		String url = "https://clinicaltrials.gov/show/" + nctid + "?displayxml=true";
 		String response = WebUtil.getCTByNctid(nctid);
+		//Parse the XMl file and get the useful information, including criteria, gender, minimum_age, maximum_age,
+		//sampling_method, study_pop, healthy_volunteers.
 		String[] criteria = WebUtil.parse(response);
 		StringBuffer insb = new StringBuffer();
 		StringBuffer exsb = new StringBuffer();
@@ -165,28 +168,33 @@ public class InformationExtractionController {
 		String sampling_method = criteria[4];
 		String study_pop = criteria[5];
 		String healthy_volunteers = criteria[6];
-		
-		
+
+		//Split the criteria text into sentences based on the bullet symbols "-  "
+		//and delete the spaces and "-  " before sentences.
+		//Combine the sentences or words which belong to the same point
 		boolean flag = false;
 		String[] lines = criteria[0].split("\n");
 		StringBuffer sb = new StringBuffer();
 		for (int x = 1; x < lines.length; x++) {
 			if (lines[x - 1].trim().length() == 0) {
-				// System.out.println("iiiiin=" +
-				// removeMultiSpace(lines[x]));
-				String res = IOUtil.removeMultiSpace(lines[x]);
+				String res = lines[x].trim();
 				if (res.startsWith("-  ")) {
 					res = res.substring(3);
+					sb.append(res);
+				}else{
+					sb.append("\n" + res);
 				}
-				sb.append("\n" + res);
+
 			} else {
-				// System.out.println("add=" + removeMultiSpace(lines[x]));
-				sb.append(" " + IOUtil.removeMultiSpace(lines[x]));
+				if(lines[x].trim().isEmpty()){
+					sb.append("\n");
+				}else{//A sentence seperates into several lines.
+					sb.append(" "+lines[x].trim());
+				}
 			}
 		}
-		//System.out.println("____________");
-		//System.out.println(sb.toString());
 		String ecstr = sb.toString();
+		//Separate inclusion and exclusion criteria from the criteria text.
 		String[] inc_exc=IOUtil.separateIncExc(ecstr);
 		Map<String, Object> map = null;
 		map = new HashMap<String, Object>();
@@ -198,7 +206,11 @@ public class InformationExtractionController {
 		map.put("study_pop", study_pop);
 		map.put("healthy_volunteers", healthy_volunteers);
 		map.put("inc", inc_exc[0]);
-		map.put("exc", inc_exc[1]);// ----
+		map.put("exc", inc_exc[1]);
 		return map;
 	}
+
+
+
+
 }

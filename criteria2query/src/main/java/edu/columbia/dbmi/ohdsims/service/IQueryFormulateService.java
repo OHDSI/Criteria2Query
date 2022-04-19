@@ -7,6 +7,7 @@ import edu.columbia.dbmi.ohdsims.pojo.CdmCriteria;
 import edu.columbia.dbmi.ohdsims.pojo.Document;
 import edu.columbia.dbmi.ohdsims.pojo.Paragraph;
 import edu.columbia.dbmi.ohdsims.pojo.Sentence;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public interface IQueryFormulateService {
@@ -15,4 +16,5 @@ public List<CdmCriteria> translateByParagraph(Paragraph p,boolean include);
 public CdmCriteria translateBySentence(Sentence s,boolean include) ;
 public JSONObject formualteCohortQuery(Document doc);
 public Integer storeInATLAS(JSONObject expression,String cohortname);
+public JSONArray generateReport(String query, String dataset);
 }

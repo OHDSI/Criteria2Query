@@ -62,12 +62,12 @@
 }
 
 [data-entity][data-entity="procedure"] {
-     background: rgba(253, 151, 32, 0.2);
-     border-color: rgb(253, 151, 32); 
+     background: rgba(26, 140, 255, 0.2);/*rgba(253, 151, 32, 0.2);*/
+     border-color: rgb(26, 140, 255);/*rgb(253, 151, 32); */
 }
 
 [data-entity][data-entity="procedure"]::after {
-     background: rgb(253, 151, 32); 
+     background: rgb(26, 140, 255);/*rgb(253, 151, 32); */
 }
 
 
@@ -105,16 +105,16 @@
 }
 
 [data-entity][data-entity="device"]::after {
-     background: rgb(47, 187, 171); 
+     background: rgb(0, 179, 89);/*rgb(47, 187, 171);*/
 }
 
 [data-entity][data-entity="demographic"] {
-     background: rgba(47, 187, 171, 0.2);
-     border-color: rgb(47, 187, 171); 
+     background: rgba(0, 179, 89, 0.2);/*rgba(47, 187, 171, 0.2);*/
+     border-color: rgb(0, 179, 89);/*rgb(47, 187, 171); */
 }
 
 [data-entity][data-entity="demographic"]::after {
-     background: rgb(47, 187, 171); 
+     background: rgb(47, 187, 171);
 }
 
 [data-entity][data-entity="percent"] {

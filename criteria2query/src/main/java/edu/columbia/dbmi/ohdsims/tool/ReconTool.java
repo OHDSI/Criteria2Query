@@ -33,7 +33,9 @@ public class ReconTool {
 		for (CoreMap sentence : sentences) {
 			for (CoreLabel token : sentence.get(TokensAnnotation.class)) {
 				String word = token.get(TextAnnotation.class);//token.get(LemmaAnnotation.class);//TextAnnotation.class
+				//Get the text of the token.
 				String pos = token.get(PartOfSpeechAnnotation.class);
+				//Get the pos tag of the token.
 				//String lemma = token.get(LemmaAnnotation.class);
 				boolean f = false;
 				if ((word.equals("and") || word.equals(",") || word.equals("/") || word.equals("or"))) {

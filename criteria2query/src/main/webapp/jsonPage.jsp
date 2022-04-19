@@ -136,9 +136,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<!--   <h2>Critera2Query</h2> -->
 					<h4>JSON</h4>
 				</div>
-				<button id="checkonATLAS" type="button" class="btn btn-success">Check on ATLAS</button>
+				<!--button id="checkonATLAS" type="button" class="btn btn-success">Check on ATLAS</button-->
+				<button id="translate2sqlAndExecute" type="button" class="btn btn-success">Generate Cohort</button>
 				<!-- <button id="trans2sql" type="button" class="btn btn-primary">Generate SQL</button>  -->
 				<textarea id="jsonresult" rows="25" class="form-control"></textarea>
+				<h4>SQL QUERY</h4>
+				<textarea id="sqlresult" rows="15" class="form-control"></textarea>
+				<h4>RESULT</h4>
+				<div class="col-sm-12 col-md-12 col-lg-12">
+					<table id="result"
+						   class="table table-bordered col-sm-12 col-md-12 col-lg-12">
+					</table>
+				</div>
 
 			</div>
 
@@ -158,23 +167,71 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</footer>
 	<script type="text/javascript">
   var basePath = "../";
-  var concepturl="http://api.ohdsi.org/WebAPI/conceptset/";
- 
-  var count;
-  var conceptsetname;
-  var wholeindex;
+  //var count;
+  //var conceptsetname;
+  //var wholeindex;
   $(function() {
 	  //initPage();
 	  init();
-	  $("#trans2sql").click(function(){
-		  translate2sql();
+	  //$("#trans2sql").click(function(){
+		//  translate2sql();
 		  //execsql();
-		});
-	  $("#checkonATLAS").click(function(){
+	//	});
+	 // $("#checkonATLAS").click(function(){
 		  //translate2sql();
-		  gotoATLAS();
-		});
+	//	  gotoATLAS();
+	//	});
+	  $("#translate2sqlAndExecute").click(function(){
+		  translate2sqlAndExecute();
+	  });
 	  })
+
+  //Generate SQL queries from the JSON file and execute the SQL script.
+  function translate2sqlAndExecute(){
+  	var data = $("#jsonresult").val();
+  	$.blockUI({
+		message : '<h3><img src="../img/squares.gif" />Executing...</h3>',
+		css : {
+			border : '1px solid khaki'
+		}
+  	});
+  	$.ajax({
+		url: basePath + "queryformulate/getSQL",
+		method: "POST",
+		contentType: "application/json",
+		dataType:"json",
+		success: function(data){
+			$("#sqlresult").val(data['sqlResult']);
+			$('#result').bootstrapTable('destroy');
+			$('#result').bootstrapTable({
+				data: data['queryResult'],
+				columns: [
+						{
+							field: 'person_id',
+							title: 'person_id',
+							width: '30%'
+						},
+					{
+						field: 'start_date',
+						title: 'start_date',
+						width:'35%'
+					},
+					{
+						field: 'end_date',
+						title: 'end_date',
+						width:'35%'
+					}
+				]
+			})
+		},
+		error: function (error) {
+		  console.log("Error: " + error);
+	  }
+	})
+  }
+
+
+ /*
 	function translate2sql(){
 	 var dbtype=$("#dbtype").val();
 	  $.ajax({
@@ -226,11 +283,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			dataType : "json",
   			async : false,
   			success : function(data) {
-  				openNewWin("http://atlas-demo.ohdsi.org/#/cohortdefinition/"+data['id']);
+  				openNewWin("http://www.ohdsi.org/web/atlas/#/cohortdefinition/"+data['id']);
   			}
   	  });
   	  //window.location.href=basePath + "nlpmethod/jsonpage";
     	}
+    	*/
+
   function init(){
 	  $.blockUI({
 			message : '<h3><img src="../img/gears.gif" /> Query Formulating...</h3>',
@@ -252,11 +311,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				} 
 			});
 		 }
-	
+	/*
 	 function openNewWin(url, title)  
 		{  
 		    window.open(url);  
-		}  
+		}
+*/
+
 	</script>
 </body>
 

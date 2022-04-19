@@ -195,21 +195,6 @@ public class RelExTool {
 				}
 			}
 		}
-//		System.out.println(singlesent+"\t"+twosents+"\t"+threesents);
-//		for(Sentence skk:miniunits){
-//			if(skk.getText().startsWith(" -")){
-//				System.out.println("-->"+skk.getText());
-//				for(Term t:skk.getTerms()){
-//					System.out.println(t.getTermId()+"\t"+t.getText()+"\t"+t.getStart_index()+","+t.getEnd_index());
-//				}
-//				for(Triple<Integer, Integer, String> r:skk.getRelations()){
-//					System.out.println("r="+r);
-//					if(r.third.contains("TempMea")){
-//						return;
-//					}
-//				}
-//			}
-//		}
 		RelExTool rex=new RelExTool();
 		rex.generateTrainingFile(targetcvs,miniunits);
 	}
@@ -510,19 +495,6 @@ public class RelExTool {
 								relations.add(runit);
 							}
 						}
-						// HashMap<Integer, String> term_relations =
-						// t.getRelations();
-						// if (term_relations != null) {
-						// term_relations.put(Integer.valueOf(r[2].substring(1)),
-						// r[0]);
-						// } else {
-						// term_relations = new HashMap<Integer, String>();
-						// term_relations.put(Integer.valueOf(r[2].substring(1)),
-						// r[0]);
-						// }
-						// t.setRelations(term_relations);
-						// }
-						// }
 						int tempstart = t.getStart_index();
 						int tempend = t.getEnd_index();
 						int pstart = p.getStart_index();
@@ -542,31 +514,32 @@ public class RelExTool {
 	
 	
 	
-	public  List<Triple<Integer, Integer, String>> relsRevision(List<Term> terms, List<Triple<Integer, Integer, String>> rels) {
+	public  List<Triple<Integer, Integer, String>> relsRevision(List<Term> terms, List<Triple<Integer, Integer, String>> rels, String relName) {
 		HashMap<Integer,HashSet<Integer>> relarr=new HashMap<Integer,HashSet<Integer>>();
 		List<Triple<Integer, Integer, String>> allrels=new ArrayList<Triple<Integer, Integer, String>>();
 		for(Triple<Integer, Integer, String> rel:rels){
-			if(rel.third.equals("has_temporal")){
+			//if(rel.third.equals("has_temporal")){
+			if(rel.third.equals(relName)){
 				if(relarr.containsKey(rel.first)){
 					HashSet<Integer> temporalset=relarr.get(rel.first);
-					temporalset.add(rel.second);
-					relarr.put(rel.first, temporalset);
+					temporalset.add(rel.second);//Add the term2 with a same term1 in the "has_temporal" relation to hashset temporalset.
+					relarr.put(rel.first, temporalset);//Insert a mapping(key: term1, value: hashset with one or more term2) in to map relarr.
 				}else{
 					HashSet<Integer> temporalset=new HashSet<Integer>();
 					temporalset.add(rel.second);
-					relarr.put(rel.first, temporalset);
+					relarr.put(rel.first, temporalset);//Insert a mapping(key: term1, value: hashset with an element term2) into map relarr.
 				}
 			}else{
-				allrels.add(rel);
+				allrels.add(rel);//Add those relations not belong to "has_temporal" to the list allerels.
 			}
 		}
 		
-		for (Entry<Integer, HashSet<Integer>> entry : relarr.entrySet()) {
-			if(entry.getValue().size()>1){
-				HashSet<Integer> set=entry.getValue();
+		for (Entry<Integer, HashSet<Integer>> entry : relarr.entrySet()) {//Traverse all the mappings.
+			if(entry.getValue().size()>1){//For a term1, if there are more than one term2 which have a relation "has_temporal" with term1.
+				HashSet<Integer> set=entry.getValue();//term2 set
 				int minidistance=1000000;
 				int candidate=-1;
-				for(Integer i:set){
+				for(Integer i:set){//Find the term2 which has the shortest distance from term1.
 					Term t1=findTermById(terms,entry.getKey());
 					Term t2=findTermById(terms,i);
 					Integer distance=(t2.getStart_index()-t1.getEnd_index())*(t2.getStart_index()-t1.getEnd_index());
@@ -575,12 +548,12 @@ public class RelExTool {
 						minidistance=distance;
 					}
 				}
-				Triple<Integer, Integer, String> afterrel=new Triple<Integer, Integer, String>(entry.getKey(),candidate,"has_temporal");
-				allrels.add(afterrel);
-			}else{
-				HashSet<Integer> set=entry.getValue();
+				Triple<Integer, Integer, String> afterrel=new Triple<Integer, Integer, String>(entry.getKey(),candidate,relName);
+				allrels.add(afterrel);//"allrels" only saves the "has_temporal" relations where for each term1, term2 has the shortest distance from term1.
+			}else{//For a term1, if there are only one term2 which has a relation "has_temporal" with term1.
+				HashSet<Integer> set=entry.getValue();//Get the ID of term2.
 				for(Integer a:set){
-					Triple<Integer, Integer, String> afterrel=new Triple<Integer, Integer, String>(entry.getKey(),a,"has_temporal");
+					Triple<Integer, Integer, String> afterrel=new Triple<Integer, Integer, String>(entry.getKey(),a,relName);
 					allrels.add(afterrel);
 				}
 			}
@@ -617,12 +590,7 @@ public class RelExTool {
 		for (TypedDependency item : tdl) {
 			g2.addEdge(String.valueOf(item.gov().index()), String.valueOf(item.dep().index()));
 		}
-		
-//		ConnectivityInspector ci=new ConnectivityInspector(g2);
-//		Set<String> allvertexes=ci.connectedSetOf("1");
-//		for(String v:allvertexes){
-//			System.out.println("v="+v);
-//		}
+
 		List<String> t1list = new ArrayList<String>();
 		List<String> t2list = new ArrayList<String>();
 		for (IndexedWord iw : itemset) {
@@ -662,13 +630,6 @@ public class RelExTool {
 		}
 		Collections.sort(paths);
 		return paths.get(0);
-		// GraphPath<Integer, DefaultWeightedEdge> shortestPath1 =
-		// dijk.getPath("2","13");
-		// if(shortestPath1==null){
-		// return 500;
-		// }else{
-		// return shortestPath1.getLength();
-		// }
 	}
 
 	

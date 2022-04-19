@@ -218,10 +218,12 @@ public class LogicAnalysisTool {
 		LinkedHashSet<Integer> result = null;
 		for (int i = 0; i < conj_or.size(); i++) {
 			if (conj_or.get(i).contains(x)) {
+				//System.out.println("::");
+				//System.out.println(conj_or.get(i));
 				result = conj_or.get(i);
 			}
 		}
-		return result;
+		return result;//Return the set [entity1_median, entity2_median, entity3_median...] in the conj_or set that contains x.
 	}
 
 	public void printoutGroups(List<LinkedHashSet<Integer>> conj_or) {
@@ -243,12 +245,15 @@ public class LogicAnalysisTool {
 			int entity1_median = 0;
 			int entity2_median = 0;
 			for (SemanticGraphEdge sge : sges) {
+				//System.out.println("Semantic");
 				//System.out.println(
 				//		sge.getRelation().getSpecific() + "\t" + sge.getDependent() + "\t" + sge.getGovernor());
 				if (sge.getRelation().getSpecific() != null && sge.getRelation().getSpecific().equals("or")) {
 					entity1_median = (sge.getDependent().beginPosition() + sge.getDependent().endPosition()) / 2;
 					entity2_median = (sge.getGovernor().beginPosition() + sge.getGovernor().endPosition()) / 2;
 					LinkedHashSet<Integer> conj_or_group_1 = searchGroup(conj_or, entity1_median);
+					//Check if entity1_median is in the conj_or set
+					// and get [token1_median, token2_median, token3_median...] that contains the entity1_median that we input.
 					LinkedHashSet<Integer> conj_or_group_2 = searchGroup(conj_or, entity2_median);
 					if (conj_or_group_1 == null && conj_or_group_2 == null) {
 						LinkedHashSet<Integer> conj_or_group = new LinkedHashSet<Integer>();
@@ -256,10 +261,14 @@ public class LogicAnalysisTool {
 						conj_or_group.add(entity2_median);
 						conj_or.add(conj_or_group);
 					} else if (conj_or_group_1 != null && conj_or_group_2 == null) {
+						//If entity1_median is in one of the set in the conj_or,
+						// add the entity2_median to that set.
 						conj_or.remove(conj_or_group_1);
 						conj_or_group_1.add(entity2_median);
 						conj_or.add(conj_or_group_1);
 					} else if (conj_or_group_1 == null && conj_or_group_2 != null) {
+						//If entity2_median is in one of the set in the conj_or,
+						// add the entity1_median to that set.
 						conj_or.remove(conj_or_group_2);
 						conj_or_group_2.add(entity1_median);
 						conj_or.add(conj_or_group_2);
@@ -273,8 +282,8 @@ public class LogicAnalysisTool {
 			LinkedHashSet<Integer> entities = new LinkedHashSet<Integer>();
 			for (Integer b : conj_or.get(i)) {
 				for (Term t : terms) {
-					if (b >= t.getStart_index() && b <= t.getEnd_index()) {
-						entities.add(t.getTermId());
+					if (b >= t.getStart_index() && b <= t.getEnd_index()) {//If term t covers entity_median b
+						entities.add(t.getTermId());//Terms in the same "entities" set are connected by "or" relationships.
 					}
 				}
 			}

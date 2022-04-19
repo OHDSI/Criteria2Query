@@ -79,7 +79,8 @@ public class IOUtil {
 		}
 		return null;
 	}
-	
+
+	//Remove all the spaces before the text.
 	public static String removeMultiSpace(String s) {
 		String[] str = s.split("\\s+ ");
 		// System.out.println("~~"+str.length);
@@ -98,24 +99,33 @@ public class IOUtil {
 		//System.out.println(s.substring(index));
 		return s.substring(index);
 	}
-	
+
+	//Separate the criteria into the inclusion criteria and exclusion criteria.
 	public static String[] separateIncExc(String ecstr) {
+		//Get the position of the first occurrence of String "inclusion criteria".
+		//If there is no occurrence of "inclusion criteria", it will return -1.
 		int incindex = ecstr.toLowerCase().indexOf("inclusion criteria");
+		//Get the position of the first occurrence of String "exclusion criteria".
+		//If there is no occurrence of "exclusion criteria", it will return -1.
 		int excindex = ecstr.toLowerCase().indexOf("exclusion criteria");
 		String[] eclines = ecstr.split("\n");
-		String[] inc_exc = new String[2];
+		String[] inc_exc = new String[2];//Save the inclusion and exclusion criteria separately in a String array.
 		StringBuffer incsb = new StringBuffer();
 		StringBuffer excsb = new StringBuffer();
 		boolean incflag = false;
 		boolean excflag = false;
 		if (incindex > -1 && excindex > -1) {
+			//If both the inclusion criteria and exclusion criteria exist
 			for (String r : eclines) {
-				if (r.toLowerCase().contains("inclusion criteria:")) {
+				if (r.isEmpty()){
+					continue;
+				}
+				if (r.toLowerCase().contains("inclusion criteria")) {
 					incflag = true;
 					excflag = false;
 					continue;
 				}
-				if (r.toLowerCase().contains("exclusion criteria:")) {
+				if (r.toLowerCase().contains("exclusion criteria")) {
 					excflag = true;
 					incflag = false;
 					continue;
@@ -129,6 +139,7 @@ public class IOUtil {
 			}
 
 		} else if (incindex != -1 && excindex == -1) {
+			//If inclusion criteria exists and exclusion criteria doesn't exist,
 			for (String r : eclines) {
 				if (r.toLowerCase().contains("inclusion criteria")) {
 					incflag = true;
@@ -138,6 +149,7 @@ public class IOUtil {
 			}
 
 		} else if (incindex == -1 && excindex != -1) {
+			//If exclusion criteria exists and inclusion criteria doesn't exist,
 			for (String r : eclines) {
 				if (r.toLowerCase().contains("exclusion criteria")) {
 					continue;

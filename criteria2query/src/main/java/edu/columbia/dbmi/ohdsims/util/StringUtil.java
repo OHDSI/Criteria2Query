@@ -3,7 +3,6 @@ package edu.columbia.dbmi.ohdsims.util;
 import java.text.Normalizer;
 
 public class StringUtil {
-
 	public static String replaceString(String str, String target, String replacestr) {
 		int begin = str.toLowerCase().indexOf(target.toLowerCase());
 		int end = begin + target.length();
