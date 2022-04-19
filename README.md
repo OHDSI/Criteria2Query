@@ -5,7 +5,7 @@
 
 <img src="/pictures/website.png" width="800"/>
 
-*If you are interested in the code of C2Q 2.0, please contact Dr. Chunhua Weng at Columbia University.*
+*If you are interested in the code of Criteria2Query 2.0, please contact Dr. Chunhua Weng at Columbia University.*
 
 Introduction
  ========
@@ -16,9 +16,6 @@ Criteria2Query (C2Q) is an automatic cohort identification system. It enhances h
  * Accessible and portable cohort SQL query formulation based on the Observational Medical Outcomes Partnership (OMOP) Common Data Model (CDM) version 5;
  * Real-time cohort query execution with result visualization. 
 
-
-## Demo 
-[Demo and tutorial video](https://www.youtube.com/watch?v=LJsWgE0EZ-o)
 
 ## Interface and use case example 
 <img src="/pictures/example.png" width="800"/>
