@@ -2,6 +2,7 @@
 <img src="/pictures/website.png"  width="800"/>
 
 *Criteria2Query 2.0 is published!*
+[Online Demo](http://34.70.212.14:8080/criteria2query_test/)
 
 Introduction
  ========
