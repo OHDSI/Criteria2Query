@@ -112,7 +112,7 @@ public class WebUtil {
 	 */
 	public static String getCTByNctid(String nctid) {
 		HttpClient httpClient = new HttpClient();
-		GetMethod getMethod = new GetMethod("https://clinicaltrials.gov/show/" + nctid + "?displayxml=true");
+		GetMethod getMethod = new GetMethod("https://clinicaltrials.gov/api/legacy/public-xml/" + nctid);
 		// 使用系统提供的默认的恢复策略
 		getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
 		try {
