@@ -44,17 +44,26 @@ public class GlobalSetting {
 
     public final static String concepthub="http://localhost:8081/concepthub";
 
+    public final static String databaseURL1K = "jdbc:postgresql://localhost/cdm_5.2.2_SynPUF1k";
+    public final static String databaseURL5pct = "jdbc:postgresql://localhost/cdm_5.2.2_SynPUF5pct";
+    public final static String databaseUser = "postgres";
+    public final static String databasePassword = "123456";
+
+    public final static String negateDetectionFolder = "D:\\Work\\WengLab\\C2Q\\NegationDetection\\NegationDetection";
+    public final static String virtualEnvFolder = "D:\\Work\\WengLab\\C2Q\\python_virtualenvs\\for_c2q\\Scripts";
+
+
 
 
     //Connect to the databases
-    public final static String databaseURL1K = "jdbc:postgresql://localhost/synpuf1k";
-    public final static String databaseURL5pct = "jdbc:postgresql://localhost/synpuf5pct";
-    public final static String databaseUser = "Please connect to a database.";
-    public final static String databasePassword = "*****";
-
-
-    //Change the directories
-    public final static String negateDetectionFolder = "/opt/tomcat/NegationDetection";
-    public final static String virtualEnvFolder = "/opt/tomcat/python_virtualenvs/C2Q_NEGATION/bin"; //"D:\\C2Q\\python_virtualenvs\\C2Q_NEGATION\\Scripts";
+//    public final static String databaseURL1K = "jdbc:postgresql://localhost/synpuf1k";
+//    public final static String databaseURL5pct = "jdbc:postgresql://localhost/synpuf5pct";
+//    public final static String databaseUser = "Please connect to a database.";
+//    public final static String databasePassword = "*****";
+//
+//
+//    //Change the directories
+//    public final static String negateDetectionFolder = "/opt/tomcat/NegationDetection";
+//    public final static String virtualEnvFolder = "/opt/tomcat/python_virtualenvs/C2Q_NEGATION/bin"; //"D:\\C2Q\\python_virtualenvs\\C2Q_NEGATION\\Scripts";
 
 }
