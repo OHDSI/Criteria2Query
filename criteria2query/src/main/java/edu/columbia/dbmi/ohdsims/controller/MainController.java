@@ -147,6 +147,7 @@ public class MainController {
         if (recon) {
             doc = this.ieService.reconIEResults(doc);
         }
+        abb = false;
         if (abb == true) {
             doc = this.ieService.abbrExtensionByDoc(doc);//Extend the abbreviation.
         }
@@ -251,6 +252,7 @@ public class MainController {
         List<DisplayCriterion> display_initial_event = this.ieService.displayDoc(doc.getInitial_event());
         List<DisplayCriterion> display_inclusion_criteria = this.ieService.displayDoc(doc.getInclusion_criteria());
         List<DisplayCriterion> display_exclusion_criteria = this.ieService.displayDoc(doc.getExclusion_criteria());
+        abb = false;
         if (abb == true) {
             doc = this.ieService.abbrExtensionByDoc(doc);//Extend the abbreviation term.
         }

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GlobalSetting {
-    public final static String c2qversion = "criteria2query v0.8.6.0";
+    public final static String c2qversion = "criteria2query v2.4";
     public final static String ohdsi_api_base_url = "http://api.ohdsi.org/WebAPI/";//http://api.ohdsi.org/WebAPI/ http://atlas-tutorial.ohdsi.org/WebAPI/
     public final static String crf_model = "edu/columbia/dbmi/ohdsims/model/c2q_all_model_advanced.ser.gz";//all-c2q-model. //ec-ner-model.ser.gz
     public final static String relexmodel = "edu/columbia/dbmi/ohdsims/model/re.model";//all-c2q-model. //ec-ner-model.ser.gz
@@ -41,7 +41,9 @@ public class GlobalSetting {
     public final static String valueTransDict = "edu/columbia/dbmi/ohdsims/model/value_comparison_phrase_normalization_dict.txt";
     public final static String temporalTransDict = "edu/columbia/dbmi/ohdsims/model/temporal_comparison_phrase_normalization_dict.txt";
 
-    public final static String concepthub = "http://35.202.46.162:8080/concepthub";
+
+    public final static String concepthub="http://localhost:8081/concepthub";
+
 
 
     //Connect to the databases
@@ -49,6 +51,7 @@ public class GlobalSetting {
     public final static String databaseURL5pct = "jdbc:postgresql://localhost/synpuf5pct";
     public final static String databaseUser = "Please connect to a database.";
     public final static String databasePassword = "*****";
+
 
     //Change the directories
     public final static String negateDetectionFolder = "/opt/tomcat/NegationDetection";

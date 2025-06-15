@@ -33,7 +33,7 @@ import net.sf.json.JSONObject;
 public class ConceptMapping {
 
 	private final static String conceptseturl = GlobalSetting.ohdsi_api_base_url+"conceptset/";
-	private final static String usagi = GlobalSetting.concepthub+"/omop/searchOneEntityByTermAndDomain";
+	private final static String usagi = GlobalSetting.concepthub;//+"/omop/searchOneEntityByTermAndDomain";
 	private final static String umlsurl = GlobalSetting.concepthub+"/umls/searchUMLS";
 
 	public static void main(String[] args) {

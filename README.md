@@ -1,8 +1,8 @@
 # Criteria2Query  
 <img src="/pictures/website.png"  width="800"/>
 
-*Criteria2Query 2.0 is published!*
-[Online Demo](http://34.70.212.14:8080/criteria2query_test/)
+*Criteria2Query 2.4 is published!*
+<!-- [Online Demo](http://34.70.212.14:8080/criteria2query_test/) -->
 
 Introduction
  ========
@@ -28,35 +28,50 @@ Criteria2Query (C2Q) is an automatic cohort identification system. It enhances h
 
 Dependencies
 ========
-* [SynPUF_1K](http://www.ltscomputingllc.com/downloads/) and [SynPUF_5%](https://www.ohdsi.org/data-standardization/) datasets in CDM Version 5.2.2 format.
+* SynPUF_1K and SynPUF_5% datasets, or any other dataset in CDM Version 5.2.2 format.
 * OMOP CDM Vocabulary version 5 files. These can be obtained from [Athena](https://athena.ohdsi.org/search-terms/start).
-* These are for the demonstration of real-time cohort SQL query execution (not strictly required)
-
+* [Usagi](https://github.com/OHDSI/Usagi) for concept mapping. 
 
 
 Getting Started
 =======
-1. Download and install everything based on the system requirements above.
+1. Install all required system dependencies as specified in the System Requirements section above.
 
 2. Git clone this repository.
 
-3. Download the [negation scope detection model](https://drive.google.com/file/d/1uBbSL0_Zp70Z4vMlAQq43qlRhmg5cIq0/view?usp=sharing) and move it to the folder `NegationDetection`.
+3. Download the [negation scope detection model](https://drive.google.com/file/d/1B2i_HC0CV0j5-7DSewiaA5Dbyr0IHOdk/view?usp=sharing) and place it in the `NegationDetection` directory.
 
-4. Create a virtual environment in Python and install packages based on `venv_requirements.txt`. (Instruction: https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/)
+4. Create a Python virtual environment and install the required packages from `venv_requirements.txt`. (Instruction: https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/)
 
-5. Change the directories of Negation Detection and the Python virtual environment in the file `/criteria2query/src/main/java/edu/columbia/dbmi/ohdsims/pojo/GlobalSetting.java` 
+5. Update the directory paths for Negation Detection and the Python virtual environment in the following file: `/criteria2query/src/main/java/edu/columbia/dbmi/ohdsims/pojo/GlobalSetting.java` 
 ```
-//Change the directories (examples)
+// Set the directory for the negation detection model
 public final static String negateDetectionFolder = "/opt/tomcat/NegationDetection";
-public final static String virtualEnvFolder = "/opt/tomcat/python_virtualenvs/C2Q_NEGATION/bin"; // or "D:\\C2Q\\python_virtualenvs\\C2Q_NEGATION\\Scripts";
+
+// Set the path to the Python virtual environment
+public final static String virtualEnvFolder = "/opt/tomcat/python_virtualenvs/C2Q_NEGATION/bin";
+// For Windows, use the following format:
+// public final static String virtualEnvFolder = "D:\\C2Q\\python_virtualenvs\\C2Q_NEGATION\\Scripts";
 ```
 
-6. Import SynPUF_1K and SynPUF_5% datasets to your PostgreSQL DBMS (You can skip this step if they are already imported.)
-    * Download the [SynPUF_1K](http://www.ltscomputingllc.com/downloads/) and [SynPUF_5%](https://www.ohdsi.org/data-standardization/) datasets in CDM Version 5.2.2 format.
-    * Download the OMOP CDM Vocabulary version 5 files from [Athena](https://athena.ohdsi.org/search-terms/start).
-    * Follow the instruction here (https://github.com/OHDSI/CommonDataModel/tree/v5.2.2/PostgreSQL) to create your instantiations of the Common Data Model for SynPUF_1K and SynPUF_5%, respectively. 
+6. Download [Usagi](https://github.com/OHDSI/Usagi), and implement a POST API endpoint (referred to as the Concept Hub) that allows searching concepts by term and domain.
 
-7. Connect to your own database (SynPUF_1K and SynPUF_5%) by changing the URL, user, and password in the file `/criteria2query/src/main/java/edu/columbia/dbmi/ohdsims/pojo/GlobalSetting.java` 
+7. Configure the Concept Hub endpoint in the following file:`/criteria2query/src/main/java/edu/columbia/dbmi/ohdsims/pojo/GlobalSetting.java`
+Update the concepthub URL to point to your POST API endpoint:
+```
+// Set the Concept Hub POST endpoint
+public final static String concepthub = "http://localhost:8081/concepthub";
+```
+
+8. Import the SynPUF datasets into your PostgreSQL database
+(Skip this step if the datasets are already imported.)
+    * Download the SynPUF_1K and SynPUF_5% datasets in OMOP CDM version 5.2.2 format.
+    * Download the OMOP CDM vocabulary files (v5) from [Athena](https://athena.ohdsi.org/search-terms/start).
+    * Follow the instructions in the [OHDSI Common Data Model repository](https://github.com/OHDSI/CommonDataModel/tree/v5.2.2/PostgreSQL) to instantiate the CDM schema in your PostgreSQL database for both datasets.
+    * You may also use your own datasets, as long as they conform to the OMOP CDM v5.2.2 format. 
+
+9. Configure database connection settings
+Update the database URLs, username, and password in the following file to connect to your SynPUF_1K and SynPUF_5% databases:`/criteria2query/src/main/java/edu/columbia/dbmi/ohdsims/pojo/GlobalSetting.java` 
 ```
 //Connect to the databases
     public final static String databaseURL1K = "jdbc:postgresql://localhost/synpuf1k";
@@ -64,7 +79,7 @@ public final static String virtualEnvFolder = "/opt/tomcat/python_virtualenvs/C2
     public final static String databaseUser = "Please connect to a database.";
     public final static String databasePassword = "*****";
 ```
-8. Deploy C2Q and visit it in your web browser.
+10. Deploy the C2Q application. Once configured, deploy the application and open it in your web browser.
 
 
 

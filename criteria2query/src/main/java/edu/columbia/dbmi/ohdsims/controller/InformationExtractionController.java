@@ -40,6 +40,21 @@ import edu.stanford.nlp.ling.SentenceUtils;
 import edu.stanford.nlp.process.DocumentPreprocessor;
 import net.sf.json.JSONObject;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.apache.http.impl.client.HttpClients;
+
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/ie")
 public class InformationExtractionController {
@@ -145,69 +160,89 @@ public class InformationExtractionController {
 	//and split the criteria into inclusion criteria and exclusion criteria.
 	@RequestMapping(value = "/getct", produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public Map<String, Object> getCrteriafromCT(HttpSession httpSession, HttpServletRequest request, String nctid)
-			throws Exception {
-		String remoteAddr = "";
-	    if (request != null) {
-	            remoteAddr = request.getHeader("X-FORWARDED-FOR");
-	            if (remoteAddr == null || "".equals(remoteAddr)) {
-	                remoteAddr = request.getRemoteAddr();
-	            }
-	     }
-		logger.info("[IP:"+remoteAddr+"][Fetch Criteria From ClinicalTrials.gov]");
-		String url = "https://clinicaltrials.gov/show/" + nctid + "?displayxml=true";
-		String response = WebUtil.getCTByNctid(nctid);
-		//Parse the XMl file and get the useful information, including criteria, gender, minimum_age, maximum_age,
-		//sampling_method, study_pop, healthy_volunteers.
-		String[] criteria = WebUtil.parse(response);
-		StringBuffer insb = new StringBuffer();
-		StringBuffer exsb = new StringBuffer();
-		String gender = criteria[1];
-		String minimum_age = criteria[2];
-		String maxmum_age = criteria[3];
-		String sampling_method = criteria[4];
-		String study_pop = criteria[5];
-		String healthy_volunteers = criteria[6];
+	public Map<String, Object> getCrteriafromCT(HttpSession httpSession, HttpServletRequest request, String nctid) {
 
-		//Split the criteria text into sentences based on the bullet symbols "-  "
-		//and delete the spaces and "-  " before sentences.
-		//Combine the sentences or words which belong to the same point
-		boolean flag = false;
-		String[] lines = criteria[0].split("\n");
-		StringBuffer sb = new StringBuffer();
-		for (int x = 1; x < lines.length; x++) {
-			if (lines[x - 1].trim().length() == 0) {
-				String res = lines[x].trim();
-				if (res.startsWith("-  ")) {
-					res = res.substring(3);
-					sb.append(res);
-				}else{
-					sb.append("\n" + res);
-				}
+		Map<String, Object> map = new HashMap<>();
 
-			} else {
-				if(lines[x].trim().isEmpty()){
-					sb.append("\n");
-				}else{//A sentence seperates into several lines.
-					sb.append(" "+lines[x].trim());
+		try {
+			// Log client IP
+			String remoteAddr = "";
+			if (request != null) {
+				remoteAddr = request.getHeader("X-FORWARDED-FOR");
+				if (remoteAddr == null || "".equals(remoteAddr)) {
+					remoteAddr = request.getRemoteAddr();
 				}
 			}
-		}
-		String ecstr = sb.toString();
-		//Separate inclusion and exclusion criteria from the criteria text.
-		String[] inc_exc=IOUtil.separateIncExc(ecstr);
-		Map<String, Object> map = null;
-		map = new HashMap<String, Object>();
-		map.put("gender", gender);
-		map.put("minimum_age", minimum_age);
-		map.put("maxmum_age", maxmum_age);
+			logger.info("[IP:" + remoteAddr + "][Fetch Criteria From ClinicalTrials.gov]");
 
-		map.put("sampling_method", sampling_method);
-		map.put("study_pop", study_pop);
-		map.put("healthy_volunteers", healthy_volunteers);
-		map.put("inc", inc_exc[0]);
-		map.put("exc", inc_exc[1]);
+			// Build API URL
+			String url = "https://clinicaltrials.gov/api/v2/studies/" + nctid;
+
+
+			// Fetch JSON response
+			String jsonResponse = getJsonFromUrl(url);
+
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode root = mapper.readTree(jsonResponse);
+			JsonNode eligibilityNode = root.path("protocolSection").path("eligibilityModule");
+
+			String gender = eligibilityNode.path("sex").asText("");
+			String minimum_age = eligibilityNode.path("minimumAge").asText("");
+			String maximum_age = eligibilityNode.path("maximumAge").asText("");
+			String criteriaText = eligibilityNode.path("eligibilityCriteria").asText("");
+			String healthy_volunteers = String.valueOf(eligibilityNode.path("healthyVolunteers").asBoolean(false));
+
+			// Process criteria text (your original logic)
+//			String[] lines = criteriaText.replaceAll("(\n)+", "\n").split("\n");
+//			StringBuffer sb = new StringBuffer();
+//
+//			for (int x = 0; x < lines.length; x++) {
+//				if (x > 0 && lines[x - 1].trim().length() == 0) {
+//					String res = lines[x].trim();
+//					if (res.startsWith("-  ")) {
+//						res = res.substring(3);
+//						sb.append(res);
+//					} else {
+//						sb.append("\n" + res);
+//					}
+//				} else {
+//					if (lines[x].trim().isEmpty()) {
+//						sb.append("\n");
+//					} else {
+//						sb.append(" " + lines[x].trim());
+//					}
+//				}
+//			}
+//
+//			String ecstr = sb.toString();
+			String ecstr = criteriaText.replaceAll("(\n)+", "\n");
+
+			// Split into inclusion/exclusion criteria (use your existing IOUtil)
+			String[] inc_exc = IOUtil.separateIncExc(ecstr);
+
+			// Build result map
+			map.put("gender", gender);
+			map.put("minimum_age", minimum_age);
+			map.put("maxmum_age", maximum_age);
+			map.put("healthy_volunteers", healthy_volunteers);
+			map.put("inc", inc_exc[0]);
+			map.put("exc", inc_exc[1]);
+
+		} catch (Exception e) {
+			logger.error("Error in getCrteriafromCT for NCTID " + nctid + ": " + e.getMessage(), e);
+			// Optionally you can put empty/default values in map here if desired
+		}
+
 		return map;
+	}
+
+	public static String getJsonFromUrl(String url) throws Exception {
+		HttpClient client = HttpClients.createDefault();
+		HttpGet request = new HttpGet(url);
+		request.addHeader("Accept", "application/json");
+
+		HttpResponse response = client.execute(request);
+		return EntityUtils.toString(response.getEntity(), "UTF-8");
 	}
 
 

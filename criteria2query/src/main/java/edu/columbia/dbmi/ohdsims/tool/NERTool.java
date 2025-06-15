@@ -49,7 +49,7 @@ public class NERTool {
     //CoreLabel class will hold information about an entity.
     //getClassifierNoExceptions will use the model specified by its argument.
     public static final String grammars = GlobalSetting.dependence_model;
-    private final static String diclookup = GlobalSetting.concepthub + "/omop/searchOneEntityByTerm";
+    private final static String diclookup = GlobalSetting.concepthub;// + "/omop/searchOneEntityByTerm";
     private final static String rule_based_model = GlobalSetting.rule_base_model;
     public RuleBasedModels rbm = new RuleBasedModels();
 
@@ -410,8 +410,8 @@ public class NERTool {
         //Creates a JSONObject.
         JSONObject bestconcept = JSONObject.fromObject(result);
         try {
-            if (bestconcept.getDouble("matchScore") > 0.75) {
-                JSONObject concept_jo = bestconcept.getJSONObject("concept");
+            JSONObject concept_jo = bestconcept.getJSONObject("concept");
+            if (concept_jo.getDouble("matchScore") > 0.75) {
                 String domain = concept_jo.getString("domainId");
                 res = "<" + domain + ">" + str + "</" + domain + ">";
             }

@@ -35,6 +35,10 @@ public class NegationDetection {
         List<String> sents = new ArrayList<>();
         sents.add("["+"They do have diabetes ."+"]");
         sents.add("["+"They don't have diabetes ."+"]");
+        //String sent = "Administration of any vaccine other than the study vaccine or any intramuscular " +
+        //       "injection within 30 days prior to the first dose of study vaccine or planned administration " +
+        //      "within 30 days prior to or after any study vaccination";
+        //"inhaled and topical steroids are allowed whereas intra-articular and epidural injection / administration of steroids are not allowed";//"They don't have diabetes .";
         List  negate = nd.getNegateTag(negateTags, sents);
         for(int i=0; i<negate.size();i++){
             System.out.println(negate.get(i));
@@ -42,11 +46,14 @@ public class NegationDetection {
     }
 
     public List<List<Integer>> getNegateTag(List<List<Integer>> cues, List<String> sents){
+        //System.out.println(sents.toString());
         String sents_str = sents.toString();
         sents_str = sents_str.replaceAll("\"", "'");
         String input = sents_str.substring(4, sents_str.length()-4);
         input += "\t";
         String cues_str = cues.toString();
+        //System.out.println(cues_str);
+        //String cues_str = Arrays.toString(cues);
         input += cues_str.substring(2, cues_str.length()-2);
         List<List<Integer>> negates = new ArrayList<>();
         try {
@@ -63,20 +70,47 @@ public class NegationDetection {
             this.arguments[2] = inputFileName;
             Process process = Runtime.getRuntime().exec(this.arguments, null, dir);
             int re = process.waitFor();
-            System.out.println(re);
+//            System.out.println(re);
             BufferedReader reader = new BufferedReader(new FileReader(neg_folder+"/java_python_data_transfer/"+ inputFileName+".txt"));
             String tags = reader.readLine();
             reader.close();
             File inputFile = new File(neg_folder+"/java_python_data_transfer/"+ inputFileName+".txt");
             inputFile.delete();
-            if(tags != null) {
-                String[] tags_group = tags.substring(3, tags.length() - 3).split("(]]|]), (\\[\\[|\\[)");
-                for (String tags_per_sent : tags_group) {
-                    List<Integer> negates_per_sent = new ArrayList<>();
-                    for (String tag: tags_per_sent.split(", ")){
-                        negates_per_sent.add(Integer.parseInt(tag));
+//            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//            String line;
+//            String tags = null;
+//            while ((line = in.readLine()) != null) {
+//                System.out.println(line);
+//                tags = line;
+//            }
+//            in.close();
+            //int re = process.waitFor();
+            //System.out.println(re);
+
+            if (tags != null) {
+                int index = tags.indexOf("\t");
+                if (index != -1) {
+                    String tags_part = tags.substring(index+1);
+
+                    String[] tags_group = tags_part.split("\\], \\[");
+
+                    for (String tags_per_sent : tags_group) {
+                        tags_per_sent = tags_per_sent.replaceAll("\\[", "").replaceAll("\\]", "").trim();
+
+                        List<Integer> negates_per_sent = new ArrayList<>();
+                        for (String tag : tags_per_sent.split(",")) {
+                            tag = tag.trim();
+                            if (tag.matches("\\d+")) {
+                                negates_per_sent.add(Integer.parseInt(tag));
+                            } else {
+                                // Optional: log bad tag
+                                System.err.println("Skipping non-numeric tag: " + tag);
+                            }
+                        }
+                        negates.add(negates_per_sent);
                     }
-                    negates.add(negates_per_sent);
+                } else {
+                    System.err.println("No [ found in tags input.");
                 }
             }
         } catch (Exception e) {
