@@ -61,7 +61,7 @@ torchmetrics==0.7.3
 tqdm==4.63.1
 transformers==4.15.0
 typing-extensions==4.1.1
-urllib3==1.26.9
+urllib3==2.5.0
 Werkzeug==2.1.1
 wrapt==1.14.0
 yarl==1.7.2
